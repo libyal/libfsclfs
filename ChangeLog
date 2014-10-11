@@ -1,0 +1,142 @@
+TODO
+* update msvcpp files
+* fix make dist
+* use notify output grouping
+* update libfsclfs.c
+* fsclfsinfo:
+  - add info handle
+* code clean up:
+  - init functions
+* owner page
+  - detect last valid owner page
+* add caches (use fdata)
+  - blocks/records
+  - owner pages
+* fsclfsinfo
+  - refactor to use info handle
+
+Format
+* improve fixup handling (what about lower nibble of lower byte)
+* add checksum handing
+
+API
+* store: add get stream by name function
+
+Debug
+* print offsets of containers
+* libfusn: add debug descriptions of update resource and source flags
+
+Deployment
+* check configure test of sub library included functions
+* write man pages
+
+20141011
+* removed README.macosx
+* updated dependencies
+
+20140529
+* updated dependencies
+
+20140118
+* 2014 update
+* updated dependencies
+
+20131109
+* updated dependencies
+
+20130915
+* code clean up
+
+20130914
+* updated dependencies
+* added libcthreads build support
+
+20130224
+* updated dependencies
+* 2013 update
+
+20130214
+* worked on debug output
+
+20120929
+* updated dependencies
+
+20120527
+* updated dependencies
+* code clean up:
+  - extern definitions
+
+20110313
+* code clean up
+
+20110305
+* updated libfdata
+
+20110304
+* updated configure.ac, common, libcstring, liberror, libnotify, libsystem,
+  libuna, libbfio, libfdatetime, libfwnt
+* worked on gettext support
+* worked on TxR support
+* 2011 update
+
+20101220
+* removed libfdata
+
+20101219
+* updated common, libcstring, libsystem, libbfio, libfdatetime
+* updated array type
+* code clean up
+
+20101203
+* code clean up
+* updated libfdata
+
+20101202
+* worked on format
+  - owner page
+  - virual/physical lsn mappings
+  - block chains
+  - split blocks
+
+20101201
+* worked on format
+  - container
+* worked on container and stream
+* refactored base log into store
+* updated libbfio
+
+20101130
+* worked on format
+  - base log, block fixup values
+* added container and stream
+
+20101129
+* worked on format
+  - base log
+* changed handle into store and base log
+
+20101128
+* worked on format
+
+20101127
+* updated libfdatetime
+* moved abort to IO handle
+* moved record to record value
+* record is now an external 'object' type
+* worked on format
+
+20101126
+* updated configure.ac
+* updated libcstring, liberror, libuna, libbfio, libfdata
+* added libclfs.rc
+* worked on format
+
+20101113
+* textual changes
+* worked on initial version
+* worked on format
+
+20101112
+* created initial version
+* worked on format
+

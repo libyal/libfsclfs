@@ -1,0 +1,109 @@
+/*
+ * The internal definitions
+ *
+ * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBFSCLFS_INTERNAL_DEFINITIONS_H )
+#define _LIBFSCLFS_INTERNAL_DEFINITIONS_H
+
+#include <common.h>
+#include <byte_stream.h>
+
+#define LIBFSCLFS_ENDIAN_BIG					_BYTE_STREAM_ENDIAN_BIG
+#define LIBFSCLFS_ENDIAN_LITTLE					_BYTE_STREAM_ENDIAN_LITTLE
+
+/* Define HAVE_LOCAL_LIBFSCLFS for local use of libfsclfs
+ */
+#if !defined( HAVE_LOCAL_LIBFSCLFS )
+#include <libfsclfs/definitions.h>
+
+/* The definitions in <libfsclfs/definitions.h> are copied here
+ * for local use of libfsclfs
+ */
+#else
+#define LIBFSCLFS_VERSION					@VERSION@
+
+/* The version string
+ */
+#define LIBFSCLFS_VERSION_STRING				"@VERSION@"
+
+/* The file access
+ * bit 1        set to 1 for read access
+ * bit 2        set to 1 for write access
+ * bit 3-8      not used
+ */
+enum LIBFSCLFS_ACCESS_FLAGS
+{
+	LIBFSCLFS_ACCESS_FLAG_READ				= 0x01,
+/* Reserved: not supported yet */
+	LIBFSCLFS_ACCESS_FLAG_WRITE				= 0x02
+};
+
+/* The file access macros
+ */
+#define LIBFSCLFS_OPEN_READ					( LIBFSCLFS_ACCESS_FLAG_READ )
+/* Reserved: not supported yet */
+#define LIBFSCLFS_OPEN_WRITE					( LIBFSCLFS_ACCESS_FLAG_WRITE )
+/* Reserved: not supported yet */
+#define LIBFSCLFS_OPEN_READ_WRITE				( LIBFSCLFS_ACCESS_FLAG_READ | LIBFSCLFS_ACCESS_FLAG_WRITE )
+
+#endif
+
+/* The block types
+ */
+enum LIBFSCLFS_BLOCK_TYPES
+{
+	LIBFSCLFS_BLOCK_TYPE_BASE_LOG				= 0x00,
+	LIBFSCLFS_BLOCK_TYPE_CONTAINER				= 0x01
+};
+
+/* The record type (flags)
+ */
+enum LIBFSCLFS_RECORD_TYPE_FLAGS
+{
+	RECORD_TYPE_FLAG_IS_DATA				= 0x00000001UL,
+	RECORD_TYPE_FLAG_IS_RESTART				= 0x00000002UL,
+	RECORD_TYPE_FLAG_IS_START				= 0x00000004UL,
+	RECORD_TYPE_FLAG_IS_END					= 0x00000008UL,
+	RECORD_TYPE_FLAG_IS_CONTINUATION			= 0x00000010UL,
+	RECORD_TYPE_FLAG_IS_LAST				= 0x00000020UL
+};
+
+/* The record flags
+ */
+enum LIBFSCLFS_RECORD_FLAGS
+{
+	LIBFSCLFS_RECORD_FLAG_IO_HANDLE_NON_MANAGED		= 0x00,
+	LIBFSCLFS_RECORD_FLAG_IO_HANDLE_MANAGED			= 0x01
+};
+
+#if defined( WINAPI )
+#define LIBFSCLFS_PATH_SEPARATOR				'\\'
+#else
+#define LIBFSCLFS_PATH_SEPARATOR				'/'
+#endif
+
+#if defined( HAVE_DEBUG_OUTPUT )
+#define LIBFSCLFS_RECORD_FLAGS_DEFAULT				LIBFSCLFS_RECORD_FLAG_IO_HANDLE_NON_MANAGED
+#else
+#define LIBFSCLFS_RECORD_FLAGS_DEFAULT				LIBFSCLFS_RECORD_FLAG_IO_HANDLE_MANAGED
+#endif
+
+#endif
+

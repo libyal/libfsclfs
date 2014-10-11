@@ -1,0 +1,429 @@
+/*
+ * Library to access the Windows Common Log File System (CLFS) format
+ *
+ * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBFSCLFS_H )
+#define _LIBFSCLFS_H
+
+#include <libfsclfs/definitions.h>
+#include <libfsclfs/error.h>
+#include <libfsclfs/extern.h>
+#include <libfsclfs/features.h>
+#include <libfsclfs/types.h>
+
+#include <stdio.h>
+
+#if defined( LIBFSCLFS_HAVE_BFIO )
+#include <libbfio.h>
+#endif
+
+#if defined( __cplusplus )
+extern "C" {
+#endif
+
+/* -------------------------------------------------------------------------
+ * Support functions
+ * ------------------------------------------------------------------------- */
+
+/* Returns the library version
+ */
+LIBFSCLFS_EXTERN \
+const char *libfsclfs_get_version(
+             void );
+
+/* -------------------------------------------------------------------------
+ * Notify functions
+ * ------------------------------------------------------------------------- */
+
+/* Sets the verbose notification
+ */
+LIBFSCLFS_EXTERN \
+void libfsclfs_notify_set_verbose(
+      int verbose );
+
+/* Sets the notification stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_notify_set_stream(
+     FILE *stream,
+     libfsclfs_error_t **error );
+
+/* Opens the notification stream using a filename
+ * The stream is opened in append mode
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_notify_stream_open(
+     const char *filename,
+     libfsclfs_error_t **error );
+
+/* Closes the notification stream if opened using a filename
+ * Returns 0 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_notify_stream_close(
+     libfsclfs_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Error functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees an error
+ */
+LIBFSCLFS_EXTERN \
+void libfsclfs_error_free(
+      libfsclfs_error_t **error );
+
+/* Prints a descriptive string of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_error_fprint(
+     libfsclfs_error_t *error,
+     FILE *stream );
+
+/* Prints a descriptive string of the error to the string
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_error_sprint(
+     libfsclfs_error_t *error,
+     char *string,
+     size_t size );
+
+/* Prints a backtrace of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_error_backtrace_fprint(
+     libfsclfs_error_t *error,
+     FILE *stream );
+
+/* Prints a backtrace of the error to the string
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_error_backtrace_sprint(
+     libfsclfs_error_t *error,
+     char *string,
+     size_t size );
+
+/* -------------------------------------------------------------------------
+ * Store functions
+ * ------------------------------------------------------------------------- */
+
+/* Creates a store
+ * Make sure the value store is referencing, is set to NULL
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_initialize(
+     libfsclfs_store_t **store,
+     libfsclfs_error_t **error );
+
+/* Frees a store
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_free(
+     libfsclfs_store_t **store,
+     libfsclfs_error_t **error );
+
+/* Opens a base log using a base log
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_open(
+     libfsclfs_store_t *store,
+     const char *filename,
+     int access_flags,
+     libfsclfs_error_t **error );
+
+#if defined( LIBFSCLFS_HAVE_WIDE_CHARACTER_TYPE )
+/* Opens a base log using a base log
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_open_wide(
+     libfsclfs_store_t *store,
+     const wchar_t *filename,
+     int access_flags,
+     libfsclfs_error_t **error );
+#endif
+
+#if defined( LIBFSCLFS_HAVE_BFIO )
+/* Opens a base log using a Basic File IO (bfio) handle of a base log
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_open_file_io_handle(
+     libfsclfs_store_t *store,
+     libbfio_handle_t *file_io_handle,
+     int access_flags,
+     libfsclfs_error_t **error );
+#endif
+
+/* Opens the containers
+ * This function assumes the container files are in the same location as the base log file
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_open_containers(
+     libfsclfs_store_t *store,
+     libfsclfs_error_t **error );
+
+/* Closes a base log
+ * Returns 0 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_close(
+     libfsclfs_store_t *store,
+     libfsclfs_error_t **error );
+
+/* Retrieves the number of containers
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_get_number_of_containers(
+     libfsclfs_store_t *store,
+     int *number_of_containers,
+     libfsclfs_error_t **error );
+
+/* Retrieves a specific container
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_get_container(
+     libfsclfs_store_t *store,
+     int container_index,
+     libfsclfs_container_t **container,
+     libfsclfs_error_t **error );
+
+/* Retrieves the number of streams
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_get_number_of_streams(
+     libfsclfs_store_t *store,
+     int *number_of_streams,
+     libfsclfs_error_t **error );
+
+/* Retrieves a specific stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_get_stream(
+     libfsclfs_store_t *store,
+     int stream_index,
+     libfsclfs_stream_t **stream,
+     libfsclfs_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Container functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees a container
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_container_free(
+     libfsclfs_container_t **container,
+     libfsclfs_error_t **error );
+
+/* Retrieves the size
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_container_get_size(
+     libfsclfs_container_t *container,
+     size64_t *size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the size of the UTF-8 encoded name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_container_get_utf8_name_size(
+     libfsclfs_container_t *container,
+     size_t *utf8_string_size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the UTF-8 encoded name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_container_get_utf8_name(
+     libfsclfs_container_t *container,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the size of the UTF-16 encoded name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_container_get_utf16_name_size(
+     libfsclfs_container_t *container,
+     size_t *utf16_string_size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the UTF-16 encoded name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_container_get_utf16_name(
+     libfsclfs_container_t *container,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libfsclfs_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Stream functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees a stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_free(
+     libfsclfs_stream_t **stream,
+     libfsclfs_error_t **error );
+
+/* Retrieves the size of the UTF-8 encoded name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_get_utf8_name_size(
+     libfsclfs_stream_t *stream,
+     size_t *utf8_string_size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the UTF-8 encoded name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_get_utf8_name(
+     libfsclfs_stream_t *stream,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the size of the UTF-16 encoded name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_get_utf16_name_size(
+     libfsclfs_stream_t *stream,
+     size_t *utf16_string_size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the UTF-16 encoded name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_get_utf16_name(
+     libfsclfs_stream_t *stream,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libfsclfs_error_t **error );
+
+/* Retrieves the base log sequence number (LSN)
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_get_base_lsn(
+     libfsclfs_stream_t *stream,
+     uint64_t *base_lsn,
+     libfsclfs_error_t **error );
+
+/* Retrieves the last log sequence number (LSN)
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_get_last_lsn(
+     libfsclfs_stream_t *stream,
+     uint64_t *last_lsn,
+     libfsclfs_error_t **error );
+
+/* Retrieve a record with a specific log sequence number (LSN)
+ * Returns 1 if successful, 0 if no such record or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_stream_get_record_by_lsn(
+     libfsclfs_stream_t *stream,
+     uint64_t record_lsn,
+     libfsclfs_record_t **record,
+     libfsclfs_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Record functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees a record
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_record_free(
+     libfsclfs_record_t **record,
+     libfsclfs_error_t **error );
+
+/* Retrieves the previous log sequence number (LSN)
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_record_get_previous_lsn(
+     libfsclfs_record_t *record,
+     uint64_t *previous_lsn,
+     libfsclfs_error_t **error );
+
+/* Retrieves the undo-next log sequence number (LSN)
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_record_get_undo_next_lsn(
+     libfsclfs_record_t *record,
+     uint64_t *undo_next_lsn,
+     libfsclfs_error_t **error );
+
+/* Retrieves the record data
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_record_get_data(
+     libfsclfs_record_t *record,
+     uint8_t **data,
+     size_t *data_size,
+     libfsclfs_error_t **error );
+
+#if defined( __cplusplus )
+}
+#endif
+
+#endif
+

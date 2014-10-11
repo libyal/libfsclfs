@@ -1,0 +1,60 @@
+.Dd January 18, 2014
+.Dt fsclfsinfo
+.Os libfsclfs
+.Sh NAME
+.Nm fsclfsinfo
+.Nd determines information about a Windows Common Log File System (CLFS) format
+.Sh SYNOPSIS
+.Nm fsclfsinfo
+.Op Fl ahvV
+.Va Ar source
+.Sh DESCRIPTION
+.Nm fsclfsinfo
+is a utility to determine information about a Windows Common Log File System (CLFS) format
+.Pp
+.Nm fsclfsinfo
+is part of the
+.Nm libfsclfs
+package.
+.Nm libfsclfs
+is a library to access the Windows Common Log File System (CLFS) format
+.Pp
+.Ar source
+is the source file.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl a
+shows allocation information
+.It Fl h
+shows this help
+.It Fl v
+verbose output to stderr
+.It Fl V
+print version
+.El
+.Sh ENVIRONMENT
+None
+.Sh FILES
+None
+.Sh EXAMPLES
+.Bd -literal
+# fsclfsinfo /dev/sda1
+fsclfsinfo 20130915
+
+Common Log File System (CLFS) store information:
+.Dl        ...
+
+.Ed
+.Sh DIAGNOSTICS
+Errors, verbose and debug output are printed to stderr when verbose output \-v is enabled.
+Verbose and debug output are only printed when enabled at compilation.
+.Sh BUGS
+Please report bugs of any kind to <joachim.metz@gmail.com> or on the project website:
+http://code.google.com/p/libfsclfs/
+.Sh AUTHOR
+These man pages were written by Joachim Metz.
+.Sh COPYRIGHT
+Copyright 2010-2014, Joachim Metz <joachim.metz@gmail.com>.
+This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+.Sh SEE ALSO
