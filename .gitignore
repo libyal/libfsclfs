@@ -104,6 +104,8 @@ stamp-h1
 /include/libfsclfs/types.h
 /libfsclfs/libfsclfs.rc
 /libfsclfs/libfsclfs_definitions.h
+/fsclfstools/fsclfsinfo
+/fsclfstools/fsclfstest
 /tests/input
 /tests/tmp
 
