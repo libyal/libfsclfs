@@ -60,6 +60,10 @@ int libfsclfs_io_handle_free(
      libfsclfs_io_handle_t **io_handle,
      libcerror_error_t **error );
 
+int libfsclfs_io_handle_clear(
+     libfsclfs_io_handle_t *io_handle,
+     libcerror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

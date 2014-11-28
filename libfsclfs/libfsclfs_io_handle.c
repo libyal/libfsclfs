@@ -139,3 +139,50 @@ int libfsclfs_io_handle_free(
 	return( 1 );
 }
 
+/* Clears the IO handle
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_io_handle_clear(
+     libfsclfs_io_handle_t *io_handle,
+     libcerror_error_t **error )
+{
+	static char *function = "libfsclfs_io_handle_clear";
+
+	if( io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( memory_set(
+	     io_handle,
+	     0,
+	     sizeof( libfsclfs_io_handle_t ) ) == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
+		 "%s: unable to clear IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	io_handle->bytes_per_sector = 512;
+
+	/* A region is an area of 512 KiB
+	 */
+	io_handle->region_size = 512 * 1024;
+
+	/* The owner page is the last 4 KiB page of a region
+	 */
+	io_handle->region_owner_page_offset = ( 512 - 4 ) * 1024;
+
+	return( 1 );
+}
+

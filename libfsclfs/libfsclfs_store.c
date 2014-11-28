@@ -1483,8 +1483,8 @@ int libfsclfs_store_close(
 
 			result = -1;
 		}
+		internal_store->base_log_file_io_handle = NULL;
 	}
-	internal_store->base_log_file_io_handle                    = NULL;
 	internal_store->base_log_file_io_handle_created_in_library = 0;
 
 	if( internal_store->container_file_io_pool_created_in_library != 0 )
@@ -1515,10 +1515,23 @@ int libfsclfs_store_close(
 
 			result = -1;
 		}
+		internal_store->container_file_io_pool_created_in_library = 0;
 	}
-	internal_store->container_file_io_pool                    = NULL;
-	internal_store->container_file_io_pool_created_in_library = 0;
+	internal_store->container_file_io_pool = NULL;
 
+	if( libfsclfs_io_handle_clear(
+	     internal_store->io_handle,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to clear IO handle.",
+		 function );
+
+		result = -1;
+	}
 	return( result );
 }
 

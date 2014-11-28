@@ -66,12 +66,14 @@ int libfsclfs_container_open(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 LIBFSCLFS_EXTERN \
 int libfsclfs_container_open_wide(
      libfsclfs_container_t *container,
      const wchar_t *filename,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 LIBFSCLFS_EXTERN \
 int libfsclfs_container_get_size(
