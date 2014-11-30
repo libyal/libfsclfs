@@ -37,22 +37,6 @@
 #include <stdlib.h>
 #endif
 
-#if defined( HAVE_LOCAL_LIBFTXF )
-#include <libftxf_definitions.h>
-#include <libftxf_record.h>
-#include <libftxf_types.h>
-#elif defined( HAVE_LIBFTXF )
-#include <libftxf.h>
-#endif
-
-#if defined( HAVE_LOCAL_LIBFTXR )
-#include <libftxr_definitions.h>
-#include <libftxr_record.h>
-#include <libftxr_types.h>
-#elif defined( HAVE_LIBFTXR )
-#include <libftxr.h>
-#endif
-
 #include "fsclfsoutput.h"
 #include "fsclfstools_libcerror.h"
 #include "fsclfstools_libclocale.h"
@@ -60,6 +44,8 @@
 #include "fsclfstools_libcstring.h"
 #include "fsclfstools_libcsystem.h"
 #include "fsclfstools_libfsclfs.h"
+#include "fsclfstools_libftxf.h"
+#include "fsclfstools_libftxr.h"
 
 /* Prints the executable usage information
  */

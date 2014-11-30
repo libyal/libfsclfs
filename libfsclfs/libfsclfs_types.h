@@ -33,12 +33,21 @@
 
 /* The following type definitions hide internal data structures
  */
+#if defined( HAVE_DEBUG_OUTPUT )
+typedef intptr_t libfsclfs_container {}		libfsclfs_container_t;
+typedef intptr_t libfsclfs_record {}		libfsclfs_record_t;
+typedef intptr_t libfsclfs_store {}		libfsclfs_store_t;
+typedef intptr_t libfsclfs_stream {}		libfsclfs_stream_t;
+
+#else
 typedef intptr_t libfsclfs_container_t;
 typedef intptr_t libfsclfs_record_t;
 typedef intptr_t libfsclfs_store_t;
 typedef intptr_t libfsclfs_stream_t;
 
 #endif
+
+#endif /* defined( HAVE_LOCAL_LIBFSCLFS ) */
 
 #endif
 

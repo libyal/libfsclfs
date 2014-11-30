@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBFFSCLFS_LIBFGUID_H )
-#define _LIBFFSCLFS_LIBFGUID_H
+#if !defined( _LIBFSCLFS_LIBFGUID_H )
+#define _LIBFSCLFS_LIBFGUID_H
 
 #include <common.h>
 

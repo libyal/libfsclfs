@@ -1,8 +1,6 @@
 TODO
-* update msvcpp files
-* fix make dist
+* add check signature functions?
 * use notify output grouping
-* update libfsclfs.c
 * fsclfsinfo:
   - add info handle
 * code clean up:
@@ -12,8 +10,6 @@ TODO
 * add caches (use fdata)
   - blocks/records
   - owner pages
-* fsclfsinfo
-  - refactor to use info handle
 
 Format
 * improve fixup handling (what about lower nibble of lower byte)
@@ -29,6 +25,10 @@ Debug
 Deployment
 * check configure test of sub library included functions
 * write man pages
+
+20141130
+* code clean up
+* updated msvscpp files
 
 20141022
 * changes for deployment

@@ -1,7 +1,7 @@
 /*
- * Support functions
+ * The libfguid header wrapper
  *
- * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -19,43 +19,30 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBFSCLFS_SUPPORT_H )
-#define _LIBFSCLFS_SUPPORT_H
+#if !defined( _FSCLFSTOOLS_LIBFGUID_H )
+#define _FSCLFSTOOLS_LIBFGUID_H
 
 #include <common.h>
-#include <types.h>
 
-#include "libfsclfs_extern.h"
-#include "libfsclfs_libcerror.h"
+/* Define HAVE_LOCAL_LIBFGUID for local use of libfguid
+ */
+#if defined( HAVE_LOCAL_LIBFGUID )
 
-#if defined( __cplusplus )
-extern "C" {
+#include <libfguid_definitions.h>
+#include <libfguid_identifier.h>
+#include <libfguid_types.h>
+
+#else
+
+/* If libtool DLL support is enabled set LIBFGUID_DLL_IMPORT
+ * before including libfguid.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBFGUID_DLL_IMPORT
 #endif
 
-#if !defined( HAVE_LOCAL_LIBFSCLFS )
+#include <libfguid.h>
 
-LIBFSCLFS_EXTERN \
-const char *libfsclfs_get_version(
-             void );
-
-LIBFSCLFS_EXTERN \
-int libfsclfs_get_access_flags_read(
-     void );
-
-LIBFSCLFS_EXTERN \
-int libfsclfs_get_codepage(
-     int *codepage,
-     libcerror_error_t **error );
-
-LIBFSCLFS_EXTERN \
-int libfsclfs_set_codepage(
-     int codepage,
-     libcerror_error_t **error );
-
-#endif /* !defined( HAVE_LOCAL_LIBFSCLFS ) */
-
-#if defined( __cplusplus )
-}
 #endif
 
 #endif

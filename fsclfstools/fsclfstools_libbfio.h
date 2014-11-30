@@ -1,5 +1,5 @@
 /*
- * Support functions
+ * The libbfio header wrapper
  *
  * Copyright (C) 2010-2014, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,43 +19,35 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBFSCLFS_SUPPORT_H )
-#define _LIBFSCLFS_SUPPORT_H
+#if !defined( _FSCLFSTOOLS_LIBBFIO_H )
+#define _FSCLFSTOOLS_LIBBFIO_H
 
 #include <common.h>
-#include <types.h>
 
-#include "libfsclfs_extern.h"
-#include "libfsclfs_libcerror.h"
+/* Define HAVE_LOCAL_LIBBFIO for local use of libbfio
+ */
+#if defined( HAVE_LOCAL_LIBBFIO )
 
-#if defined( __cplusplus )
-extern "C" {
+#include <libbfio_definitions.h>
+#include <libbfio_file.h>
+#include <libbfio_file_pool.h>
+#include <libbfio_file_range.h>
+#include <libbfio_handle.h>
+#include <libbfio_memory_range.h>
+#include <libbfio_pool.h>
+#include <libbfio_types.h>
+
+#else
+
+/* If libtool DLL support is enabled set LIBBFIO_DLL_IMPORT
+ * before including libbfio.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBBFIO_DLL_IMPORT
 #endif
 
-#if !defined( HAVE_LOCAL_LIBFSCLFS )
+#include <libbfio.h>
 
-LIBFSCLFS_EXTERN \
-const char *libfsclfs_get_version(
-             void );
-
-LIBFSCLFS_EXTERN \
-int libfsclfs_get_access_flags_read(
-     void );
-
-LIBFSCLFS_EXTERN \
-int libfsclfs_get_codepage(
-     int *codepage,
-     libcerror_error_t **error );
-
-LIBFSCLFS_EXTERN \
-int libfsclfs_set_codepage(
-     int codepage,
-     libcerror_error_t **error );
-
-#endif /* !defined( HAVE_LOCAL_LIBFSCLFS ) */
-
-#if defined( __cplusplus )
-}
 #endif
 
 #endif

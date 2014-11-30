@@ -42,6 +42,30 @@ typedef struct libfsclfs_internal_store libfsclfs_internal_store_t;
 
 struct libfsclfs_internal_store
 {
+	/* The IO handle
+	 */
+	libfsclfs_io_handle_t *io_handle;
+
+	/* The base log file IO handle
+	 */
+	libbfio_handle_t *base_log_file_io_handle;
+
+	/* The container file IO pool
+	 */
+	libbfio_pool_t *container_file_io_pool;
+
+	/* Value to indicate if the base log file IO handle was created inside the library
+	 */
+	uint8_t base_log_file_io_handle_created_in_library;
+
+	/* Value to indicate if the base log file IO handle was opened inside the library
+	 */
+	uint8_t base_log_file_io_handle_opened_in_library;
+
+	/* Value to indicate if the container file IO pool was created inside the library
+	 */
+	uint8_t container_file_io_pool_created_in_library;
+
 	/* The store metadata dump count
 	 */
 	uint32_t store_metadata_dump_count;
@@ -69,26 +93,6 @@ struct libfsclfs_internal_store
 	/* The maximum number of open handles in the container file IO pool
 	 */
 	int maximum_number_of_open_handles;
-
-	/* The base log file IO handle
-	 */
-	libbfio_handle_t *base_log_file_io_handle;
-
-	/* The container file IO pool
-	 */
-	libbfio_pool_t *container_file_io_pool;
-
-	/* The IO handle
-	 */
-	libfsclfs_io_handle_t *io_handle;
-
-	/* Value to indicate if the base log file IO handle was created inside the library
-	 */
-	uint8_t base_log_file_io_handle_created_in_library;
-
-	/* Value to indicate if the container file IO pool was created inside the library
-	 */
-	uint8_t container_file_io_pool_created_in_library;
 };
 
 LIBFSCLFS_EXTERN \
@@ -164,10 +168,12 @@ int libfsclfs_store_close(
 
 int libfsclfs_store_open_read(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *file_io_handle,
      libcerror_error_t **error );
 
 int libfsclfs_store_read_block_descriptors(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *file_io_handle,
      uint32_t offset,
      uint32_t size,
      libcdata_array_t *block_descriptors_array,
@@ -175,6 +181,7 @@ int libfsclfs_store_read_block_descriptors(
 
 int libfsclfs_store_read_store_metadata(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *file_io_handle,
      uint32_t offset,
      uint32_t size,
      libcerror_error_t **error );

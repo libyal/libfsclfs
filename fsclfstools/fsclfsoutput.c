@@ -24,43 +24,19 @@
 #include <memory.h>
 #include <types.h>
 
-#if defined( HAVE_LOCAL_LIBUNA )
-#include <libuna_definitions.h>
-#elif defined( HAVE_LIBUNA_H )
-#include <libuna.h>
-#endif
-
-#if defined( HAVE_LOCAL_LIBBFIO )
-#include <libbfio_definitions.h>
-#elif defined( HAVE_LIBBFIO_H )
-#include <libbfio.h>
-#endif
-
-#if defined( HAVE_LOCAL_LIBFDATETIME )
-#include <libfdatetime_definitions.h>
-#elif defined( HAVE_LIBFDATETIME_H )
-#include <libfdatetime.h>
-#endif
-
-#if defined( HAVE_LOCAL_LIBFGUID )
-#include <libfguid_definitions.h>
-#elif defined( HAVE_LIBFGUID )
-#include <libfguid.h>
-#endif
-
-#if defined( HAVE_LOCAL_LIBFTXF )
-#include <libftxf_definitions.h>
-#elif defined( HAVE_LIBFTXF )
-#include <libftxf.h>
-#endif
-
 #include "fsclfsoutput.h"
+#include "fsclfstools_libbfio.h"
 #include "fsclfstools_libcerror.h"
 #include "fsclfstools_libclocale.h"
 #include "fsclfstools_libcnotify.h"
 #include "fsclfstools_libcstring.h"
 #include "fsclfstools_libcsystem.h"
+#include "fsclfstools_libfdatetime.h"
+#include "fsclfstools_libfguid.h"
 #include "fsclfstools_libfsclfs.h"
+#include "fsclfstools_libftxf.h"
+#include "fsclfstools_libftxr.h"
+#include "fsclfstools_libuna.h"
 
 /* Prints the copyright information
  */
@@ -71,11 +47,26 @@ void fsclfsoutput_copyright_fprint(
 	{
 		return;
 	}
+	/* TRANSLATORS: This is a proper name.
+	 */
 	fprintf(
 	 stream,
-	 "Copyright (c) 2010-2014, Joachim Metz <%s>.\n"
-	 "This is free software; see the source for copying conditions. There is NO\n"
-	 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n",
+	 _( "Copyright (c) 2010-2014, %s.\n" ),
+	 _( "Joachim Metz" ) );
+
+	fprintf(
+	 stream,
+	 _( "This is free software; see the source for copying conditions. There is NO\n"
+	    "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n" ) );
+
+	/* TRANSLATORS: The placeholder indicates the bug-reporting address
+	 * for this package.  Please add _another line_ saying
+	 * "Report translation bugs to <...>\n" with the address for translation
+	 * bugs (typically your translation team's web or email address).
+	 */
+	fprintf(
+	 stream,
+	 _( "Report bugs to <%s>.\n" ),
 	 PACKAGE_BUGREPORT );
 }
 
@@ -145,6 +136,11 @@ void fsclfsoutput_version_detailed_fprint(
 	 stream,
 	 ", libftxf %s",
 	 LIBFTXF_VERSION_STRING );
+
+	fprintf(
+	 stream,
+	 ", libftxr %s",
+	 LIBFTXR_VERSION_STRING );
 
         fprintf(
 	 stream,

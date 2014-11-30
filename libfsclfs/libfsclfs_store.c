@@ -613,7 +613,7 @@ on_error:
 	return( -1 );
 }
 
-#endif
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* Opens a store using a Basic File IO (bfio) handle of a base log
  * Returns 1 if successful or -1 on error
@@ -627,6 +627,8 @@ int libfsclfs_store_open_file_io_handle(
 	libfsclfs_internal_store_t *internal_store = NULL;
 	static char *function                      = "libfsclfs_store_open_file_io_handle";
 	int bfio_access_flags                      = 0;
+	int file_io_handle_is_open                 = 0;
+	int file_io_handle_opened_in_library       = 0;
 
 	if( store == NULL )
 	{
@@ -679,37 +681,66 @@ int libfsclfs_store_open_file_io_handle(
 	{
 		bfio_access_flags = LIBBFIO_ACCESS_FLAG_READ;
 	}
-	internal_store->access_flags            = access_flags;
-	internal_store->base_log_file_io_handle = file_io_handle;
+	file_io_handle_is_open = libbfio_handle_is_open(
+	                          file_io_handle,
+	                          error );
 
-	if( libbfio_handle_open(
-	     internal_store->base_log_file_io_handle,
-	     bfio_access_flags,
-	     error ) != 1 )
+	if( file_io_handle_is_open == -1 )
 	{
-                libcerror_error_set(
-                 error,
-                 LIBCERROR_ERROR_DOMAIN_IO,
-                 LIBCERROR_IO_ERROR_OPEN_FAILED,
-                 "%s: unable to open file IO handle.",
-                 function );
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_OPEN_FAILED,
+		 "%s: unable to determine if file IO handle is open.",
+		 function );
 
-                return( -1 );
+		goto on_error;
+	}
+	else if( file_io_handle_is_open == 0 )
+	{
+		if( libbfio_handle_open(
+		     file_io_handle,
+		     bfio_access_flags,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_OPEN_FAILED,
+			 "%s: unable to open file IO handle.",
+			 function );
+
+			goto on_error;
+		}
+		file_io_handle_opened_in_library = 1;
 	}
 	if( libfsclfs_store_open_read(
 	     internal_store,
+	     file_io_handle,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read from store.",
+		 "%s: unable to read from file IO handle.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
+	internal_store->base_log_file_io_handle                   = file_io_handle;
+	internal_store->base_log_file_io_handle_opened_in_library = file_io_handle_opened_in_library;
+
 	return( 1 );
+
+on_error:
+	if( file_io_handle_opened_in_library != 0 )
+	{
+		libbfio_handle_close(
+		 file_io_handle,
+		 NULL );
+	}
+	return( -1 );
 }
 
 /* Opens the containers
@@ -1260,7 +1291,7 @@ on_error:
 	return( -1 );
 }
 
-#endif
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* Opens a container using a Basic File IO (bfio) handle
  * Returns 1 if successful or -1 on error
@@ -1439,12 +1470,12 @@ int libfsclfs_store_close(
 
 		return( -1 );
 	}
-	if( internal_store->base_log_file_io_handle_created_in_library != 0 )
-	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
+	{
+		if( internal_store->base_log_file_io_handle_created_in_library != 0 )
 		{
-			if( libfsclfs_debug_print_read_offsets(
+			if( libvshadow_debug_print_read_offsets(
 			     internal_store->base_log_file_io_handle,
 			     error ) != 1 )
 			{
@@ -1456,7 +1487,10 @@ int libfsclfs_store_close(
 				 function );
 			}
 		}
+	}
 #endif
+	if( internal_store->base_log_file_io_handle_opened_in_library != 0 )
+	{
 		if( libbfio_handle_close(
 		     internal_store->base_log_file_io_handle,
 		     error ) != 0 )
@@ -1470,6 +1504,10 @@ int libfsclfs_store_close(
 
 			result = -1;
 		}
+		internal_store->base_log_file_io_handle_opened_in_library = 0;
+	}
+	if( internal_store->base_log_file_io_handle_created_in_library != 0 )
+	{
 		if( libbfio_handle_free(
 		     &( internal_store->base_log_file_io_handle ),
 		     error ) != 1 )
@@ -1483,9 +1521,9 @@ int libfsclfs_store_close(
 
 			result = -1;
 		}
-		internal_store->base_log_file_io_handle = NULL;
+		internal_store->base_log_file_io_handle_created_in_library = 0;
 	}
-	internal_store->base_log_file_io_handle_created_in_library = 0;
+	internal_store->base_log_file_io_handle = NULL;
 
 	if( internal_store->container_file_io_pool_created_in_library != 0 )
 	{
@@ -1517,7 +1555,8 @@ int libfsclfs_store_close(
 		}
 		internal_store->container_file_io_pool_created_in_library = 0;
 	}
-	internal_store->container_file_io_pool = NULL;
+	internal_store->container_file_io_pool    = NULL;
+	internal_store->store_metadata_dump_count = 0;
 
 	if( libfsclfs_io_handle_clear(
 	     internal_store->io_handle,
@@ -1532,6 +1571,42 @@ int libfsclfs_store_close(
 
 		result = -1;
 	}
+	if( internal_store->basename != NULL )
+	{
+		memory_free(
+		 internal_store->basename );
+
+		internal_store->basename      = NULL;
+		internal_store->basename_size = 0;
+	}
+	if( libcdata_array_empty(
+	     internal_store->container_descriptors_array,
+	     (int (*)(intptr_t **, libcerror_error_t **)) &libfsclfs_container_descriptor_free,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to empty container descriptors array.",
+		 function );
+
+		result = -1;
+	}
+	if( libcdata_array_empty(
+	     internal_store->stream_descriptors_array,
+	     (int (*)(intptr_t **, libcerror_error_t **)) &libfsclfs_stream_descriptor_free,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to empty stream descriptors array.",
+		 function );
+
+		result = -1;
+	}
 	return( result );
 }
 
@@ -1540,6 +1615,7 @@ int libfsclfs_store_close(
  */
 int libfsclfs_store_open_read(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *file_io_handle,
      libcerror_error_t **error )
 {
 	libcdata_array_t *block_descriptors_array      = NULL;
@@ -1598,6 +1674,7 @@ int libfsclfs_store_open_read(
 	}
 	if( libfsclfs_store_read_block_descriptors(
 	     internal_store,
+	     file_io_handle,
 	     0,
 	     block_descriptors_block_size,
 	     block_descriptors_array,
@@ -1671,6 +1748,7 @@ int libfsclfs_store_open_read(
 #endif
 			if( libfsclfs_store_read_store_metadata(
 			     internal_store,
+			     file_io_handle,
 			     block_descriptor->offset,
 			     block_descriptor->size,
 			     error ) != 1 )
@@ -1718,6 +1796,7 @@ on_error:
  */
 int libfsclfs_store_read_block_descriptors(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *file_io_handle,
      uint32_t block_offset,
      uint32_t block_size,
      libcdata_array_t *block_descriptors_array,
@@ -1767,7 +1846,7 @@ int libfsclfs_store_read_block_descriptors(
 	if( libfsclfs_block_read(
 	     block,
 	     internal_store->io_handle,
-	     internal_store->base_log_file_io_handle,
+	     file_io_handle,
 	     block_offset,
 	     error ) != 1 )
 	{
@@ -2113,6 +2192,7 @@ on_error:
  */
 int libfsclfs_store_read_store_metadata(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *file_io_handle,
      uint32_t block_offset,
      uint32_t block_size,
      libcerror_error_t **error )
@@ -2174,7 +2254,7 @@ int libfsclfs_store_read_store_metadata(
 	if( libfsclfs_block_read(
 	     block,
 	     internal_store->io_handle,
-	     internal_store->base_log_file_io_handle,
+	     file_io_handle,
 	     block_offset,
 	     error ) != 1 )
 	{
@@ -4091,6 +4171,7 @@ int libfsclfs_store_set_basename(
 }
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 /* Retrieves the size of the basename
  * Returns 1 if successful, 0 if value not present or -1 on error
  */
@@ -4564,6 +4645,7 @@ int libfsclfs_store_set_basename_wide(
 #endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
+
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* Retrieves the number of containers
