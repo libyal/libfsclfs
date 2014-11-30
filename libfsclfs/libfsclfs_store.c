@@ -33,6 +33,7 @@
 #include "libfsclfs_libbfio.h"
 #include "libfsclfs_libcdata.h"
 #include "libfsclfs_libcerror.h"
+#include "libfsclfs_libclocale.h"
 #include "libfsclfs_libcnotify.h"
 #include "libfsclfs_libcstring.h"
 #include "libfsclfs_libfguid.h"
@@ -1176,7 +1177,7 @@ on_error:
 /* Opens a specific container
  * Returns 1 if successful or -1 on error
  */
-int libfsclfs_store_open_container(
+int libfsclfs_store_open_container_wide(
      libfsclfs_internal_store_t *internal_store,
      int container_index,
      const wchar_t *filename,
@@ -1475,7 +1476,7 @@ int libfsclfs_store_close(
 	{
 		if( internal_store->base_log_file_io_handle_created_in_library != 0 )
 		{
-			if( libvshadow_debug_print_read_offsets(
+			if( libfsclfs_debug_print_read_offsets(
 			     internal_store->base_log_file_io_handle,
 			     error ) != 1 )
 			{
@@ -3731,7 +3732,7 @@ int libfsclfs_store_get_basename_size(
 		return( 0 );
 	}
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf8_string_size_from_utf32(
@@ -3755,14 +3756,14 @@ int libfsclfs_store_get_basename_size(
 		result = libuna_byte_stream_size_from_utf32(
 		          (libuna_utf32_character_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          basename_size,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_byte_stream_size_from_utf16(
 		          (libuna_utf16_character_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          basename_size,
 		          error );
 #else
@@ -3830,7 +3831,7 @@ int libfsclfs_store_get_basename(
 		return( 0 );
 	}
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf8_string_size_from_utf32(
@@ -3854,14 +3855,14 @@ int libfsclfs_store_get_basename(
 		result = libuna_byte_stream_size_from_utf32(
 		          (libuna_utf32_character_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &narrow_basename_size,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_byte_stream_size_from_utf16(
 		          (libuna_utf16_character_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &narrow_basename_size,
 		          error );
 #else
@@ -3895,7 +3896,7 @@ int libfsclfs_store_get_basename(
 		return( -1 );
 	}
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf8_string_copy_from_utf32(
@@ -3921,7 +3922,7 @@ int libfsclfs_store_get_basename(
 		result = libuna_byte_stream_copy_from_utf32(
 		          (uint8_t *) basename,
 		          basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          (libuna_utf32_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          error );
@@ -3929,7 +3930,7 @@ int libfsclfs_store_get_basename(
 		result = libuna_byte_stream_copy_from_utf16(
 		          (uint8_t *) basename,
 		          basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          (libuna_utf16_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          error );
@@ -4015,7 +4016,7 @@ int libfsclfs_store_set_basename(
 		internal_store->basename_size = 0;
 	}
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_size_from_utf8(
@@ -4039,14 +4040,14 @@ int libfsclfs_store_set_basename(
 		result = libuna_utf32_string_size_from_byte_stream(
 		          (uint8_t *) basename,
 		          basename_length + 1,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_size_from_byte_stream(
 		          (uint8_t *) basename,
 		          basename_length + 1,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
 #else
@@ -4084,7 +4085,7 @@ int libfsclfs_store_set_basename(
 		return( -1 );
 	}
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_copy_from_utf8(
@@ -4112,7 +4113,7 @@ int libfsclfs_store_set_basename(
 		          internal_store->basename_size,
 		          (uint8_t *) basename,
 		          basename_length + 1,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_copy_from_byte_stream(
@@ -4120,7 +4121,7 @@ int libfsclfs_store_set_basename(
 		          internal_store->basename_size,
 		          (uint8_t *) basename,
 		          basename_length + 1,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          error );
 #else
 #error Unsupported size of wchar_t
@@ -4215,7 +4216,7 @@ int libfsclfs_store_get_basename_size_wide(
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
 	*basename_size = internal_store->basename_size;
 #else
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_size_from_utf8(
@@ -4239,14 +4240,14 @@ int libfsclfs_store_get_basename_size_wide(
 		result = libuna_utf32_string_size_from_byte_stream(
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          basename_size,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_size_from_byte_stream(
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          basename_size,
 		          error );
 #else
@@ -4313,7 +4314,7 @@ int libfsclfs_store_get_basename_wide(
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
 	wide_basename_size = internal_store->basename_size;
 #else
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_size_from_utf8(
@@ -4337,14 +4338,14 @@ int libfsclfs_store_get_basename_wide(
 		result = libuna_utf32_string_size_from_byte_stream(
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &wide_basename_size,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_size_from_byte_stream(
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &wide_basename_size,
 		          error );
 #else
@@ -4391,7 +4392,7 @@ int libfsclfs_store_get_basename_wide(
 	}
 	basename[ internal_store->basename_size - 1 ] = 0;
 #else
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_copy_from_utf8(
@@ -4419,7 +4420,7 @@ int libfsclfs_store_get_basename_wide(
 		          basename_size,
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_copy_from_byte_stream(
@@ -4427,7 +4428,7 @@ int libfsclfs_store_get_basename_wide(
 		          basename_size,
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          error );
 #else
 #error Unsupported size of wchar_t
@@ -4496,7 +4497,7 @@ int libfsclfs_store_set_basename_wide(
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
 	internal_store->basename_size = basename_length + 1;
 #else
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf8_string_size_from_utf32(
@@ -4520,14 +4521,14 @@ int libfsclfs_store_set_basename_wide(
 		result = libuna_byte_stream_size_from_utf32(
 		          (libuna_utf32_character_t *) basename,
 		          basename_length + 1,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_byte_stream_size_from_utf16(
 		          (libuna_utf16_character_t *) basename,
 		          basename_length + 1,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
 #else
@@ -4583,7 +4584,7 @@ int libfsclfs_store_set_basename_wide(
 	}
 	internal_store->basename[ basename_length ] = 0;
 #else
-	if( libcstring_narrow_system_string_codepage == 0 )
+	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf8_string_copy_from_utf32(
@@ -4609,7 +4610,7 @@ int libfsclfs_store_set_basename_wide(
 		result = libuna_byte_stream_copy_from_utf32(
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          (libuna_utf32_character_t *) basename,
 		          basename_length + 1,
 		          error );
@@ -4617,7 +4618,7 @@ int libfsclfs_store_set_basename_wide(
 		result = libuna_byte_stream_copy_from_utf16(
 		          (uint8_t *) internal_store->basename,
 		          internal_store->basename_size,
-		          libcstring_narrow_system_string_codepage,
+		          libclocale_codepage,
 		          (libuna_utf16_character_t *) basename,
 		          basename_length + 1,
 		          error );
