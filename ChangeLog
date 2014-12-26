@@ -26,6 +26,9 @@ Deployment
 * check configure test of sub library included functions
 * write man pages
 
+20141226
+* updated dpkg files
+
 20141130
 * code clean up
 * updated msvscpp files

@@ -10,8 +10,16 @@ Package: libfsclfs
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: libfsclfs-dbg
 Description: Library to access the Windows Common Log File System (CLFS) format
  libfsclfs is a library to access the Windows Common Log File System (CLFS) format.
+
+Package: libfsclfs-dbg
+Architecture: any
+Section: debug
+Depends: libfsclfs (= ${Source-Version}), ${misc:Depends}
+Description: Debugging symbols for libfsclfs
+ Debugging symbols for libfsclfs.
 
 Package: libfsclfs-dev
 Section: libdevel
