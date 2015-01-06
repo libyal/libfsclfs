@@ -1,13 +1,12 @@
 Source: libfsclfs
-Section: unknown
+Section: libs
 Priority: extra
 Maintainer: Joachim Metz <joachim.metz@gmail.com>
 Build-Depends: debhelper (>= 7), autotools-dev
-Standards-Version: 3.8.3
+Standards-Version: 3.9.5
 Homepage: https://github.com/libyal/libfsclfs/
 
 Package: libfsclfs
-Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: libfsclfs-dbg
@@ -17,21 +16,21 @@ Description: Library to access the Windows Common Log File System (CLFS) format
 Package: libfsclfs-dbg
 Architecture: any
 Section: debug
-Depends: libfsclfs (= ${Source-Version}), ${misc:Depends}
+Depends: libfsclfs (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for libfsclfs
  Debugging symbols for libfsclfs.
 
 Package: libfsclfs-dev
 Section: libdevel
 Architecture: any
-Depends: libfsclfs (= ${Source-Version})
+Depends: libfsclfs (= ${binary:Version}), ${misc:Depends}
 Description: Header files and libraries for developing applications for libfsclfs
  Header files and libraries for developing applications for libfsclfs.
 
 Package: libfsclfs-tools
 Section: utils
 Architecture: any
-Depends: libfsclfs (= ${Source-Version}), ${shlibs:Depends}
+Depends: libfsclfs (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Several tools for reading the Windows Common Log File System (CLFS)
  Several tools for reading the Windows Common Log File System (CLFS).
 

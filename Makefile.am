@@ -40,7 +40,8 @@ DPKG_FILES = \
 	dpkg/rules \
 	dpkg/libfsclfs-dev.docs \
 	dpkg/libfsclfs.docs \
-	dpkg/libfsclfs-tools.docs
+	dpkg/libfsclfs-tools.docs \
+	dpkg/source/format
 
 GETTEXT_FILES = \
 	config.rpath \
@@ -57,7 +58,7 @@ EXTRA_DIST = \
 	$(DPKG_FILES) \
 	$(GETTEXT_FILES) \
 	$(PKGCONFIG_FILES) \
-        $(SPEC_FILES)
+	$(SPEC_FILES)
 
 MAINTAINERCLEANFILES = \
 	Makefile.in
