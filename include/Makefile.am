@@ -1,13 +1,13 @@
 include_HEADERS = \
-        libfsclfs.h
+	libfsclfs.h
 
 pkginclude_HEADERS = \
-        libfsclfs/codepage.h \
-        libfsclfs/definitions.h \
-        libfsclfs/error.h \
-        libfsclfs/extern.h \
-        libfsclfs/features.h \
-        libfsclfs/types.h
+	libfsclfs/codepage.h \
+	libfsclfs/definitions.h \
+	libfsclfs/error.h \
+	libfsclfs/extern.h \
+	libfsclfs/features.h \
+	libfsclfs/types.h
 
 EXTRA_DIST = \
 	libfsclfs.h.in \
