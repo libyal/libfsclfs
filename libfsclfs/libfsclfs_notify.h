@@ -42,22 +42,22 @@ void libfsclfs_notify_set_verbose(
 LIBFSCLFS_EXTERN \
 int libfsclfs_notify_set_stream(
      FILE *stream,
-                      libcerror_error_t **error );
+     libcerror_error_t **error );
 
 LIBFSCLFS_EXTERN \
 int libfsclfs_notify_stream_open(
      const char *filename,
-                      libcerror_error_t **error );
+     libcerror_error_t **error );
 
 LIBFSCLFS_EXTERN \
 int libfsclfs_notify_stream_close(
      libcerror_error_t **error );
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBFSCLFS ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_NOTIFY_H ) */
 

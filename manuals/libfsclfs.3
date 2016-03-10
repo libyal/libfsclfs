@@ -1,9 +1,9 @@
-.Dd January  6, 2015
+.Dd January  8, 2016
 .Dt libfsclfs 3
 .Os libfsclfs
 .Sh NAME
 .Nm libfsclfs.h
-.Nd Library to access the Windows Common Log File System (CLFS) format
+.Nd Library to access the Common Log File System (CLFS) format
 .Sh LIBRARY
 .Lb libfsclfs
 .Sh SYNOPSIS
@@ -48,7 +48,7 @@ Store functions
 .Fn libfsclfs_store_free "libfsclfs_store_t **store, libfsclfs_error_t **error"
 .Ft int
 .Fn libfsclfs_store_open "libfsclfs_store_t *store, const char *filename, int access_flags, libfsclfs_error_t **error"
-.Ft #endif int
+.Ft int
 .Fn libfsclfs_store_open_containers "libfsclfs_store_t *store, libfsclfs_error_t **error"
 .Ft int
 .Fn libfsclfs_store_close "libfsclfs_store_t *store, libfsclfs_error_t **error"
@@ -66,7 +66,7 @@ Available when compiled with wide character string support:
 .Fn libfsclfs_store_open_wide "libfsclfs_store_t *store, const wchar_t *filename, int access_flags, libfsclfs_error_t **error"
 .Pp
 Available when compiled with libbfio support:
-.Ft #endif int
+.Ft int
 .Fn libfsclfs_store_open_file_io_handle "libfsclfs_store_t *store, libbfio_handle_t *file_io_handle, int access_flags, libfsclfs_error_t **error"
 .Pp
 Container functions
@@ -121,6 +121,7 @@ For the actual return values see "libfsclfs.h".
 None
 .Sh FILES
 None
+.Sh NOTES
 libfsclfs allows to be compiled with wide character support (wchar_t).
 
 To compile libfsclfs with wide character support use:
