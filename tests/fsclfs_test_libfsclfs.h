@@ -1,5 +1,5 @@
 /*
- * The internal libcdata header
+ * The internal libfsclfs header
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,36 +19,19 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBFSCLFS_LIBCDATA_H )
-#define _LIBFSCLFS_LIBCDATA_H
+#if !defined( _FSCLFS_TEST_LIBFSCLFS_H )
+#define _FSCLFS_TEST_LIBFSCLFS_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBCDATA for local use of libcdata
+/* If Cygwin libtool DLL support is enabled and do not want to create static
+ * executables set LIBFSCLFS_DLL_IMPORT before including libfsclfs.h
  */
-#if defined( HAVE_LOCAL_LIBCDATA )
-
-#include <libcdata_array.h>
-#include <libcdata_btree.h>
-#include <libcdata_definitions.h>
-#include <libcdata_list.h>
-#include <libcdata_list_element.h>
-#include <libcdata_range_list.h>
-#include <libcdata_tree_node.h>
-#include <libcdata_types.h>
-
-#else
-
-/* If libtool DLL support is enabled set LIBCDATA_DLL_IMPORT
- * before including libcdata.h
- */
-#if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBCDATA_DLL_IMPORT
+#if defined( _WIN32 ) && defined( DLL_EXPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
+#define LIBFSCLFS_DLL_IMPORT
 #endif
 
-#include <libcdata.h>
+#include <libfsclfs.h>
 
-#endif /* defined( HAVE_LOCAL_LIBCDATA ) */
-
-#endif /* !defined( _LIBFSCLFS_LIBCDATA_H ) */
+#endif /* !defined( _FSCLFS_TEST_LIBFSCLFS_H ) */
 

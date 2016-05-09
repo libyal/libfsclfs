@@ -1,5 +1,5 @@
 /*
- * The internal libcdata header
+ * The internal libcstring header
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,36 +19,33 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBFSCLFS_LIBCDATA_H )
-#define _LIBFSCLFS_LIBCDATA_H
+#if !defined( _FSCLFS_TEST_LIBCSTRING_H )
+#define _FSCLFS_TEST_LIBCSTRING_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBCDATA for local use of libcdata
+/* Define HAVE_LOCAL_LIBCSTRING for local use of libcstring
  */
-#if defined( HAVE_LOCAL_LIBCDATA )
+#if defined( HAVE_LOCAL_LIBCSTRING )
 
-#include <libcdata_array.h>
-#include <libcdata_btree.h>
-#include <libcdata_definitions.h>
-#include <libcdata_list.h>
-#include <libcdata_list_element.h>
-#include <libcdata_range_list.h>
-#include <libcdata_tree_node.h>
-#include <libcdata_types.h>
+#include <libcstring_definitions.h>
+#include <libcstring_narrow_string.h>
+#include <libcstring_system_string.h>
+#include <libcstring_types.h>
+#include <libcstring_wide_string.h>
 
 #else
 
-/* If libtool DLL support is enabled set LIBCDATA_DLL_IMPORT
- * before including libcdata.h
+/* If libtool DLL support is enabled set LIBCSTRING_DLL_IMPORT
+ * before including libcstring.h
  */
 #if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBCDATA_DLL_IMPORT
+#define LIBCSTRING_DLL_IMPORT
 #endif
 
-#include <libcdata.h>
+#include <libcstring.h>
 
-#endif /* defined( HAVE_LOCAL_LIBCDATA ) */
+#endif /* defined( HAVE_LOCAL_LIBCSTRING ) */
 
-#endif /* !defined( _LIBFSCLFS_LIBCDATA_H ) */
+#endif /* !defined( _FSCLFS_TEST_LIBCSTRING_H ) */
 

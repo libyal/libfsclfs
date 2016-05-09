@@ -3,8 +3,6 @@
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
- * Refer to AUTHORS for acknowledgements.
- *
  * This software is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -32,7 +30,6 @@
 #include <libuna_base32_stream.h>
 #include <libuna_base64_stream.h>
 #include <libuna_byte_stream.h>
-#include <libuna_error.h>
 #include <libuna_unicode_character.h>
 #include <libuna_url_stream.h>
 #include <libuna_utf16_stream.h>
@@ -55,7 +52,7 @@
 
 #include <libuna.h>
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBUNA ) */
 
-#endif
+#endif /* !defined( _FSCLFSTOOLS_LIBUNA_H ) */
 

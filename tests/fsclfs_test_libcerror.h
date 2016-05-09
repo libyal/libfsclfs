@@ -1,5 +1,5 @@
 /*
- * The internal libcdata header
+ * The internal libcerror header
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,36 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBFSCLFS_LIBCDATA_H )
-#define _LIBFSCLFS_LIBCDATA_H
+#if !defined( _FSCLFS_TEST_LIBCERROR_H )
+#define _FSCLFS_TEST_LIBCERROR_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBCDATA for local use of libcdata
+/* Define HAVE_LOCAL_LIBCERROR for local use of libcerror
  */
-#if defined( HAVE_LOCAL_LIBCDATA )
+#if defined( HAVE_LOCAL_LIBCERROR )
 
-#include <libcdata_array.h>
-#include <libcdata_btree.h>
-#include <libcdata_definitions.h>
-#include <libcdata_list.h>
-#include <libcdata_list_element.h>
-#include <libcdata_range_list.h>
-#include <libcdata_tree_node.h>
-#include <libcdata_types.h>
+#include <libcerror_definitions.h>
+#include <libcerror_error.h>
+#include <libcerror_system.h>
+#include <libcerror_types.h>
 
 #else
 
-/* If libtool DLL support is enabled set LIBCDATA_DLL_IMPORT
- * before including libcdata.h
+/* If libtool DLL support is enabled set LIBCERROR_DLL_IMPORT
+ * before including libcerror.h
  */
 #if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBCDATA_DLL_IMPORT
+#define LIBCERROR_DLL_IMPORT
 #endif
 
-#include <libcdata.h>
+#include <libcerror.h>
 
-#endif /* defined( HAVE_LOCAL_LIBCDATA ) */
+#endif /* defined( HAVE_LOCAL_LIBCERROR ) */
 
-#endif /* !defined( _LIBFSCLFS_LIBCDATA_H ) */
+#endif /* !defined( _FSCLFS_TEST_LIBCERROR_H ) */
 
