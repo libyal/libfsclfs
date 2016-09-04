@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="fsclfs_test_get_version"
-	ProjectGUID="{2AB5C379-D7AC-41C7-8404-A5749E957CB1}"
-	RootNamespace="fsclfs_test_get_version"
+	Name="fsclfs_test_error"
+	ProjectGUID="{B7BD497F-E6D5-4BFB-A81B-65372F29FC17}"
+	RootNamespace="fsclfs_test_error"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\fsclfs_test_get_version.c"
+				RelativePath="..\..\tests\fsclfs_test_error.c"
 				>
 			</File>
 		</Filter>

@@ -121,6 +121,7 @@ stamp-h[1-9]
 /libfsclfs/libfsclfs_definitions.h
 /fsclfstools/fsclfsinfo
 /fsclfstools/fsclfstest
+/tests/fsclfs_test_error
 /tests/fsclfs_test_get_version
 /tests/input
 /tests/tmp*

@@ -16,12 +16,25 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	fsclfs_test_error \
 	fsclfs_test_get_version
 
-fsclfs_test_get_version_SOURCES = \
+fsclfs_test_error_SOURCES = \
+	fsclfs_test_error.c \
 	fsclfs_test_libfsclfs.h \
 	fsclfs_test_libcstring.h \
+	fsclfs_test_macros.h \
+	fsclfs_test_unused.h
+
+fsclfs_test_error_LDADD = \
+	../libfsclfs/libfsclfs.la \
+	@LIBCSTRING_LIBADD@
+
+fsclfs_test_get_version_SOURCES = \
 	fsclfs_test_get_version.c \
+	fsclfs_test_libfsclfs.h \
+	fsclfs_test_libcstring.h \
+	fsclfs_test_macros.h \
 	fsclfs_test_unused.h
 
 fsclfs_test_get_version_LDADD = \
