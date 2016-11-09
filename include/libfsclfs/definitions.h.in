@@ -50,5 +50,5 @@ enum LIBFSCLFS_ACCESS_FLAGS
 /* Reserved: not supported yet */
 #define LIBFSCLFS_OPEN_READ_WRITE				( LIBFSCLFS_ACCESS_FLAG_READ | LIBFSCLFS_ACCESS_FLAG_WRITE )
 
-#endif
+#endif /* !defined( _LIBFSCLFS_DEFINITIONS_H ) */
 

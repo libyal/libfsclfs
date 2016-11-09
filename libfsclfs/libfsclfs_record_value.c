@@ -27,7 +27,6 @@
 #include "libfsclfs_debug.h"
 #include "libfsclfs_libcerror.h"
 #include "libfsclfs_libcnotify.h"
-#include "libfsclfs_libcstring.h"
 #include "libfsclfs_record_value.h"
 
 #include "fsclfs_record.h"

@@ -21,7 +21,10 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "libfsclfs_block.h"
 #include "libfsclfs_block_descriptor.h"
@@ -35,7 +38,6 @@
 #include "libfsclfs_libcerror.h"
 #include "libfsclfs_libclocale.h"
 #include "libfsclfs_libcnotify.h"
-#include "libfsclfs_libcstring.h"
 #include "libfsclfs_libfguid.h"
 #include "libfsclfs_libuna.h"
 #include "libfsclfs_owner_page.h"
@@ -340,10 +342,10 @@ int libfsclfs_store_open(
 
 		return( -1 );
 	}
-	filename_length = libcstring_narrow_string_length(
+	filename_length = narrow_string_length(
 	                   filename );
 
-	basename_end = libcstring_narrow_string_search_character_reverse(
+	basename_end = narrow_string_search_character_reverse(
 	                filename,
 	                LIBFSCLFS_PATH_SEPARATOR,
 	                filename_length + 1 );
@@ -509,11 +511,11 @@ int libfsclfs_store_open_wide(
 
 		return( -1 );
 	}
-	filename_length = libcstring_wide_string_length(
+	filename_length = wide_string_length(
 	                   filename );
 
 /* TODO does this work for UTF-16 ? */
-	basename_end = libcstring_wide_string_search_character_reverse(
+	basename_end = wide_string_search_character_reverse(
 	                filename,
 	                (wint_t) LIBFSCLFS_PATH_SEPARATOR,
 	                filename_length + 1 );
@@ -752,11 +754,11 @@ int libfsclfs_store_open_containers(
      libfsclfs_store_t *store,
      libcerror_error_t **error )
 {
-	libcstring_system_character_t *container_location      = NULL;
-	libcstring_system_character_t *container_name          = NULL;
-	libcstring_system_character_t *container_name_start    = NULL;
 	libfsclfs_container_descriptor_t *container_descriptor = NULL;
 	libfsclfs_internal_store_t *internal_store             = NULL;
+	system_character_t *container_location                 = NULL;
+	system_character_t *container_name                     = NULL;
+	system_character_t *container_name_start               = NULL;
 	static char *function                                  = "libfsclfs_store_open_containers";
 	size_t container_location_size                         = 0;
 	size_t container_name_size                             = 0;
@@ -834,7 +836,7 @@ int libfsclfs_store_open_containers(
 
 			return( -1 );
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libuna_utf16_string_size_from_utf16_stream(
 		          container_descriptor->name,
 		          container_descriptor->name_size,
@@ -860,7 +862,7 @@ int libfsclfs_store_open_containers(
 
 			return( -1 );
 		}
-		container_name = libcstring_system_string_allocate(
+		container_name = system_string_allocate(
 		                  container_name_size );
 
 		if( container_name == NULL )
@@ -874,7 +876,7 @@ int libfsclfs_store_open_containers(
 
 			return( -1 );
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libuna_utf16_string_copy_from_utf16_stream(
 		          (libuna_utf16_character_t *) container_name,
 		          container_name_size,
@@ -905,13 +907,13 @@ int libfsclfs_store_open_containers(
 
 			return( -1 );
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-		container_name_start = libcstring_wide_string_search_character_reverse(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+		container_name_start = wide_string_search_character_reverse(
 		                        container_name,
 		                        (wint_t) '\\',
 		                        container_name_size );
 #else
-		container_name_start = libcstring_narrow_string_search_character_reverse(
+		container_name_start = narrow_string_search_character_reverse(
 		                        container_name,
 		                        (int) '\\',
 		                        container_name_size );
@@ -934,7 +936,7 @@ int libfsclfs_store_open_containers(
 		{
 			container_location_size = internal_store->basename_size + container_name_size - 1;
 
-			container_location = libcstring_system_string_allocate(
+			container_location = system_string_allocate(
 			                      container_location_size );
 
 			if( container_location == NULL )
@@ -951,13 +953,13 @@ int libfsclfs_store_open_containers(
 
 				return( -1 );
 			}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-			if( libcstring_wide_string_copy(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+			if( wide_string_copy(
 			     container_location,
 			     internal_store->basename,
 			     internal_store->basename_size - 1 ) == NULL )
 #else
-			if( libcstring_narrow_string_copy(
+			if( narrow_string_copy(
 			     container_location,
 			     internal_store->basename,
 			     internal_store->basename_size - 1 ) == NULL )
@@ -977,13 +979,13 @@ int libfsclfs_store_open_containers(
 
 				return( -1 );
 			}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-			if( libcstring_wide_string_copy(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+			if( wide_string_copy(
 			     &( container_location[ internal_store->basename_size - 1 ] ),
 			     container_name_start,
 			     container_name_size - 1 ) == NULL )
 #else
-			if( libcstring_narrow_string_copy(
+			if( narrow_string_copy(
 			     &( container_location[ internal_store->basename_size - 1 ] ),
 			     container_name_start,
 			     container_name_size - 1 ) == NULL )
@@ -1013,7 +1015,7 @@ int libfsclfs_store_open_containers(
 			container_location      = container_name_start;
 			container_location_size = container_name_size;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_store_open_container_wide(
 		          internal_store,
 		          container_descriptor->physical_number,
@@ -1032,7 +1034,7 @@ int libfsclfs_store_open_containers(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_OPEN_FAILED,
-			 "%s: unable to open container: %" PRIs_LIBCSTRING_SYSTEM ".",
+			 "%s: unable to open container: %" PRIs_SYSTEM ".",
 			 function,
 			 container_location );
 		}
@@ -1131,7 +1133,7 @@ int libfsclfs_store_open_container(
 	if( libbfio_file_set_name(
 	     file_io_handle,
 	     filename,
-	     libcstring_narrow_string_length(
+	     narrow_string_length(
 	      filename ) + 1,
 	     error ) != 1 )
 	{
@@ -1251,7 +1253,7 @@ int libfsclfs_store_open_container_wide(
 	if( libbfio_file_set_name_wide(
 	     file_io_handle,
 	     filename,
-	     libcstring_wide_string_length(
+	     wide_string_length(
 	      filename ) + 1,
 	     error ) != 1 )
 	{
@@ -2217,9 +2219,9 @@ int libfsclfs_store_read_store_metadata(
 	int entry_index                                        = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	libcstring_system_character_t guid_string[ 48 ];
+	system_character_t guid_string[ 48 ];
 
-	libcstring_system_character_t *value_string            = NULL;
+	system_character_t *value_string                       = NULL;
 	libfguid_identifier_t *guid                            = NULL;
 	size_t value_string_size                               = 0;
 	uint64_t value_64bit                                   = 0;
@@ -2386,7 +2388,7 @@ int libfsclfs_store_read_store_metadata(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfguid_identifier_copy_to_utf16_string(
 			  guid,
 			  (uint16_t *) guid_string,
@@ -2430,7 +2432,7 @@ int libfsclfs_store_read_store_metadata(
 			goto on_error;
 		}
 		libcnotify_printf(
-		 "%s: store identifier\t\t\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "%s: store identifier\t\t\t: %" PRIs_SYSTEM "\n",
 		 function,
 		 guid_string );
 
@@ -3100,7 +3102,7 @@ int libfsclfs_store_read_store_metadata(
 				 function,
 				 name_data_size );
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 				result = libuna_utf16_string_size_from_utf16_stream(
 					  name_data,
 					  name_data_size,
@@ -3126,7 +3128,7 @@ int libfsclfs_store_read_store_metadata(
 
 					goto on_error;
 				}
-				value_string = libcstring_system_string_allocate(
+				value_string = system_string_allocate(
 				                value_string_size );
 
 				if( value_string == NULL )
@@ -3140,7 +3142,7 @@ int libfsclfs_store_read_store_metadata(
 
 					goto on_error;
 				}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 				result = libuna_utf16_string_copy_from_utf16_stream(
 					  (libuna_utf16_character_t *) value_string,
 					  value_string_size,
@@ -3172,7 +3174,7 @@ int libfsclfs_store_read_store_metadata(
 					goto on_error;
 				}
 				libcnotify_printf(
-				 "%s: name\t\t\t\t: %" PRIs_LIBCSTRING_SYSTEM "\n",
+				 "%s: name\t\t\t\t: %" PRIs_SYSTEM "\n",
 				 function,
 				 value_string );
 
@@ -3701,7 +3703,7 @@ int libfsclfs_store_get_basename_size(
 {
 	static char *function = "libfsclfs_store_get_basename_size";
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -3731,7 +3733,7 @@ int libfsclfs_store_get_basename_size(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -3783,7 +3785,7 @@ int libfsclfs_store_get_basename_size(
 	}
 #else
 	*basename_size = internal_store->basename_size;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	return( 1 );
 }
@@ -3800,7 +3802,7 @@ int libfsclfs_store_get_basename(
 	static char *function       = "libfsclfs_store_get_basename";
 	size_t narrow_basename_size = 0;
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result                  = 0;
 #endif
 
@@ -3830,7 +3832,7 @@ int libfsclfs_store_get_basename(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -3882,7 +3884,7 @@ int libfsclfs_store_get_basename(
 	}
 #else
 	narrow_basename_size = internal_store->basename_size;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	if( basename_size < narrow_basename_size )
 	{
@@ -3895,7 +3897,7 @@ int libfsclfs_store_get_basename(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -3950,7 +3952,7 @@ int libfsclfs_store_get_basename(
 		return( -1 );
 	}
 #else
-	if( libcstring_system_string_copy(
+	if( system_string_copy(
 	     basename,
 	     internal_store->basename,
 	     internal_store->basename_size ) == NULL )
@@ -3965,7 +3967,7 @@ int libfsclfs_store_get_basename(
 		return( -1 );
 	}
 	basename[ internal_store->basename_size - 1 ] = 0;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	return( 1 );
 }
@@ -3981,7 +3983,7 @@ int libfsclfs_store_set_basename(
 {
 	static char *function = "libfsclfs_store_set_basename";
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -4015,7 +4017,7 @@ int libfsclfs_store_set_basename(
 		internal_store->basename      = NULL;
 		internal_store->basename_size = 0;
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -4068,7 +4070,7 @@ int libfsclfs_store_set_basename(
 #else
 	internal_store->basename_size = basename_length + 1;
 #endif
-	internal_store->basename = libcstring_system_string_allocate(
+	internal_store->basename = system_string_allocate(
 	                            internal_store->basename_size );
 
 	if( internal_store->basename == NULL )
@@ -4084,7 +4086,7 @@ int libfsclfs_store_set_basename(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libclocale_codepage == 0 )
 	{
 #if SIZEOF_WCHAR_T == 4
@@ -4145,7 +4147,7 @@ int libfsclfs_store_set_basename(
 		return( -1 );
 	}
 #else
-	if( libcstring_system_string_copy(
+	if( system_string_copy(
 	     internal_store->basename,
 	     basename,
 	     basename_length ) == NULL )
@@ -4166,7 +4168,7 @@ int libfsclfs_store_set_basename(
 		return( -1 );
 	}
 	internal_store->basename[ basename_length ] = 0;
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 	return( 1 );
 }
@@ -4183,7 +4185,7 @@ int libfsclfs_store_get_basename_size_wide(
 {
 	static char *function = "libfsclfs_store_get_basename_size_wide";
 
-#if !defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -4213,7 +4215,7 @@ int libfsclfs_store_get_basename_size_wide(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	*basename_size = internal_store->basename_size;
 #else
 	if( libclocale_codepage == 0 )
@@ -4265,7 +4267,7 @@ int libfsclfs_store_get_basename_size_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
 
@@ -4281,7 +4283,7 @@ int libfsclfs_store_get_basename_wide(
 	static char *function     = "libfsclfs_store_get_basename_wide";
 	size_t wide_basename_size = 0;
 
-#if !defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result                = 0;
 #endif
 
@@ -4311,7 +4313,7 @@ int libfsclfs_store_get_basename_wide(
 	{
 		return( 0 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	wide_basename_size = internal_store->basename_size;
 #else
 	if( libclocale_codepage == 0 )
@@ -4363,7 +4365,7 @@ int libfsclfs_store_get_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	if( basename_size < wide_basename_size )
 	{
 		libcerror_error_set(
@@ -4375,8 +4377,8 @@ int libfsclfs_store_get_basename_wide(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_system_string_copy(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	if( system_string_copy(
 	     basename,
 	     internal_store->basename,
 	     internal_store->basename_size ) == NULL )
@@ -4445,7 +4447,7 @@ int libfsclfs_store_get_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
 
@@ -4460,7 +4462,7 @@ int libfsclfs_store_set_basename_wide(
 {
 	static char *function = "libfsclfs_store_set_basename_wide";
 
-#if !defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result            = 0;
 #endif
 
@@ -4494,7 +4496,7 @@ int libfsclfs_store_set_basename_wide(
 		internal_store->basename      = NULL;
 		internal_store->basename_size = 0;
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	internal_store->basename_size = basename_length + 1;
 #else
 	if( libclocale_codepage == 0 )
@@ -4546,8 +4548,8 @@ int libfsclfs_store_set_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
-	internal_store->basename = libcstring_system_string_allocate(
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
+	internal_store->basename = system_string_allocate(
 	                            internal_store->basename_size );
 
 	if( internal_store->basename == NULL )
@@ -4561,8 +4563,8 @@ int libfsclfs_store_set_basename_wide(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libcstring_system_string_copy(
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	if( system_string_copy(
 	     internal_store->basename,
 	     basename,
 	     basename_length ) == NULL )
@@ -4643,7 +4645,7 @@ int libfsclfs_store_set_basename_wide(
 
 		return( -1 );
 	}
-#endif /* defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 	return( 1 );
 }
 

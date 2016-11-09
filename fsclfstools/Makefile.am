@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -36,7 +35,6 @@ fsclfsinfo_SOURCES = \
 	fsclfstools_libcerror.h \
 	fsclfstools_libclocale.h \
 	fsclfstools_libcnotify.h \
-	fsclfstools_libcstring.h \
 	fsclfstools_libcsystem.h \
 	fsclfstools_libfdatetime.h \
 	fsclfstools_libfguid.h \
@@ -51,7 +49,6 @@ fsclfsinfo_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 fsclfstest_SOURCES = \
@@ -61,7 +58,6 @@ fsclfstest_SOURCES = \
 	fsclfstools_libcerror.h \
 	fsclfstools_libclocale.h \
 	fsclfstools_libcnotify.h \
-	fsclfstools_libcstring.h \
 	fsclfstools_libcsystem.h \
 	fsclfstools_libfdatetime.h \
 	fsclfstools_libfguid.h \
@@ -78,7 +74,6 @@ fsclfstest_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 MAINTAINERCLEANFILES = \

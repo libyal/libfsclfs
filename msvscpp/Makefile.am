@@ -1,6 +1,10 @@
 MSVSCPP_FILES = \
+	fsclfs_test_container/fsclfs_test_container.vcproj \
 	fsclfs_test_error/fsclfs_test_error.vcproj \
-	fsclfs_test_get_version/fsclfs_test_get_version.vcproj \
+	fsclfs_test_record/fsclfs_test_record.vcproj \
+	fsclfs_test_store/fsclfs_test_store.vcproj \
+	fsclfs_test_stream/fsclfs_test_stream.vcproj \
+	fsclfs_test_support/fsclfs_test_support.vcproj \
 	fsclfsinfo/fsclfsinfo.vcproj \
 	fsclfstest/fsclfstest.vcproj \
 	libbfio/libbfio.vcproj \
@@ -11,7 +15,6 @@ MSVSCPP_FILES = \
 	libcnotify/libcnotify.vcproj \
 	libcpath/libcpath.vcproj \
 	libcsplit/libcsplit.vcproj \
-	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
 	libcthreads/libcthreads.vcproj \
 	libfcache/libfcache.vcproj \

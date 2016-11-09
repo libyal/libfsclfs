@@ -24,6 +24,10 @@
 
 #include <common.h>
 
+/* Define HAVE_LOCAL_LIBFSCLFS for local use of libfsclfs
+ */
+#if !defined( HAVE_LOCAL_LIBFSCLFS )
+
 /* If libtool DLL support is enabled set LIBFSCLFS_DLL_EXPORT
  * before including libfsclfs/extern.h
  */
@@ -33,5 +37,10 @@
 
 #include <libfsclfs/extern.h>
 
+#else
+#define LIBFSCLFS_EXTERN	extern
+
 #endif
+
+#endif /* !defined( _LIBFSCLFS_INTERNAL_EXTERN_H ) */
 

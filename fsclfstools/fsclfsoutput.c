@@ -29,7 +29,6 @@
 #include "fsclfstools_libcerror.h"
 #include "fsclfstools_libclocale.h"
 #include "fsclfstools_libcnotify.h"
-#include "fsclfstools_libcstring.h"
 #include "fsclfstools_libcsystem.h"
 #include "fsclfstools_libfdatetime.h"
 #include "fsclfstools_libfguid.h"

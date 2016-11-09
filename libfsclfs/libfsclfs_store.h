@@ -80,7 +80,7 @@ struct libfsclfs_internal_store
 
 	/* The basename
 	 */
-	libcstring_system_character_t *basename;
+	system_character_t *basename;
 
 	/* The basename size
 	 */

@@ -118,5 +118,5 @@ enum LIBFSCLFS_CODEPAGES
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_CODEPAGE_H ) */
 

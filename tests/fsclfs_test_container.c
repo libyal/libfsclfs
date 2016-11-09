@@ -1,5 +1,5 @@
 /*
- * Library get version test program
+ * Library container type testing program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -20,46 +20,60 @@
  */
 
 #include <common.h>
+#include <file_stream.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
-#include "fsclfs_test_libcstring.h"
+#include "fsclfs_test_libcerror.h"
 #include "fsclfs_test_libfsclfs.h"
 #include "fsclfs_test_macros.h"
+#include "fsclfs_test_memory.h"
 #include "fsclfs_test_unused.h"
 
-/* Tests retrieving the library version
+/* Tests the libfsclfs_container_free function
  * Returns 1 if successful or 0 if not
  */
-int fsclfs_test_get_version(
+int fsclfs_test_container_free(
      void )
 {
-	const char *version_string = NULL;
-	int result                 = 0;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
 
-	version_string = libfsclfs_get_version();
-
-	result = libcstring_narrow_string_compare(
-	          version_string,
-	          LIBFSCLFS_VERSION_STRING,
-	          9 );
+	/* Test error cases
+	 */
+	result = libfsclfs_container_free(
+	          NULL,
+	          &error );
 
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
 
 	return( 1 );
 
 on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
 	return( 0 );
 }
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc FSCLFS_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] FSCLFS_TEST_ATTRIBUTE_UNUSED )
@@ -73,8 +87,8 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
 	FSCLFS_TEST_RUN(
-	 "libfsclfs_get_version",
-	 fsclfs_test_get_version() )
+	 "libfsclfs_container_free",
+	 fsclfs_test_container_free );
 
 	return( EXIT_SUCCESS );
 

@@ -22,7 +22,10 @@
 #include <common.h>
 #include <file_stream.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #if defined( HAVE_UNISTD_H )
 #include <unistd.h>
@@ -36,7 +39,6 @@
 #include "fsclfstools_libcerror.h"
 #include "fsclfstools_libclocale.h"
 #include "fsclfstools_libcnotify.h"
-#include "fsclfstools_libcstring.h"
 #include "fsclfstools_libcsystem.h"
 #include "fsclfstools_libfsclfs.h"
 
@@ -68,16 +70,16 @@ int fsclfsinfo_store_info_fprint(
      libfsclfs_store_t *log_store,
      libfsclfs_error_t **error )
 {
-	libcstring_system_character_t *value_string = NULL;
-	libfsclfs_container_t *log_container        = NULL;
-	libfsclfs_stream_t *log_stream              = NULL;
-	static char *function                       = "fsclfsinfo_store_info_fprint";
-	size64_t container_size                     = 0;
-	size_t value_string_size                    = 0;
-	int item_index                              = 0;
-	int number_of_containers                    = 0;
-	int number_of_streams                       = 0;
-	int result                                  = 0;
+	libfsclfs_container_t *log_container = NULL;
+	libfsclfs_stream_t *log_stream       = NULL;
+	system_character_t *value_string     = NULL;
+	static char *function                = "fsclfsinfo_store_info_fprint";
+	size64_t container_size              = 0;
+	size_t value_string_size             = 0;
+	int item_index                       = 0;
+	int number_of_containers             = 0;
+	int number_of_streams                = 0;
+	int result                           = 0;
 
 	if( stream == NULL )
 	{
@@ -172,7 +174,7 @@ int fsclfsinfo_store_info_fprint(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_container_get_utf16_name_size(
 		          log_container,
 		          &value_string_size,
@@ -195,7 +197,7 @@ int fsclfsinfo_store_info_fprint(
 
 			goto on_error;
 		}
-		value_string = libcstring_system_string_allocate(
+		value_string = system_string_allocate(
 		                value_string_size );
 
 		if( value_string == NULL )
@@ -209,7 +211,7 @@ int fsclfsinfo_store_info_fprint(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_container_get_utf16_name(
 		          log_container,
 		          (uint16_t *) value_string,
@@ -239,7 +241,7 @@ int fsclfsinfo_store_info_fprint(
 		}
 		fprintf(
 		 stream,
-		 "\tName:\t%" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "\tName:\t%" PRIs_SYSTEM "\n",
 		 value_string );
 
 		memory_free(
@@ -308,7 +310,7 @@ int fsclfsinfo_store_info_fprint(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_stream_get_utf16_name_size(
 		          log_stream,
 		          &value_string_size,
@@ -331,7 +333,7 @@ int fsclfsinfo_store_info_fprint(
 
 			goto on_error;
 		}
-		value_string = libcstring_system_string_allocate(
+		value_string = system_string_allocate(
 		                value_string_size );
 
 		if( value_string == NULL )
@@ -345,7 +347,7 @@ int fsclfsinfo_store_info_fprint(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_stream_get_utf16_name(
 		          log_stream,
 		          (uint16_t *) value_string,
@@ -375,7 +377,7 @@ int fsclfsinfo_store_info_fprint(
 		}
 		fprintf(
 		 stream,
-		 "\tName:\t%" PRIs_LIBCSTRING_SYSTEM "\n",
+		 "\tName:\t%" PRIs_SYSTEM "\n",
 		 value_string );
 
 		memory_free(
@@ -419,19 +421,19 @@ on_error:
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain( int argc, wchar_t * const argv[] )
 #else
 int main( int argc, char * const argv[] )
 #endif
 {
-	libfsclfs_error_t *error              = NULL;
-	libfsclfs_store_t *log_store          = NULL;
-	libcstring_system_character_t *source = NULL;
-	char *program                         = "fsclfsinfo";
-	libcstring_system_integer_t option    = 0;
-	int result                            = 0;
-	int verbose                           = 0;
+	libfsclfs_error_t *error     = NULL;
+	libfsclfs_store_t *log_store = NULL;
+	system_character_t *source   = NULL;
+	char *program                = "fsclfsinfo";
+	system_integer_t option      = 0;
+	int result                   = 0;
+	int verbose                  = 0;
 
 	libcnotify_stream_set(
 	 stderr,
@@ -466,15 +468,15 @@ int main( int argc, char * const argv[] )
 	while( ( option = libcsystem_getopt(
 	                   argc,
 	                   argv,
-	                   _LIBCSTRING_SYSTEM_STRING( "hvV" ) ) ) != (libcstring_system_integer_t) -1 )
+	                   _SYSTEM_STRING( "hvV" ) ) ) != (system_integer_t) -1 )
 	{
 		switch( option )
 		{
-			case (libcstring_system_integer_t) '?':
+			case (system_integer_t) '?':
 			default:
 				fprintf(
 				 stderr,
-				 "Invalid argument: %" PRIs_LIBCSTRING_SYSTEM "\n",
+				 "Invalid argument: %" PRIs_SYSTEM "\n",
 				 argv[ optind - 1 ] );
 
 				usage_fprint(
@@ -482,18 +484,18 @@ int main( int argc, char * const argv[] )
 
 				return( EXIT_FAILURE );
 
-			case (libcstring_system_integer_t) 'h':
+			case (system_integer_t) 'h':
 				usage_fprint(
 				 stdout );
 
 				return( EXIT_SUCCESS );
 
-			case (libcstring_system_integer_t) 'v':
+			case (system_integer_t) 'v':
 				verbose = 1;
 
 				break;
 
-			case (libcstring_system_integer_t) 'V':
+			case (system_integer_t) 'V':
 				fsclfsoutput_copyright_fprint(
 				 stdout );
 
@@ -531,7 +533,7 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libfsclfs_store_open_wide(
 	          log_store,
 	          source,
@@ -548,7 +550,7 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stderr,
-		 "Error opening store using base log: %" PRIs_LIBCSTRING_SYSTEM ".\n",
+		 "Error opening store using base log: %" PRIs_SYSTEM ".\n",
 		 argv[ optind ] );
 
 		goto on_error;
