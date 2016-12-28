@@ -111,5 +111,5 @@ int libfsclfs_block_get_virtual_log_range_array_data(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_BLOCK_H ) */
 

@@ -1,5 +1,5 @@
 /*
- * Library record type testing program
+ * Library record type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,6 +32,8 @@
 #include "fsclfs_test_macros.h"
 #include "fsclfs_test_memory.h"
 #include "fsclfs_test_unused.h"
+
+#include "../libfsclfs/libfsclfs_record.h"
 
 /* Tests the libfsclfs_record_free function
  * Returns 1 if successful or 0 if not
@@ -71,6 +73,10 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -86,9 +92,25 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfsclfs_record_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_record_free",
 	 fsclfs_test_record_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfsclfs_record_get_previous_lsn */
+
+	/* TODO: add tests for libfsclfs_record_get_undo_next_lsn */
+
+	/* TODO: add tests for libfsclfs_record_get_data */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 

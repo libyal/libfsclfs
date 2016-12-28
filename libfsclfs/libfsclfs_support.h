@@ -58,5 +58,5 @@ int libfsclfs_set_codepage(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_SUPPORT_H ) */
 

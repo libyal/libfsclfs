@@ -47,5 +47,5 @@ int libfsclfs_debug_print_read_offsets(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_DEBUG_H ) */
 

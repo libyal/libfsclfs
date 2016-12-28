@@ -1,5 +1,5 @@
 /*
- * Library container type testing program
+ * Library container type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,6 +32,8 @@
 #include "fsclfs_test_macros.h"
 #include "fsclfs_test_memory.h"
 #include "fsclfs_test_unused.h"
+
+#include "../libfsclfs/libfsclfs_container.h"
 
 /* Tests the libfsclfs_container_free function
  * Returns 1 if successful or 0 if not
@@ -86,9 +88,29 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfsclfs_container_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_container_free",
 	 fsclfs_test_container_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfsclfs_container_get_size */
+
+	/* TODO: add tests for libfsclfs_container_get_utf8_name_size */
+
+	/* TODO: add tests for libfsclfs_container_get_utf8_name */
+
+	/* TODO: add tests for libfsclfs_container_get_utf16_name_size */
+
+	/* TODO: add tests for libfsclfs_container_get_utf16_name */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 

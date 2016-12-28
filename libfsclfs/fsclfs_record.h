@@ -78,5 +78,5 @@ struct fsclfs_container_record_header
 }
 #endif
 
-#endif
+#endif /* !defined( _FSCLFS_RECORD_H ) */
 

@@ -45,5 +45,5 @@ void fsclfsoutput_version_detailed_fprint(
 }
 #endif
 
-#endif
+#endif /* !defined( _FSCLFSOUTPUT_H ) */
 

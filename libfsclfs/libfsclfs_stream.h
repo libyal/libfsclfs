@@ -109,5 +109,5 @@ int libfsclfs_stream_get_record_by_lsn(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_INTERNAL_STREAM_H ) */
 

@@ -72,5 +72,5 @@ int libfsclfs_stream_descriptor_free(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_STREAM_DESCRIPTOR_H ) */
 

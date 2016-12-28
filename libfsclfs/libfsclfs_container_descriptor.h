@@ -68,5 +68,5 @@ int libfsclfs_container_descriptor_free(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_CONTAINER_DESCRIPTOR_H ) */
 

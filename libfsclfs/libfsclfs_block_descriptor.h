@@ -56,5 +56,5 @@ int libfsclfs_block_descriptor_free(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_BLOCK_DESCRIPTOR_H ) */
 

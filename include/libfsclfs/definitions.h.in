@@ -24,11 +24,11 @@
 
 #include <libfsclfs/types.h>
 
-#define LIBFSCLFS_VERSION					@VERSION@
+#define LIBFSCLFS_VERSION		@VERSION@
 
 /* The version string
  */
-#define LIBFSCLFS_VERSION_STRING				"@VERSION@"
+#define LIBFSCLFS_VERSION_STRING	"@VERSION@"
 
 /* The file access
  * bit 1        set to 1 for read access
@@ -37,18 +37,18 @@
  */
 enum LIBFSCLFS_ACCESS_FLAGS
 {
-	LIBFSCLFS_ACCESS_FLAG_READ				= 0x01,
+	LIBFSCLFS_ACCESS_FLAG_READ	= 0x01,
 /* Reserved: not supported yet */
-	LIBFSCLFS_ACCESS_FLAG_WRITE				= 0x02
+	LIBFSCLFS_ACCESS_FLAG_WRITE	= 0x02
 };
 
 /* The file access macros
  */
-#define LIBFSCLFS_OPEN_READ					( LIBFSCLFS_ACCESS_FLAG_READ )
+#define LIBFSCLFS_OPEN_READ		( LIBFSCLFS_ACCESS_FLAG_READ )
 /* Reserved: not supported yet */
-#define LIBFSCLFS_OPEN_WRITE					( LIBFSCLFS_ACCESS_FLAG_WRITE )
+#define LIBFSCLFS_OPEN_WRITE		( LIBFSCLFS_ACCESS_FLAG_WRITE )
 /* Reserved: not supported yet */
-#define LIBFSCLFS_OPEN_READ_WRITE				( LIBFSCLFS_ACCESS_FLAG_READ | LIBFSCLFS_ACCESS_FLAG_WRITE )
+#define LIBFSCLFS_OPEN_READ_WRITE	( LIBFSCLFS_ACCESS_FLAG_READ | LIBFSCLFS_ACCESS_FLAG_WRITE )
 
 #endif /* !defined( _LIBFSCLFS_DEFINITIONS_H ) */
 

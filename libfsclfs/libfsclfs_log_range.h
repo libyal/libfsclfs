@@ -64,5 +64,5 @@ int libfsclfs_log_range_free(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_LOG_RANGE_H ) */
 

@@ -359,5 +359,5 @@ struct fsclfs_base_log_container_attributes_record_data
 }
 #endif
 
-#endif
+#endif /* !defined( _FSCLFS_BSAE_LOG_RECORD_H ) */
 

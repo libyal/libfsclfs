@@ -1,5 +1,5 @@
 /*
- * Library store type testing program
+ * Library store type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -30,15 +30,15 @@
 #include <stdlib.h>
 #endif
 
+#include "fsclfs_test_getopt.h"
 #include "fsclfs_test_libcerror.h"
 #include "fsclfs_test_libclocale.h"
-#include "fsclfs_test_libcsystem.h"
 #include "fsclfs_test_libfsclfs.h"
 #include "fsclfs_test_libuna.h"
 #include "fsclfs_test_macros.h"
 #include "fsclfs_test_memory.h"
 
-#if SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
 #error Unsupported size of wchar_t
 #endif
 
@@ -256,8 +256,8 @@ int fsclfs_test_store_get_wide_source(
      libcerror_error_t **error )
 {
 	static char *function   = "fsclfs_test_store_get_wide_source";
-	size_t wide_source_size = 0;
 	size_t source_length    = 0;
+	size_t wide_source_size = 0;
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result              = 0;
@@ -584,11 +584,17 @@ int fsclfs_test_store_close_source(
 int fsclfs_test_store_initialize(
      void )
 {
-	libcerror_error_t *error = NULL;
-	libfsclfs_store_t *store      = NULL;
-	int result               = 0;
+	libcerror_error_t *error        = NULL;
+	libfsclfs_store_t *store        = NULL;
+	int result                      = 0;
 
-	/* Test libfsclfs_store_initialize
+#if defined( HAVE_FSCLFS_TEST_MEMORY )
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
+#endif
+
+	/* Test regular cases
 	 */
 	result = libfsclfs_store_initialize(
 	          &store,
@@ -664,79 +670,89 @@ int fsclfs_test_store_initialize(
 
 #if defined( HAVE_FSCLFS_TEST_MEMORY )
 
-	/* Test libfsclfs_store_initialize with malloc failing
-	 */
-	fsclfs_test_malloc_attempts_before_fail = 0;
-
-	result = libfsclfs_store_initialize(
-	          &store,
-	          &error );
-
-	if( fsclfs_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		fsclfs_test_malloc_attempts_before_fail = -1;
+		/* Test libfsclfs_store_initialize with malloc failing
+		 */
+		fsclfs_test_malloc_attempts_before_fail = test_number;
 
-		if( store != NULL )
+		result = libfsclfs_store_initialize(
+		          &store,
+		          &error );
+
+		if( fsclfs_test_malloc_attempts_before_fail != -1 )
 		{
-			libfsclfs_store_free(
-			 &store,
-			 NULL );
+			fsclfs_test_malloc_attempts_before_fail = -1;
+
+			if( store != NULL )
+			{
+				libfsclfs_store_free(
+				 &store,
+				 NULL );
+			}
+		}
+		else
+		{
+			FSCLFS_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			FSCLFS_TEST_ASSERT_IS_NULL(
+			 "store",
+			 store );
+
+			FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
 		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		FSCLFS_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libfsclfs_store_initialize with memset failing
+		 */
+		fsclfs_test_memset_attempts_before_fail = test_number;
 
-		FSCLFS_TEST_ASSERT_IS_NULL(
-		 "store",
-		 store );
+		result = libfsclfs_store_initialize(
+		          &store,
+		          &error );
 
-		FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libfsclfs_store_initialize with memset failing
-	 */
-	fsclfs_test_memset_attempts_before_fail = 0;
-
-	result = libfsclfs_store_initialize(
-	          &store,
-	          &error );
-
-	if( fsclfs_test_memset_attempts_before_fail != -1 )
-	{
-		fsclfs_test_memset_attempts_before_fail = -1;
-
-		if( store != NULL )
+		if( fsclfs_test_memset_attempts_before_fail != -1 )
 		{
-			libfsclfs_store_free(
-			 &store,
-			 NULL );
+			fsclfs_test_memset_attempts_before_fail = -1;
+
+			if( store != NULL )
+			{
+				libfsclfs_store_free(
+				 &store,
+				 NULL );
+			}
 		}
-	}
-	else
-	{
-		FSCLFS_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		else
+		{
+			FSCLFS_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-		FSCLFS_TEST_ASSERT_IS_NULL(
-		 "store",
-		 store );
+			FSCLFS_TEST_ASSERT_IS_NULL(
+			 "store",
+			 store );
 
-		FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+			FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_FSCLFS_TEST_MEMORY ) */
 
@@ -795,7 +811,7 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libfsclfs_store_open functions
+/* Tests the libfsclfs_store_open function
  * Returns 1 if successful or 0 if not
  */
 int fsclfs_test_store_open(
@@ -804,7 +820,7 @@ int fsclfs_test_store_open(
 	char narrow_source[ 256 ];
 
 	libcerror_error_t *error = NULL;
-	libfsclfs_store_t *store      = NULL;
+	libfsclfs_store_t *store = NULL;
 	int result               = 0;
 
 	/* Initialize test
@@ -858,21 +874,28 @@ int fsclfs_test_store_open(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libfsclfs_store_close(
+	result = libfsclfs_store_open(
 	          store,
+	          narrow_source,
+	          LIBFSCLFS_OPEN_READ,
 	          &error );
 
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libfsclfs_store_free(
 	          &store,
 	          &error );
@@ -909,7 +932,7 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Tests the libfsclfs_store_open_wide functions
+/* Tests the libfsclfs_store_open_wide function
  * Returns 1 if successful or 0 if not
  */
 int fsclfs_test_store_open_wide(
@@ -918,7 +941,7 @@ int fsclfs_test_store_open_wide(
 	wchar_t wide_source[ 256 ];
 
 	libcerror_error_t *error = NULL;
-	libfsclfs_store_t *store      = NULL;
+	libfsclfs_store_t *store = NULL;
 	int result               = 0;
 
 	/* Initialize test
@@ -972,21 +995,28 @@ int fsclfs_test_store_open_wide(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libfsclfs_store_close(
+	result = libfsclfs_store_open_wide(
 	          store,
+	          wide_source,
+	          LIBFSCLFS_OPEN_READ,
 	          &error );
 
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libfsclfs_store_free(
 	          &store,
 	          &error );
@@ -1023,51 +1053,18 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-/* Tests the libfsclfs_store_get_number_of_containers functions
+/* Tests the libfsclfs_store_close function
  * Returns 1 if successful or 0 if not
  */
-int fsclfs_test_store_get_number_of_containers(
-     libfsclfs_store_t *store )
+int fsclfs_test_store_close(
+     void )
 {
 	libcerror_error_t *error = NULL;
-	int number_of_containers    = 0;
 	int result               = 0;
-
-	result = libfsclfs_store_get_number_of_containers(
-	          store,
-	          &number_of_containers,
-	          &error );
-
-	FSCLFS_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
 
 	/* Test error cases
 	 */
-	result = libfsclfs_store_get_number_of_containers(
-	          NULL,
-	          &number_of_containers,
-	          &error );
-
-	FSCLFS_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libfsclfs_store_get_number_of_containers(
-	          store,
+	result = libfsclfs_store_close(
 	          NULL,
 	          &error );
 
@@ -1094,20 +1091,50 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libfsclfs_store_get_number_of_streams functions
+/* Tests the libfsclfs_store_open and libfsclfs_store_close functions
  * Returns 1 if successful or 0 if not
  */
-int fsclfs_test_store_get_number_of_streams(
-     libfsclfs_store_t *store )
+int fsclfs_test_store_open_close(
+     const system_character_t *source )
 {
 	libcerror_error_t *error = NULL;
-	int number_of_streams    = 0;
+	libfsclfs_store_t *store = NULL;
 	int result               = 0;
 
-	result = libfsclfs_store_get_number_of_streams(
-	          store,
-	          &number_of_streams,
+	/* Initialize test
+	 */
+	result = libfsclfs_store_initialize(
+	          &store,
 	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "store",
+         store );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libfsclfs_store_open_wide(
+	          store,
+	          source,
+	          LIBFSCLFS_OPEN_READ,
+	          &error );
+#else
+	result = libfsclfs_store_open(
+	          store,
+	          source,
+	          LIBFSCLFS_OPEN_READ,
+	          &error );
+#endif
 
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -1117,6 +1144,200 @@ int fsclfs_test_store_get_number_of_streams(
         FSCLFS_TEST_ASSERT_IS_NULL(
          "error",
          error );
+
+	result = libfsclfs_store_close(
+	          store,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close a second time to validate clean up on close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libfsclfs_store_open_wide(
+	          store,
+	          source,
+	          LIBFSCLFS_OPEN_READ,
+	          &error );
+#else
+	result = libfsclfs_store_open(
+	          store,
+	          source,
+	          LIBFSCLFS_OPEN_READ,
+	          &error );
+#endif
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libfsclfs_store_close(
+	          store,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Clean up
+	 */
+	result = libfsclfs_store_free(
+	          &store,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "store",
+         store );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( store != NULL )
+	{
+		libfsclfs_store_free(
+		 &store,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libfsclfs_store_get_number_of_containers function
+ * Returns 1 if successful or 0 if not
+ */
+int fsclfs_test_store_get_number_of_containers(
+     libfsclfs_store_t *store )
+{
+	libcerror_error_t *error        = NULL;
+	int number_of_containers        = 0;
+	int number_of_containers_is_set = 0;
+	int result                      = 0;
+
+	/* Test regular cases
+	 */
+	result = libfsclfs_store_get_number_of_containers(
+	          store,
+	          &number_of_containers,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	number_of_containers_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libfsclfs_store_get_number_of_containers(
+	          NULL,
+	          &number_of_containers,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( number_of_containers_is_set != 0 )
+	{
+		result = libfsclfs_store_get_number_of_containers(
+		          store,
+		          NULL,
+		          &error );
+
+		FSCLFS_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libfsclfs_store_get_number_of_streams function
+ * Returns 1 if successful or 0 if not
+ */
+int fsclfs_test_store_get_number_of_streams(
+     libfsclfs_store_t *store )
+{
+	libcerror_error_t *error     = NULL;
+	int number_of_streams        = 0;
+	int number_of_streams_is_set = 0;
+	int result                   = 0;
+
+	/* Test regular cases
+	 */
+	result = libfsclfs_store_get_number_of_streams(
+	          store,
+	          &number_of_streams,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	number_of_streams_is_set = result;
 
 	/* Test error cases
 	 */
@@ -1130,30 +1351,32 @@ int fsclfs_test_store_get_number_of_streams(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
 
-	result = libfsclfs_store_get_number_of_streams(
-	          store,
-	          NULL,
-	          &error );
+	if( number_of_streams_is_set != 0 )
+	{
+		result = libfsclfs_store_get_number_of_streams(
+		          store,
+		          NULL,
+		          &error );
 
-	FSCLFS_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
+		FSCLFS_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+		FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
-	libcerror_error_free(
-	 &error );
-
+		libcerror_error_free(
+		 &error );
+	}
 	return( 1 );
 
 on_error:
@@ -1178,12 +1401,12 @@ int main(
 #endif
 {
 	libcerror_error_t *error   = NULL;
+	libfsclfs_store_t *store   = NULL;
 	system_character_t *source = NULL;
-	libfsclfs_store_t *store        = NULL;
 	system_integer_t option    = 0;
 	int result                 = 0;
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = fsclfs_test_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "" ) ) ) != (system_integer_t) -1 )
@@ -1243,7 +1466,14 @@ int main(
 
 #endif /* defined( LIBFSCLFS_HAVE_BFIO ) */
 
-		/* TODO add test for libfsclfs_store_close */
+		FSCLFS_TEST_RUN(
+		 "libfsclfs_store_close",
+		 fsclfs_test_store_close );
+
+		FSCLFS_TEST_RUN_WITH_ARGS(
+		 "libfsclfs_store_open_close",
+		 fsclfs_test_store_open_close,
+		 source );
 
 		/* Initialize test
 		 */
@@ -1265,20 +1495,65 @@ int main(
 	         "error",
 	         error );
 
-		FSCLFS_TEST_RUN_WITH_ARGS(
-		 "libfsclfs_store_open",
-		 fsclfs_test_store_open,
-		 store );
+		/* TODO: add tests for libfsclfs_store_open_containers */
+
+		/* TODO: add tests for libfsclfs_store_open_containers_file_io_pool */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libfsclfs_store_open_container */
+
+		/* TODO: add tests for libfsclfs_store_open_container_wide */
+
+		/* TODO: add tests for libfsclfs_store_open_container_file_io_handle */
+
+		/* TODO: add tests for libfsclfs_store_open_read */
+
+		/* TODO: add tests for libfsclfs_store_read_block_descriptors */
+
+		/* TODO: add tests for libfsclfs_store_read_store_metadata */
+
+		/* TODO: add tests for libfsclfs_store_read_container_owner_page */
+
+		/* TODO: add tests for libfsclfs_store_get_basename_size */
+
+		/* TODO: add tests for libfsclfs_store_get_basename */
+
+		/* TODO: add tests for libfsclfs_store_set_basename */
+
+		/* TODO: add tests for libfsclfs_store_get_basename_size_wide */
+
+		/* TODO: add tests for libfsclfs_store_get_basename_wide */
+
+		/* TODO: add tests for libfsclfs_store_set_basename_wide */
+
+#endif /* defined( __GNUC__ ) */
 
 		FSCLFS_TEST_RUN_WITH_ARGS(
 		 "libfsclfs_store_get_number_of_containers",
 		 fsclfs_test_store_get_number_of_containers,
 		 store );
 
+		/* TODO: add tests for libfsclfs_store_get_container */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libfsclfs_store_get_container_physical_number */
+
+#endif /* defined( __GNUC__ ) */
+
 		FSCLFS_TEST_RUN_WITH_ARGS(
 		 "libfsclfs_store_get_number_of_streams",
 		 fsclfs_test_store_get_number_of_streams,
 		 store );
+
+		/* TODO: add tests for libfsclfs_store_get_stream */
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libfsclfs_store_get_record_value_by_logical_lsn */
+
+#endif /* defined( __GNUC__ ) */
 
 		/* Clean up
 		 */

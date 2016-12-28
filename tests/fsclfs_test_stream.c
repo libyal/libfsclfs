@@ -1,5 +1,5 @@
 /*
- * Library stream type testing program
+ * Library stream type test program
  *
  * Copyright (C) 2010-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,6 +32,8 @@
 #include "fsclfs_test_macros.h"
 #include "fsclfs_test_memory.h"
 #include "fsclfs_test_unused.h"
+
+#include "../libfsclfs/libfsclfs_stream.h"
 
 /* Tests the libfsclfs_stream_free function
  * Returns 1 if successful or 0 if not
@@ -71,6 +73,10 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -86,9 +92,33 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfsclfs_stream_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_stream_free",
 	 fsclfs_test_stream_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libfsclfs_stream_get_utf8_name_size */
+
+	/* TODO: add tests for libfsclfs_stream_get_utf8_name */
+
+	/* TODO: add tests for libfsclfs_stream_get_utf16_name_size */
+
+	/* TODO: add tests for libfsclfs_stream_get_utf16_name */
+
+	/* TODO: add tests for libfsclfs_stream_get_base_lsn */
+
+	/* TODO: add tests for libfsclfs_stream_get_last_lsn */
+
+	/* TODO: add tests for libfsclfs_stream_get_record_by_lsn */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 

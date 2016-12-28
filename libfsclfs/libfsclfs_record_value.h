@@ -92,5 +92,5 @@ int libfsclfs_record_value_get_data(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_RECORD_VALUE_H ) */
 

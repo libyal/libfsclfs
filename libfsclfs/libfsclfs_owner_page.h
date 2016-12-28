@@ -100,5 +100,5 @@ int libfsclfs_owner_page_get_physical_block_offset(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_OWNER_PAGE_H ) */
 

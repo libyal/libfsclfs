@@ -111,5 +111,5 @@ int libfsclfs_container_get_utf16_name(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_INTERNAL_CONTAINER_H ) */
 

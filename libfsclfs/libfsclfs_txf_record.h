@@ -78,5 +78,5 @@ int libfsclfs_record_value_read(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_RECORD_VALUE_H ) */
 

@@ -38,9 +38,9 @@
 #include <libfsclfs/extern.h>
 
 #else
-#define LIBFSCLFS_EXTERN	extern
+#define LIBFSCLFS_EXTERN	/* extern */
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBFSCLFS ) */
 
 #endif /* !defined( _LIBFSCLFS_INTERNAL_EXTERN_H ) */
 

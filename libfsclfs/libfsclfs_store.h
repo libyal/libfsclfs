@@ -281,5 +281,5 @@ int libfsclfs_store_get_record_value_by_logical_lsn(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_INTERNAL_STORE_H ) */
 

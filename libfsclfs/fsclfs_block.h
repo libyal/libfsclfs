@@ -133,5 +133,5 @@ struct fsclfs_block_header
 }
 #endif
 
-#endif
+#endif /* !defined( _FSCLFS_BLOCK_H ) */
 

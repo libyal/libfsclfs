@@ -87,5 +87,5 @@ int libfsclfs_record_get_data(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBFSCLFS_INTERNAL_RECORD_H ) */
 
