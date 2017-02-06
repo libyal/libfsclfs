@@ -1,5 +1,5 @@
 /*
- * Common output functions for the fsclfstools
+ * The unused definition
  *
  * Copyright (C) 2010-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,31 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _FSCLFSOUTPUT_H )
-#define _FSCLFSOUTPUT_H
+#if !defined( _FSCLFSTOOLS_UNUSED_H )
+#define _FSCLFSTOOLS_UNUSED_H
 
 #include <common.h>
-#include <file_stream.h>
-#include <types.h>
 
-#if defined( __cplusplus )
-extern "C" {
-#endif
+#if !defined( FSCLFSTOOLS_ATTRIBUTE_UNUSED )
 
-void fsclfsoutput_copyright_fprint(
-      FILE *stream );
+#if defined( __GNUC__ ) && __GNUC__ >= 3
+#define FSCLFSTOOLS_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
 
-void fsclfsoutput_version_fprint(
-      FILE *stream,
-      const char *program );
+#else
+#define FSCLFSTOOLS_ATTRIBUTE_UNUSED
 
-void fsclfsoutput_version_detailed_fprint(
-      FILE *stream,
-      const char *program );
+#endif /* defined( __GNUC__ ) && __GNUC__ >= 3 */
 
-#if defined( __cplusplus )
-}
-#endif
+#endif /* !defined( FSCLFSTOOLS_ATTRIBUTE_UNUSED ) */
 
-#endif /* !defined( _FSCLFSOUTPUT_H ) */
+#if defined( _MSC_VER )
+#define FSCLFSTOOLS_UNREFERENCED_PARAMETER( parameter ) \
+	UNREFERENCED_PARAMETER( parameter );
+
+#else
+#define FSCLFSTOOLS_UNREFERENCED_PARAMETER( parameter ) \
+	/* parameter */
+
+#endif /* defined( _MSC_VER ) */
+
+#endif /* !defined( _FSCLFSTOOLS_UNUSED_H ) */
 

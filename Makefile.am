@@ -22,7 +22,6 @@ SUBDIRS = \
 	libfusn \
 	libftxf \
 	libftxr \
-	libcsystem \
 	fsclfstools \
 	po \
 	manuals \
@@ -124,7 +123,6 @@ splint:
 	(cd $(srcdir)/libfusn && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libftxf && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libftxr && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libcsystem && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/fsclfstools && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/po && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/tests && $(MAKE) splint $(AM_MAKEFLAGS))

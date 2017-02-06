@@ -38,14 +38,16 @@
 #include <stdlib.h>
 #endif
 
-#include "fsclfsoutput.h"
+#include "fsclfstools_getopt.h"
 #include "fsclfstools_libcerror.h"
 #include "fsclfstools_libclocale.h"
 #include "fsclfstools_libcnotify.h"
-#include "fsclfstools_libcsystem.h"
 #include "fsclfstools_libfsclfs.h"
 #include "fsclfstools_libftxf.h"
 #include "fsclfstools_libftxr.h"
+#include "fsclfstools_output.h"
+#include "fsclfstools_signal.h"
+#include "fsclfstools_unused.h"
 
 /* Prints the executable usage information
  */
@@ -402,13 +404,13 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-        if( libcsystem_initialize(
+        if( fsclfstools_output_initialize(
              _IONBF,
              &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize system values.\n" );
+		 "Unable to initialize output settings.\n" );
 
 		goto on_error;
 	}
@@ -416,7 +418,7 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = fsclfstools_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "hvV" ) ) ) != (system_integer_t) -1 )

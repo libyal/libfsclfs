@@ -18,7 +18,6 @@ AM_CPPFLAGS = \
 	@LIBFUSN_CPPFLAGS@ \
 	@LIBFTXF_CPPFLAGS@ \
 	@LIBFTXR_CPPFLAGS@ \
-	@LIBCSYSTEM_CPPFLAGS@ \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBFSCLFS_DLL_IMPORT@
 
@@ -30,49 +29,53 @@ bin_PROGRAMS = \
 
 fsclfsinfo_SOURCES = \
 	fsclfsinfo.c \
-	fsclfsoutput.c fsclfsoutput.h \
+	fsclfstools_getopt.c fsclfstools_getopt.h \
+	fsclfstools_i18n.h \
 	fsclfstools_libbfio.h \
 	fsclfstools_libcerror.h \
 	fsclfstools_libclocale.h \
 	fsclfstools_libcnotify.h \
-	fsclfstools_libcsystem.h \
 	fsclfstools_libfdatetime.h \
 	fsclfstools_libfguid.h \
 	fsclfstools_libfsclfs.h \
 	fsclfstools_libftxf.h \
 	fsclfstools_libftxr.h \
-	fsclfstools_libuna.h
+	fsclfstools_libuna.h \
+	fsclfstools_output.c fsclfstools_output.h \
+	fsclfstools_signal.c fsclfstools_signal.h \
+	fsclfstools_unused.h
 
 fsclfsinfo_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
-	../libfsclfs/libfsclfs.la \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libfsclfs/libfsclfs.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
 
 fsclfstest_SOURCES = \
 	fsclfstest.c \
-	fsclfsoutput.c fsclfsoutput.h \
+	fsclfstools_getopt.c fsclfstools_getopt.h \
+	fsclfstools_i18n.h \
 	fsclfstools_libbfio.h \
 	fsclfstools_libcerror.h \
 	fsclfstools_libclocale.h \
 	fsclfstools_libcnotify.h \
-	fsclfstools_libcsystem.h \
 	fsclfstools_libfdatetime.h \
 	fsclfstools_libfguid.h \
 	fsclfstools_libfsclfs.h \
 	fsclfstools_libftxf.h \
 	fsclfstools_libftxr.h \
-	fsclfstools_libuna.h
+	fsclfstools_libuna.h \
+	fsclfstools_output.c fsclfstools_output.h \
+	fsclfstools_signal.c fsclfstools_signal.h \
+	fsclfstools_unused.h
 
 fsclfstest_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
 	@LIBFTXR_LIBADD@ \
 	@LIBFTXF_LIBADD@ \
-	../libfsclfs/libfsclfs.la \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libfsclfs/libfsclfs.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
 
