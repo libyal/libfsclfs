@@ -34,11 +34,10 @@ DPKG_FILES = \
 	dpkg/compat \
 	dpkg/control \
 	dpkg/copyright \
-	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libfsclfs-dev.docs \
-	dpkg/libfsclfs.docs \
-	dpkg/libfsclfs-tools.docs \
+	dpkg/libfsclfs-dev.install \
+	dpkg/libfsclfs.install \
+	dpkg/libfsclfs-tools.install \
 	dpkg/source/format
 
 GETTEXT_FILES = \
