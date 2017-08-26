@@ -35,7 +35,7 @@
 
 #include "../libfsclfs/libfsclfs_io_handle.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 /* Tests the libfsclfs_io_handle_initialize function
  * Returns 1 if successful or 0 if not
@@ -270,7 +270,105 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+/* Tests the libfsclfs_io_handle_clear function
+ * Returns 1 if successful or 0 if not
+ */
+int fsclfs_test_io_handle_clear(
+     void )
+{
+	libcerror_error_t *error         = NULL;
+	libfsclfs_io_handle_t *io_handle = NULL;
+	int result                       = 0;
+
+	/* Initialize test
+	 */
+	result = libfsclfs_io_handle_initialize(
+	          &io_handle,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "io_handle",
+         io_handle );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test regular cases
+	 */
+	result = libfsclfs_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libfsclfs_io_handle_clear(
+	          NULL,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libfsclfs_io_handle_free(
+	          &io_handle,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "io_handle",
+         io_handle );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( io_handle != NULL )
+	{
+		libfsclfs_io_handle_free(
+		 &io_handle,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -287,7 +385,7 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_io_handle_initialize",
@@ -297,9 +395,11 @@ int main(
 	 "libfsclfs_io_handle_free",
 	 fsclfs_test_io_handle_free );
 
-	/* TODO: add tests for libfsclfs_io_handle_clear */
+	FSCLFS_TEST_RUN(
+	 "libfsclfs_io_handle_clear",
+	 fsclfs_test_io_handle_clear );
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

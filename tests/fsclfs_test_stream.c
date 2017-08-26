@@ -73,9 +73,9 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -92,17 +92,17 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 	/* TODO: add tests for libfsclfs_stream_initialize */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_stream_free",
 	 fsclfs_test_stream_free );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 	/* TODO: add tests for libfsclfs_stream_get_utf8_name_size */
 
@@ -118,7 +118,7 @@ int main(
 
 	/* TODO: add tests for libfsclfs_stream_get_record_by_lsn */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

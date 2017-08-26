@@ -76,10 +76,10 @@ int libfsclfs_record_value_free(
      libfsclfs_record_value_t **record_value,
      libcerror_error_t **error );
 
-int libfsclfs_record_value_read(
+int libfsclfs_record_value_read_data(
      libfsclfs_record_value_t *record_value,
-     const uint8_t *record_data,
-     size_t record_data_size,
+     const uint8_t *data,
+     size_t data_size,
      libcerror_error_t **error );
 
 int libfsclfs_record_value_get_data(

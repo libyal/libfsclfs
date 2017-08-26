@@ -113,13 +113,15 @@ int libfsclfs_store_open(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 LIBFSCLFS_EXTERN \
 int libfsclfs_store_open_wide(
      libfsclfs_store_t *store,
      const wchar_t *filename,
      int access_flags,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 LIBFSCLFS_EXTERN \
 int libfsclfs_store_open_file_io_handle(
@@ -148,12 +150,14 @@ int libfsclfs_store_open_container(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 int libfsclfs_store_open_container_wide(
      libfsclfs_internal_store_t *internal_store,
      int container_index,
      const wchar_t *filename,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 int libfsclfs_store_open_container_file_io_handle(
      libfsclfs_internal_store_t *internal_store,
@@ -218,6 +222,7 @@ int libfsclfs_store_set_basename(
      libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
+
 int libfsclfs_store_get_basename_size_wide(
      libfsclfs_internal_store_t *internal_store,
      size_t *basename_size,
@@ -234,7 +239,8 @@ int libfsclfs_store_set_basename_wide(
      const wchar_t *basename,
      size_t basename_length,
      libcerror_error_t **error );
-#endif
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 LIBFSCLFS_EXTERN \
 int libfsclfs_store_get_number_of_containers(

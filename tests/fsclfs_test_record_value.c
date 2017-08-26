@@ -35,7 +35,7 @@
 
 #include "../libfsclfs/libfsclfs_record_value.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 /* Tests the libfsclfs_record_value_initialize function
  * Returns 1 if successful or 0 if not
@@ -270,7 +270,112 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+/* Tests the libfsclfs_record_value_read_data function
+ * Returns 1 if successful or 0 if not
+ */
+int fsclfs_test_record_value_read_data(
+     void )
+{
+	libcerror_error_t *error               = NULL;
+	libfsclfs_record_value_t *record_value = NULL;
+	int result                             = 0;
+
+	/* Initialize test
+	 */
+	result = libfsclfs_record_value_initialize(
+	          &record_value,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "record_value",
+         record_value );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libfsclfs_record_value_read_data(
+	          NULL,
+	          NULL,
+	          0,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libfsclfs_record_value_read_data(
+	          record_value,
+	          NULL,
+	          0,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+	/* Clean up
+	 */
+	result = libfsclfs_record_value_free(
+	          &record_value,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "record_value",
+         record_value );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( record_value != NULL )
+	{
+		libfsclfs_record_value_free(
+		 &record_value,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -287,7 +392,7 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_record_value_initialize",
@@ -297,11 +402,13 @@ int main(
 	 "libfsclfs_record_value_free",
 	 fsclfs_test_record_value_free );
 
-	/* TODO: add tests for libfsclfs_record_value_read */
+	FSCLFS_TEST_RUN(
+	 "libfsclfs_record_value_read_data",
+	 fsclfs_test_record_value_read_data );
 
 	/* TODO: add tests for libfsclfs_record_value_get_data */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

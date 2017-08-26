@@ -35,7 +35,7 @@
 
 #include "../libfsclfs/libfsclfs_owner_page.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 /* Tests the libfsclfs_owner_page_initialize function
  * Returns 1 if successful or 0 if not
@@ -270,7 +270,116 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+/* Tests the libfsclfs_owner_page_read function
+ * Returns 1 if successful or 0 if not
+ */
+int fsclfs_test_owner_page_read(
+     void )
+{
+	libcerror_error_t *error           = NULL;
+	libfsclfs_owner_page_t *owner_page = NULL;
+	int result                         = 0;
+
+	/* Initialize test
+	 */
+	result = libfsclfs_owner_page_initialize(
+	          &owner_page,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "owner_page",
+         owner_page );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libfsclfs_owner_page_read(
+	          NULL,
+	          NULL,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libfsclfs_owner_page_read(
+	          owner_page,
+	          NULL,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+	/* Clean up
+	 */
+	result = libfsclfs_owner_page_free(
+	          &owner_page,
+	          &error );
+
+	FSCLFS_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "owner_page",
+         owner_page );
+
+        FSCLFS_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( owner_page != NULL )
+	{
+		libfsclfs_owner_page_free(
+		 &owner_page,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -287,7 +396,7 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_owner_page_initialize",
@@ -297,7 +406,9 @@ int main(
 	 "libfsclfs_owner_page_free",
 	 fsclfs_test_owner_page_free );
 
-	/* TODO: add tests for libfsclfs_owner_page_read */
+	FSCLFS_TEST_RUN(
+	 "libfsclfs_owner_page_read",
+	 fsclfs_test_owner_page_read );
 
 	/* TODO: add tests for libfsclfs_owner_page_read_virtual_log_range_array */
 
@@ -307,7 +418,7 @@ int main(
 
 	/* TODO: add tests for libfsclfs_owner_page_get_physical_block_offset */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

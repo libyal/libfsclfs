@@ -139,16 +139,16 @@ int libfsclfs_record_value_free(
 	return( 1 );
 }
 
-/* Reads the record value
+/* Reads the record value data
  * Returns 1 if successful or -1 on error
  */
-int libfsclfs_record_value_read(
+int libfsclfs_record_value_read_data(
      libfsclfs_record_value_t *record_value,
-     const uint8_t *record_data,
-     size_t record_data_size,
+     const uint8_t *data,
+     size_t data_size,
      libcerror_error_t **error )
 {
-	static char *function = "libfsclfs_record_value_read";
+	static char *function = "libfsclfs_record_value_read_data";
 	uint16_t data_offset  = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
@@ -166,35 +166,35 @@ int libfsclfs_record_value_read(
 
 		return( -1 );
 	}
-	if( record_data == NULL )
+	if( data == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid record data.",
+		 "%s: invalid data.",
 		 function );
 
 		return( -1 );
 	}
-	if( record_data_size > (size_t) SSIZE_MAX )
+	if( data_size > (size_t) SSIZE_MAX )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid record data size value exceeds maximum.",
+		 "%s: invalid data size value exceeds maximum.",
 		 function );
 
 		return( -1 );
 	}
-	if( record_data_size < sizeof( fsclfs_container_record_header_t ) )
+	if( data_size < sizeof( fsclfs_container_record_header_t ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: invalid record data value too small.",
+		 "%s: invalid data value too small.",
 		 function );
 
 		return( -1 );
@@ -206,37 +206,37 @@ int libfsclfs_record_value_read(
 		 "%s: record header data:\n",
 		 function );
 		libcnotify_print_data(
-		 record_data,
+		 data,
 		 sizeof( fsclfs_container_record_header_t ),
 		 0 );
 	}
 #endif
 	byte_stream_copy_to_uint64_little_endian(
-	 ( (fsclfs_container_record_header_t *) record_data )->virtual_lsn,
+	 ( (fsclfs_container_record_header_t *) data )->virtual_lsn,
 	 record_value->virtual_lsn );
 
 	byte_stream_copy_to_uint64_little_endian(
-	 ( (fsclfs_container_record_header_t *) record_data )->undo_next_lsn,
+	 ( (fsclfs_container_record_header_t *) data )->undo_next_lsn,
 	 record_value->undo_next_lsn );
 
 	byte_stream_copy_to_uint64_little_endian(
-	 ( (fsclfs_container_record_header_t *) record_data )->previous_lsn,
+	 ( (fsclfs_container_record_header_t *) data )->previous_lsn,
 	 record_value->previous_lsn );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_container_record_header_t *) record_data )->size,
+	 ( (fsclfs_container_record_header_t *) data )->size,
 	 record_value->size );
 
 	byte_stream_copy_to_uint16_little_endian(
-	 ( (fsclfs_container_record_header_t *) record_data )->flags,
+	 ( (fsclfs_container_record_header_t *) data )->flags,
 	 record_value->flags );
 
 	byte_stream_copy_to_uint16_little_endian(
-	 ( (fsclfs_container_record_header_t *) record_data )->data_offset,
+	 ( (fsclfs_container_record_header_t *) data )->data_offset,
 	 data_offset );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_container_record_header_t *) record_data )->record_type,
+	 ( (fsclfs_container_record_header_t *) data )->record_type,
 	 record_value->type );
 
 #if defined( HAVE_DEBUG_OUTPUT )
@@ -263,7 +263,7 @@ int libfsclfs_record_value_read(
 		 record_value->size );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 ( (fsclfs_container_record_header_t *) record_data )->unknown1,
+		 ( (fsclfs_container_record_header_t *) data )->unknown1,
 		 value_32bit );
 		libcnotify_printf(
 		 "%s: unknown1\t\t\t\t\t: 0x%08" PRIx32 "\n",
@@ -291,7 +291,7 @@ int libfsclfs_record_value_read(
 	}
 #endif
 	if( ( record_value->size < sizeof( fsclfs_container_record_header_t ) )
-	 || ( (size_t) record_value->size > record_data_size ) )
+	 || ( (size_t) record_value->size > data_size ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -303,7 +303,7 @@ int libfsclfs_record_value_read(
 		return( -1 );
 	}
 	if( ( data_offset < sizeof( fsclfs_container_record_header_t ) )
-	 || ( (size_t) data_offset > record_data_size ) )
+	 || ( (size_t) data_offset > data_size ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -323,7 +323,7 @@ int libfsclfs_record_value_read(
 			 "%s: record header trailing data:\n",
 			 function );
 			libcnotify_print_data(
-			 &( record_data[ sizeof( fsclfs_container_record_header_t ) ] ),
+			 &( data[ sizeof( fsclfs_container_record_header_t ) ] ),
 			 data_offset - sizeof( fsclfs_container_record_header_t ),
 			 0 );
 		}
@@ -347,7 +347,7 @@ int libfsclfs_record_value_read(
 	}
 	if( memory_copy(
 	     record_value->data,
-	     &( record_data[ data_offset ] ),
+	     &( data[ data_offset ] ),
 	     record_value->data_size ) == NULL )
 	{
 		libcerror_error_set(

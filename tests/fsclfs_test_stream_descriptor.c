@@ -35,7 +35,7 @@
 
 #include "../libfsclfs/libfsclfs_stream_descriptor.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 /* Tests the libfsclfs_stream_descriptor_initialize function
  * Returns 1 if successful or 0 if not
@@ -270,7 +270,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -287,7 +287,7 @@ int main(
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argc )
 	FSCLFS_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 	FSCLFS_TEST_RUN(
 	 "libfsclfs_stream_descriptor_initialize",
@@ -297,7 +297,7 @@ int main(
 	 "libfsclfs_stream_descriptor_free",
 	 fsclfs_test_stream_descriptor_free );
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

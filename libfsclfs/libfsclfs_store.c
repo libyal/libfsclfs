@@ -3585,7 +3585,7 @@ int libfsclfs_block_read_record_values(
 
 				goto on_error;
 			}
-			if( libfsclfs_record_value_read(
+			if( libfsclfs_record_value_read_data(
 			     record_value,
 			     record_data,
 			     record_data_size,
