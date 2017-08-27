@@ -228,6 +228,10 @@
 				RelativePath="..\..\libftxf\libftxf_types.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\libftxf\libftxf_unused.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

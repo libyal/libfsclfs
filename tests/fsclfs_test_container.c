@@ -31,7 +31,9 @@
 #endif
 
 #include "fsclfs_test_libcerror.h"
+#include "fsclfs_test_libclocale.h"
 #include "fsclfs_test_libfsclfs.h"
+#include "fsclfs_test_libuna.h"
 #include "fsclfs_test_macros.h"
 #include "fsclfs_test_memory.h"
 #include "fsclfs_test_unused.h"

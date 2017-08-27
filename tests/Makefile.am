@@ -69,12 +69,16 @@ fsclfs_test_block_descriptor_LDADD = \
 fsclfs_test_container_SOURCES = \
 	fsclfs_test_container.c \
 	fsclfs_test_libcerror.h \
+	fsclfs_test_libclocale.h \
 	fsclfs_test_libfsclfs.h \
+	fsclfs_test_libuna.h \
 	fsclfs_test_macros.h \
 	fsclfs_test_memory.c fsclfs_test_memory.h \
 	fsclfs_test_unused.h
 
 fsclfs_test_container_LDADD = \
+	@LIBUNA_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
 	../libfsclfs/libfsclfs.la \
 	@LIBCERROR_LIBADD@
 

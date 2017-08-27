@@ -341,8 +341,6 @@ int fsclfs_test_owner_page_read(
 	libcerror_error_free(
 	 &error );
 
-	return( 1 );
-
 	/* Clean up
 	 */
 	result = libfsclfs_owner_page_free(

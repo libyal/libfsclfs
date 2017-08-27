@@ -1499,7 +1499,7 @@ int main(
 
 		/* TODO: add tests for libfsclfs_store_open_containers_file_io_pool */
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 		/* TODO: add tests for libfsclfs_store_open_container */
 
@@ -1527,7 +1527,7 @@ int main(
 
 		/* TODO: add tests for libfsclfs_store_set_basename_wide */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 		FSCLFS_TEST_RUN_WITH_ARGS(
 		 "libfsclfs_store_get_number_of_containers",
@@ -1536,11 +1536,11 @@ int main(
 
 		/* TODO: add tests for libfsclfs_store_get_container */
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 		/* TODO: add tests for libfsclfs_store_get_container_physical_number */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 		FSCLFS_TEST_RUN_WITH_ARGS(
 		 "libfsclfs_store_get_number_of_streams",
@@ -1549,11 +1549,11 @@ int main(
 
 		/* TODO: add tests for libfsclfs_store_get_stream */
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT )
 
 		/* TODO: add tests for libfsclfs_store_get_record_value_by_logical_lsn */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBFSCLFS_DLL_IMPORT ) */
 
 		/* Clean up
 		 */

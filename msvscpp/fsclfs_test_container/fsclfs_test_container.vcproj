@@ -194,7 +194,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\tests\fsclfs_test_libclocale.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\tests\fsclfs_test_libfsclfs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\fsclfs_test_libuna.h"
 				>
 			</File>
 			<File

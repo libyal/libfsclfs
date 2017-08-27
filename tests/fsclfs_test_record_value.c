@@ -337,8 +337,6 @@ int fsclfs_test_record_value_read_data(
 	libcerror_error_free(
 	 &error );
 
-	return( 1 );
-
 	/* Clean up
 	 */
 	result = libfsclfs_record_value_free(

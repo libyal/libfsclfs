@@ -339,8 +339,6 @@ int fsclfs_test_block_read(
 	libcerror_error_free(
 	 &error );
 
-	return( 1 );
-
 	/* Clean up
 	 */
 	result = libfsclfs_block_free(
