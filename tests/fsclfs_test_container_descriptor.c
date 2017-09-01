@@ -64,13 +64,13 @@ int fsclfs_test_container_descriptor_initialize(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "container_descriptor",
-         container_descriptor );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "container_descriptor",
+	 container_descriptor );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_container_descriptor_free(
 	          &container_descriptor,
@@ -81,13 +81,13 @@ int fsclfs_test_container_descriptor_initialize(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "container_descriptor",
-         container_descriptor );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "container_descriptor",
+	 container_descriptor );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int fsclfs_test_container_descriptor_initialize(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int fsclfs_test_container_descriptor_initialize(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int fsclfs_test_container_descriptor_free(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

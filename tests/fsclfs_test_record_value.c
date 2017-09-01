@@ -64,13 +64,13 @@ int fsclfs_test_record_value_initialize(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "record_value",
-         record_value );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "record_value",
+	 record_value );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_record_value_free(
 	          &record_value,
@@ -81,13 +81,13 @@ int fsclfs_test_record_value_initialize(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "record_value",
-         record_value );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "record_value",
+	 record_value );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int fsclfs_test_record_value_initialize(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int fsclfs_test_record_value_initialize(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int fsclfs_test_record_value_free(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -291,13 +291,13 @@ int fsclfs_test_record_value_read_data(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "record_value",
-         record_value );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "record_value",
+	 record_value );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -312,9 +312,9 @@ int fsclfs_test_record_value_read_data(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -330,9 +330,9 @@ int fsclfs_test_record_value_read_data(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -348,13 +348,13 @@ int fsclfs_test_record_value_read_data(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "record_value",
-         record_value );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "record_value",
+	 record_value );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 

@@ -55,9 +55,9 @@ int fsclfs_test_record_free(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

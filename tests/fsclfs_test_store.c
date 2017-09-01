@@ -605,13 +605,13 @@ int fsclfs_test_store_initialize(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_store_free(
 	          &store,
@@ -622,13 +622,13 @@ int fsclfs_test_store_initialize(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -641,9 +641,9 @@ int fsclfs_test_store_initialize(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -659,9 +659,9 @@ int fsclfs_test_store_initialize(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -793,9 +793,9 @@ int fsclfs_test_store_free(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -836,9 +836,9 @@ int fsclfs_test_store_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_store_initialize(
 	          &store,
@@ -849,13 +849,13 @@ int fsclfs_test_store_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open
 	 */
@@ -870,9 +870,9 @@ int fsclfs_test_store_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -887,9 +887,9 @@ int fsclfs_test_store_open(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -905,13 +905,13 @@ int fsclfs_test_store_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -957,9 +957,9 @@ int fsclfs_test_store_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_store_initialize(
 	          &store,
@@ -970,13 +970,13 @@ int fsclfs_test_store_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open
 	 */
@@ -991,9 +991,9 @@ int fsclfs_test_store_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -1008,9 +1008,9 @@ int fsclfs_test_store_open_wide(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -1026,13 +1026,13 @@ int fsclfs_test_store_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -1073,9 +1073,9 @@ int fsclfs_test_store_close(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -1112,13 +1112,13 @@ int fsclfs_test_store_open_close(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open and close
 	 */
@@ -1141,9 +1141,9 @@ int fsclfs_test_store_open_close(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_store_close(
 	          store,
@@ -1154,9 +1154,9 @@ int fsclfs_test_store_open_close(
 	 result,
 	 0 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open and close a second time to validate clean up on close
 	 */
@@ -1179,9 +1179,9 @@ int fsclfs_test_store_open_close(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_store_close(
 	          store,
@@ -1192,9 +1192,9 @@ int fsclfs_test_store_open_close(
 	 result,
 	 0 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Clean up
 	 */
@@ -1207,13 +1207,13 @@ int fsclfs_test_store_open_close(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "store",
-         store );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "store",
+	 store );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 

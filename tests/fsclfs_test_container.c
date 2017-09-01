@@ -468,9 +468,9 @@ int fsclfs_test_container_free(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -515,9 +515,9 @@ int fsclfs_test_container_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_container_initialize(
 	          &container,
@@ -530,13 +530,13 @@ int fsclfs_test_container_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "container",
-         container );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "container",
+	 container );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open
 	 */
@@ -550,9 +550,9 @@ int fsclfs_test_container_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -566,9 +566,9 @@ int fsclfs_test_container_open(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -584,13 +584,13 @@ int fsclfs_test_container_open(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "container",
-         container );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "container",
+	 container );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -638,9 +638,9 @@ int fsclfs_test_container_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libfsclfs_container_initialize(
 	          &container,
@@ -653,13 +653,13 @@ int fsclfs_test_container_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "container",
-         container );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "container",
+	 container );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test open
 	 */
@@ -673,9 +673,9 @@ int fsclfs_test_container_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -689,9 +689,9 @@ int fsclfs_test_container_open_wide(
 	 result,
 	 -1 );
 
-        FSCLFS_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -707,13 +707,13 @@ int fsclfs_test_container_open_wide(
 	 result,
 	 1 );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "container",
-         container );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "container",
+	 container );
 
-        FSCLFS_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	FSCLFS_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
