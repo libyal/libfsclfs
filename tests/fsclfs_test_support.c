@@ -203,6 +203,18 @@ int main(
 	 "libfsclfs_get_version",
 	 fsclfs_test_get_version );
 
+	FSCLFS_TEST_RUN(
+	 "libfsclfs_get_access_flags_read",
+	 fsclfs_test_get_access_flags_read );
+
+	FSCLFS_TEST_RUN(
+	 "libfsclfs_get_codepage",
+	 fsclfs_test_get_codepage );
+
+	FSCLFS_TEST_RUN(
+	 "libfsclfs_set_codepage",
+	 fsclfs_test_set_codepage );
+
 	return( EXIT_SUCCESS );
 
 on_error:
