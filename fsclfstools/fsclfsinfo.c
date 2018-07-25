@@ -22,17 +22,21 @@
 #include <common.h>
 #include <file_stream.h>
 #include <memory.h>
-#include <narrow_string.h>
 #include <system_string.h>
 #include <types.h>
-#include <wide_string.h>
 
-#if defined( HAVE_UNISTD_H )
-#include <unistd.h>
+#include <stdio.h>
+
+#if defined( HAVE_IO_H ) || defined( WINAPI )
+#include <io.h>
 #endif
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
+#endif
+
+#if defined( HAVE_UNISTD_H )
+#include <unistd.h>
 #endif
 
 #include "fsclfstools_getopt.h"
@@ -43,6 +47,10 @@
 #include "fsclfstools_output.h"
 #include "fsclfstools_signal.h"
 #include "fsclfstools_unused.h"
+#include "info_handle.h"
+
+info_handle_t *fsclfsinfo_info_handle = NULL;
+int fsclfsinfo_abort                  = 0;
 
 /* Prints the executable usage information
  */
@@ -64,361 +72,48 @@ void usage_fprint(
 	fprintf( stream, "\t-V:     print version\n" );
 }
 
-/* Prints store information
- * Returns 1 if successful or -1 on error
+/* Signal handler for fsclfsinfo
  */
-int fsclfsinfo_store_info_fprint(
-     FILE *stream,
-     libfsclfs_store_t *log_store,
-     libfsclfs_error_t **error )
+void fsclfsinfo_signal_handler(
+      fsclfstools_signal_t signal FSCLFSTOOLS_ATTRIBUTE_UNUSED )
 {
-	libfsclfs_container_t *log_container = NULL;
-	libfsclfs_stream_t *log_stream       = NULL;
-	system_character_t *value_string     = NULL;
-	static char *function                = "fsclfsinfo_store_info_fprint";
-	size64_t container_size              = 0;
-	size_t value_string_size             = 0;
-	int item_index                       = 0;
-	int number_of_containers             = 0;
-	int number_of_streams                = 0;
-	int result                           = 0;
+	libcerror_error_t *error = NULL;
+	static char *function    = "fsclfsinfo_signal_handler";
 
-	if( stream == NULL )
+	FSCLFSTOOLS_UNREFERENCED_PARAMETER( signal )
+
+	fsclfsinfo_abort = 1;
+
+	if( fsclfsinfo_info_handle != NULL )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid stream.",
-		 function );
-
-		return( -1 );
-	}
-	if( log_store == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid store.",
-		 function );
-
-		return( -1 );
-	}
-	fprintf(
-	 stream,
-	 "Common Log File System (CLFS) store information:\n" );
-
-	if( libfsclfs_store_get_number_of_containers(
-	     log_store,
-	     &number_of_containers,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve number of containers.",
-		 function );
-
-		goto on_error;
-	}
-	if( libfsclfs_store_get_number_of_streams(
-	     log_store,
-	     &number_of_streams,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve number of streams.",
-		 function );
-
-		goto on_error;
-	}
-	fprintf(
-	 stream,
-	 "\tNumber of containers:\t%d\n",
-	 number_of_containers );
-
-	fprintf(
-	 stream,
-	 "\tNumber of streams:\t%d\n",
-	 number_of_streams );
-
-	fprintf(
-	 stream,
-	 "\n" );
-
-	for( item_index = 0;
-	     item_index < number_of_containers;
-	     item_index++ )
-	{
-		fprintf(
-		 stream,
-		 "Container: %d\n",
-		 item_index + 1 );
-
-		if( libfsclfs_store_get_container(
-		     log_store,
-		     item_index,
-		     &log_container,
-		     error ) != 1 )
+		if( info_handle_signal_abort(
+		     fsclfsinfo_info_handle,
+		     &error ) != 1 )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve container: %d.",
-			 function,
-			 item_index );
-
-			goto on_error;
-		}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libfsclfs_container_get_utf16_name_size(
-		          log_container,
-		          &value_string_size,
-		          error );
-#else
-		result = libfsclfs_container_get_utf8_name_size(
-		          log_container,
-		          &value_string_size,
-		          error );
-#endif
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve container: %d name size.",
-			 function,
-			 item_index );
-
-			goto on_error;
-		}
-		value_string = system_string_allocate(
-		                value_string_size );
-
-		if( value_string == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_MEMORY,
-			 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-			 "%s: unable to create value string.",
+			libcnotify_printf(
+			 "%s: unable to signal info handle to abort.\n",
 			 function );
 
-			goto on_error;
+			libcnotify_print_error_backtrace(
+			 error );
+			libcerror_error_free(
+			 &error );
 		}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libfsclfs_container_get_utf16_name(
-		          log_container,
-		          (uint16_t *) value_string,
-		          value_string_size,
-		          error );
+	}
+	/* Force stdin to close otherwise any function reading it will remain blocked
+	 */
+#if defined( WINAPI ) && !defined( __CYGWIN__ )
+	if( _close(
+	     0 ) != 0 )
 #else
-		result = libfsclfs_container_get_utf8_name(
-		          log_container,
-		          (uint8_t *) value_string,
-		          value_string_size,
-		          error );
+	if( close(
+	     0 ) != 0 )
 #endif
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve container: %d name.",
-			 function,
-			 item_index );
-
-			memory_free(
-			 value_string );
-
-			goto on_error;
-		}
-		fprintf(
-		 stream,
-		 "\tName:\t%" PRIs_SYSTEM "\n",
-		 value_string );
-
-		memory_free(
-		 value_string );
-
-		if( libfsclfs_container_get_size(
-		     log_container,
-		     &container_size,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve container: %d. size",
-			 function,
-			 item_index );
-
-			goto on_error;
-		}
-		fprintf(
-		 stream,
-		 "\tSize:\t%" PRIu64 "\n",
-		 container_size );
-
-		if( libfsclfs_container_free(
-		     &log_container,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free container: %d.",
-			 function,
-			 item_index );
-
-			goto on_error;
-		}
-		fprintf(
-		 stream,
-		 "\n" );
-	}
-	for( item_index = 0;
-	     item_index < number_of_streams;
-	     item_index++ )
 	{
-		fprintf(
-		 stream,
-		 "Stream: %d\n",
-		 item_index + 1 );
-
-		if( libfsclfs_store_get_stream(
-		     log_store,
-		     item_index,
-		     &log_stream,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve stream: %d.",
-			 function,
-			 item_index );
-
-			goto on_error;
-		}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libfsclfs_stream_get_utf16_name_size(
-		          log_stream,
-		          &value_string_size,
-		          error );
-#else
-		result = libfsclfs_stream_get_utf8_name_size(
-		          log_stream,
-		          &value_string_size,
-		          error );
-#endif
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve stream: %d name size.",
-			 function,
-			 item_index );
-
-			goto on_error;
-		}
-		value_string = system_string_allocate(
-		                value_string_size );
-
-		if( value_string == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_MEMORY,
-			 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-			 "%s: unable to create value string.",
-			 function );
-
-			goto on_error;
-		}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libfsclfs_stream_get_utf16_name(
-		          log_stream,
-		          (uint16_t *) value_string,
-		          value_string_size,
-		          error );
-#else
-		result = libfsclfs_stream_get_utf8_name(
-		          log_stream,
-		          (uint8_t *) value_string,
-		          value_string_size,
-		          error );
-#endif
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve stream: %d name.",
-			 function,
-			 item_index );
-
-			memory_free(
-			 value_string );
-
-			goto on_error;
-		}
-		fprintf(
-		 stream,
-		 "\tName:\t%" PRIs_SYSTEM "\n",
-		 value_string );
-
-		memory_free(
-		 value_string );
-
-		if( libfsclfs_stream_free(
-		     &log_stream,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free stream: %d.",
-			 function,
-			 item_index );
-
-			goto on_error;
-		}
-		fprintf(
-		 stream,
-		 "\n" );
+		libcnotify_printf(
+		 "%s: unable to close stdin.\n",
+		 function );
 	}
-	return( 1 );
-
-on_error:
-	if( log_container != NULL )
-	{
-		libfsclfs_container_free(
-		 &log_container,
-		 NULL );
-	}
-	if( log_stream != NULL )
-	{
-		libfsclfs_stream_free(
-		 &log_stream,
-		 NULL );
-	}
-	return( -1 );
 }
 
 /* The main program
@@ -429,13 +124,11 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	libfsclfs_error_t *error     = NULL;
-	libfsclfs_store_t *log_store = NULL;
-	system_character_t *source   = NULL;
-	char *program                = "fsclfsinfo";
-	system_integer_t option      = 0;
-	int result                   = 0;
-	int verbose                  = 0;
+	libfsclfs_error_t *error   = NULL;
+	system_character_t *source = NULL;
+	char *program              = "fsclfsinfo";
+	system_integer_t option    = 0;
+	int verbose                = 0;
 
 	libcnotify_stream_set(
 	 stderr,
@@ -444,7 +137,7 @@ int main( int argc, char * const argv[] )
 	 1 );
 
 	if( libclocale_initialize(
-             "fsclfstools",
+	     "fsclfstools",
 	     &error ) != 1 )
 	{
 		fprintf(
@@ -453,9 +146,9 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-        if( fsclfstools_output_initialize(
-             _IONBF,
-             &error ) != 1 )
+	if( fsclfstools_output_initialize(
+	     _IONBF,
+	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
@@ -508,7 +201,7 @@ int main( int argc, char * const argv[] )
 	{
 		fprintf(
 		 stderr,
-		 "Missing source file or device.\n" );
+		 "Missing source file.\n" );
 
 		usage_fprint(
 		 stdout );
@@ -525,41 +218,30 @@ int main( int argc, char * const argv[] )
 	libfsclfs_notify_set_verbose(
 	 verbose );
 
-	if( libfsclfs_store_initialize(
-	     &log_store,
+	if( info_handle_initialize(
+	     &fsclfsinfo_info_handle,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize store.\n" );
+		 "Unable to initialize info handle.\n" );
 
 		goto on_error;
 	}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-	result = libfsclfs_store_open_wide(
-	          log_store,
-	          source,
-	          LIBFSCLFS_OPEN_READ,
-	          &error );
-#else
-	result = libfsclfs_store_open(
-	          log_store,
-	          source,
-	          LIBFSCLFS_OPEN_READ,
-	          &error );
-#endif
-	if( result != 1 )
+	if( info_handle_open_input(
+	     fsclfsinfo_info_handle,
+	     source,
+	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Error opening store using base log: %" PRIs_SYSTEM ".\n",
-		 argv[ optind ] );
+		 "Unable to open: %" PRIs_SYSTEM ".\n",
+		 source );
 
 		goto on_error;
 	}
-	if( fsclfsinfo_store_info_fprint(
-	     stdout,
-	     log_store,
+	if( info_handle_store_fprint(
+	     fsclfsinfo_info_handle,
 	     &error ) != 1 )
 	{
 		fprintf(
@@ -568,23 +250,23 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libfsclfs_store_close(
-	     log_store,
+	if( info_handle_close_input(
+	     fsclfsinfo_info_handle,
 	     &error ) != 0 )
 	{
 		fprintf(
 		 stderr,
-		 "Error closing store.\n" );
+		 "Unable to close info handle.\n" );
 
 		goto on_error;
 	}
-	if( libfsclfs_store_free(
-	     &log_store,
+	if( info_handle_free(
+	     &fsclfsinfo_info_handle,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to free store.\n" );
+		 "Unable to free info handle.\n" );
 
 		goto on_error;
 	}
@@ -598,12 +280,13 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( log_store != NULL )
+	if( fsclfsinfo_info_handle != NULL )
 	{
-		libfsclfs_store_free(
-		 &log_store,
+		info_handle_free(
+		 &fsclfsinfo_info_handle,
 		 NULL );
 	}
 	return( EXIT_FAILURE );
 }
+
 

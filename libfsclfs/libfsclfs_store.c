@@ -279,6 +279,45 @@ int libfsclfs_store_free(
 	return( result );
 }
 
+/* Signals the store to abort its current activity
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_store_signal_abort(
+     libfsclfs_store_t *store,
+     libcerror_error_t **error )
+{
+	libfsclfs_internal_store_t *internal_store = NULL;
+	static char *function                      = "libfsclfs_store_signal_abort";
+
+	if( store == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid store.",
+		 function );
+
+		return( -1 );
+	}
+	internal_store = (libfsclfs_internal_store_t *) store;
+
+	if( internal_store->io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid store - missing IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	internal_store->io_handle->abort = 1;
+
+	return( 1 );
+}
+
 /* Opens a store using a base log
  * Returns 1 if successful or -1 on error
  */

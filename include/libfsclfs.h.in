@@ -171,6 +171,14 @@ int libfsclfs_store_free(
      libfsclfs_store_t **store,
      libfsclfs_error_t **error );
 
+/* Signals the store to abort its current activity
+ * Returns 1 if successful or -1 on error
+ */
+LIBFSCLFS_EXTERN \
+int libfsclfs_store_signal_abort(
+     libfsclfs_store_t *store,
+     libfsclfs_error_t **error );
+
 /* Opens a base log using a base log
  * Returns 1 if successful or -1 on error
  */

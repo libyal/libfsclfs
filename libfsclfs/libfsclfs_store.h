@@ -106,6 +106,11 @@ int libfsclfs_store_free(
      libcerror_error_t **error );
 
 LIBFSCLFS_EXTERN \
+int libfsclfs_store_signal_abort(
+     libfsclfs_store_t *store,
+     libcerror_error_t **error );
+
+LIBFSCLFS_EXTERN \
 int libfsclfs_store_open(
      libfsclfs_store_t *store,
      const char *filename,

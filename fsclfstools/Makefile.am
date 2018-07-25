@@ -43,7 +43,8 @@ fsclfsinfo_SOURCES = \
 	fsclfstools_libuna.h \
 	fsclfstools_output.c fsclfstools_output.h \
 	fsclfstools_signal.c fsclfstools_signal.h \
-	fsclfstools_unused.h
+	fsclfstools_unused.h \
+	info_handle.c info_handle.h
 
 fsclfsinfo_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \

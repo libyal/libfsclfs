@@ -191,6 +191,10 @@
 				RelativePath="..\..\fsclfstools\fsclfstools_signal.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\fsclfstools\info_handle.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -255,6 +259,10 @@
 			</File>
 			<File
 				RelativePath="..\..\fsclfstools\fsclfstools_unused.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\fsclfstools\info_handle.h"
 				>
 			</File>
 		</Filter>
