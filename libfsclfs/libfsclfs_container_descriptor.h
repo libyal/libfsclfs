@@ -54,6 +54,10 @@ struct libfsclfs_container_descriptor
 	/* The logical number
 	 */
 	uint32_t logical_number;
+
+	/* The unknown2 value
+	 */
+	uint32_t unknown2;
 };
 
 int libfsclfs_container_descriptor_initialize(
@@ -62,6 +66,39 @@ int libfsclfs_container_descriptor_initialize(
 
 int libfsclfs_container_descriptor_free(
      libfsclfs_container_descriptor_t **container_descriptor,
+     libcerror_error_t **error );
+
+int libfsclfs_container_descriptor_read_data(
+     libfsclfs_container_descriptor_t *container_descriptor,
+     const uint8_t *data,
+     size_t data_size,
+     libcerror_error_t **error );
+
+int libfsclfs_container_descriptor_get_size(
+     libfsclfs_container_descriptor_t *container_descriptor,
+     size64_t *size,
+     libcerror_error_t **error );
+
+int libfsclfs_container_descriptor_get_utf8_name_size(
+     libfsclfs_container_descriptor_t *container_descriptor,
+     size_t *utf8_string_size,
+     libcerror_error_t **error );
+
+int libfsclfs_container_descriptor_get_utf8_name(
+     libfsclfs_container_descriptor_t *container_descriptor,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error );
+
+int libfsclfs_container_descriptor_get_utf16_name_size(
+     libfsclfs_container_descriptor_t *container_descriptor,
+     size_t *utf16_string_size,
+     libcerror_error_t **error );
+
+int libfsclfs_container_descriptor_get_utf16_name(
+     libfsclfs_container_descriptor_t *container_descriptor,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

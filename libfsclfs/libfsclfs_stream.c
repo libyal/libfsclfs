@@ -25,7 +25,6 @@
 
 #include "libfsclfs_definitions.h"
 #include "libfsclfs_libcerror.h"
-#include "libfsclfs_libuna.h"
 #include "libfsclfs_record.h"
 #include "libfsclfs_record_value.h"
 #include "libfsclfs_stream.h"
@@ -192,21 +191,8 @@ int libfsclfs_stream_get_utf8_name_size(
 	}
 	internal_stream = (libfsclfs_internal_stream_t *) stream;
 
-	if( internal_stream->stream_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid stream - missing stream descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf8_string_size_from_utf16_stream(
-	     internal_stream->stream_descriptor->name,
-	     internal_stream->stream_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
+	if( libfsclfs_stream_descriptor_get_utf8_name_size(
+	     internal_stream->stream_descriptor,
 	     utf8_string_size,
 	     error ) != 1 )
 	{
@@ -214,7 +200,7 @@ int libfsclfs_stream_get_utf8_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to determine size of UTF-8 string.",
+		 "%s: unable to retrieve UTF-8 name size from stream descriptor.",
 		 function );
 
 		return( -1 );
@@ -248,30 +234,17 @@ int libfsclfs_stream_get_utf8_name(
 	}
 	internal_stream = (libfsclfs_internal_stream_t *) stream;
 
-	if( internal_stream->stream_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid stream - missing stream descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf8_string_copy_from_utf16_stream(
+	if( libfsclfs_stream_descriptor_get_utf8_name(
+	     internal_stream->stream_descriptor,
 	     utf8_string,
 	     utf8_string_size,
-	     internal_stream->stream_descriptor->name,
-	     internal_stream->stream_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-		 "%s: unable to copy name to UTF-8 string.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve UTF-8 name from stream descriptor.",
 		 function );
 
 		return( -1 );
@@ -304,21 +277,8 @@ int libfsclfs_stream_get_utf16_name_size(
 	}
 	internal_stream = (libfsclfs_internal_stream_t *) stream;
 
-	if( internal_stream->stream_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid stream - missing stream descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf16_string_size_from_utf16_stream(
-	     internal_stream->stream_descriptor->name,
-	     internal_stream->stream_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
+	if( libfsclfs_stream_descriptor_get_utf16_name_size(
+	     internal_stream->stream_descriptor,
 	     utf16_string_size,
 	     error ) != 1 )
 	{
@@ -326,7 +286,7 @@ int libfsclfs_stream_get_utf16_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to determine size of UTF-16 string.",
+		 "%s: unable to retrieve UTF-16 name size from stream descriptor.",
 		 function );
 
 		return( -1 );
@@ -360,30 +320,17 @@ int libfsclfs_stream_get_utf16_name(
 	}
 	internal_stream = (libfsclfs_internal_stream_t *) stream;
 
-	if( internal_stream->stream_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid stream - missing stream descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf16_string_copy_from_utf16_stream(
+	if( libfsclfs_stream_descriptor_get_utf16_name(
+	     internal_stream->stream_descriptor,
 	     utf16_string,
 	     utf16_string_size,
-	     internal_stream->stream_descriptor->name,
-	     internal_stream->stream_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-		 "%s: unable to copy name to UTF-16 string.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve UTF-16 name from stream descriptor.",
 		 function );
 
 		return( -1 );
@@ -415,30 +362,20 @@ int libfsclfs_stream_get_base_lsn(
 	}
 	internal_stream = (libfsclfs_internal_stream_t *) stream;
 
-	if( internal_stream->stream_descriptor == NULL )
+	if( libfsclfs_stream_descriptor_get_base_lsn(
+	     internal_stream->stream_descriptor,
+	     base_lsn,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid stream - missing stream descriptor.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve base LSN from stream descriptor.",
 		 function );
 
 		return( -1 );
 	}
-	if( base_lsn == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid base LSN.",
-		 function );
-
-		return( -1 );
-	}
-	*base_lsn = internal_stream->stream_descriptor->base_lsn;
-
 	return( 1 );
 }
 
@@ -466,30 +403,20 @@ int libfsclfs_stream_get_last_lsn(
 	}
 	internal_stream = (libfsclfs_internal_stream_t *) stream;
 
-	if( internal_stream->stream_descriptor == NULL )
+	if( libfsclfs_stream_descriptor_get_last_lsn(
+	     internal_stream->stream_descriptor,
+	     last_lsn,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid stream - missing stream descriptor.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve last LSN from stream descriptor.",
 		 function );
 
 		return( -1 );
 	}
-	if( last_lsn == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid last LSN.",
-		 function );
-
-		return( -1 );
-	}
-	*last_lsn = internal_stream->stream_descriptor->last_lsn;
-
 	return( 1 );
 }
 

@@ -68,6 +68,44 @@ int libfsclfs_stream_descriptor_free(
      libfsclfs_stream_descriptor_t **stream_descriptor,
      libcerror_error_t **error );
 
+int libfsclfs_stream_descriptor_read_data(
+     libfsclfs_stream_descriptor_t *stream_descriptor,
+     const uint8_t *data,
+     size_t data_size,
+     libcerror_error_t **error );
+
+int libfsclfs_stream_descriptor_get_utf8_name_size(
+     libfsclfs_stream_descriptor_t *stream_descriptor,
+     size_t *utf8_string_size,
+     libcerror_error_t **error );
+
+int libfsclfs_stream_descriptor_get_utf8_name(
+     libfsclfs_stream_descriptor_t *stream_descriptor,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error );
+
+int libfsclfs_stream_descriptor_get_utf16_name_size(
+     libfsclfs_stream_descriptor_t *stream_descriptor,
+     size_t *utf16_string_size,
+     libcerror_error_t **error );
+
+int libfsclfs_stream_descriptor_get_utf16_name(
+     libfsclfs_stream_descriptor_t *stream_descriptor,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error );
+
+int libfsclfs_stream_descriptor_get_base_lsn(
+     libfsclfs_stream_descriptor_t *stream_descriptor,
+     uint64_t *base_lsn,
+     libcerror_error_t **error );
+
+int libfsclfs_stream_descriptor_get_last_lsn(
+     libfsclfs_stream_descriptor_t *stream_descriptor,
+     uint64_t *last_lsn,
+     libcerror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

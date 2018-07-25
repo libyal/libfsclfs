@@ -876,17 +876,13 @@ int libfsclfs_store_open_containers(
 			return( -1 );
 		}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libuna_utf16_string_size_from_utf16_stream(
-		          container_descriptor->name,
-		          container_descriptor->name_size,
-		          LIBUNA_ENDIAN_LITTLE,
+		result = libfsclfs_container_descriptor_get_utf16_name_size(
+		          container_descriptor,
 		          &container_name_size,
 		          error );
 #else
-		result = libuna_utf8_string_size_from_utf16_stream(
-		          container_descriptor->name,
-		          container_descriptor->name_size,
-		          LIBUNA_ENDIAN_LITTLE,
+		result = libfsclfs_container_descriptor_get_utf8_name_size(
+		          container_descriptor,
 		          &container_name_size,
 		          error );
 #endif
@@ -916,20 +912,16 @@ int libfsclfs_store_open_containers(
 			return( -1 );
 		}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libuna_utf16_string_copy_from_utf16_stream(
+		result = libfsclfs_container_descriptor_get_utf16_name(
+		          container_descriptor,
 		          (libuna_utf16_character_t *) container_name,
 		          container_name_size,
-		          container_descriptor->name,
-		          container_descriptor->name_size,
-		          LIBUNA_ENDIAN_LITTLE,
 		          error );
 #else
-		result = libuna_utf8_string_copy_from_utf16_stream(
+		result = libfsclfs_container_descriptor_get_utf8_name(
+		          container_descriptor,
 		          (libuna_utf8_character_t *) container_name,
 		          container_name_size,
-		          container_descriptor->name,
-		          container_descriptor->name_size,
-		          LIBUNA_ENDIAN_LITTLE,
 		          error );
 #endif
 		if( result != 1 )
@@ -2263,9 +2255,7 @@ int libfsclfs_store_read_store_metadata(
 	system_character_t *value_string                       = NULL;
 	libfguid_identifier_t *guid                            = NULL;
 	size_t value_string_size                               = 0;
-	uint64_t value_64bit                                   = 0;
 	uint32_t value_32bit                                   = 0;
-	uint16_t value_16bit                                   = 0;
 	int result                                             = 0;
 #endif
 
@@ -2818,102 +2808,22 @@ int libfsclfs_store_read_store_metadata(
 
 				goto on_error;
 			}
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->stream_number,
-			 stream_descriptor->number );
-
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->base_lsn,
-			 stream_descriptor->base_lsn );
-
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->last_flushed_lsn,
-			 stream_descriptor->last_flushed_lsn );
-
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->last_lsn,
-			 stream_descriptor->last_lsn );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-			if( libcnotify_verbose != 0 )
+/* TODO replace direct pass of sizeof() */
+			if( libfsclfs_stream_descriptor_read_data(
+			     stream_descriptor,
+			     record_data,
+			     sizeof( fsclfs_base_log_stream_attributes_record_data_t ),
+			     error ) != 1 )
 			{
-				libcnotify_printf(
-				 "%s: stream number\t\t\t: %" PRIu16 "\n",
-				 function,
-				 stream_descriptor->number );
-
-				byte_stream_copy_to_uint16_little_endian(
-				 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->unknown1,
-				 value_16bit );
-				libcnotify_printf(
-				 "%s: unknown1\t\t\t\t: 0x%04" PRIx16 "\n",
-				 function,
-				 value_16bit );
-
-				byte_stream_copy_to_uint32_little_endian(
-				 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->flush_queue_size,
-				 value_32bit );
-				libcnotify_printf(
-				 "%s: flush queue size\t\t\t: %" PRIu32 "\n",
-				 function,
-				 value_32bit );
-
-				libcnotify_printf(
-				 "%s: unknown3:\n",
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read stream descriptor.",
 				 function );
-				libcnotify_print_data(
-				 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->unknown3,
-				 40,
-				 0 );
 
-				byte_stream_copy_to_uint64_little_endian(
-				 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->unknown4,
-				 value_64bit );
-				libcnotify_printf(
-				 "%s: unknown4\t\t\t\t: 0x%08" PRIx64 "\n",
-				 function,
-				 value_64bit );
-
-				libcnotify_printf(
-				 "%s: base log sequence number\t\t: 0x%08" PRIx64 "\n",
-				 function,
-				 stream_descriptor->base_lsn );
-
-				libcnotify_printf(
-				 "%s: last flushed log sequence number\t: 0x%08" PRIx64 "\n",
-				 function,
-				 stream_descriptor->last_flushed_lsn );
-
-				libcnotify_printf(
-				 "%s: last log sequence number\t\t: 0x%08" PRIx64 "\n",
-				 function,
-				 stream_descriptor->last_lsn );
-
-				byte_stream_copy_to_uint64_little_endian(
-				 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->unknown5,
-				 value_64bit );
-				libcnotify_printf(
-				 "%s: unknown5\t\t\t\t: 0x%08" PRIx64 "\n",
-				 function,
-				 value_64bit );
-
-				byte_stream_copy_to_uint64_little_endian(
-				 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->unknown6,
-				 value_64bit );
-				libcnotify_printf(
-				 "%s: unknown6\t\t\t\t: 0x%08" PRIx64 "\n",
-				 function,
-				 value_64bit );
-
-				libcnotify_printf(
-				 "%s: unknown7:\n",
-				 function );
-				libcnotify_print_data(
-				 ( (fsclfs_base_log_stream_attributes_record_data_t *) record_data )->unknown7,
-				 32,
-				 0 );
+				goto on_error;
 			}
-#endif
 			record_data                   += sizeof( fsclfs_base_log_stream_attributes_record_data_t );
 			record_data_offset            += sizeof( fsclfs_base_log_stream_attributes_record_data_t );
 			information_records_data_size -= sizeof( fsclfs_base_log_stream_attributes_record_data_t );
@@ -2949,88 +2859,22 @@ int libfsclfs_store_read_store_metadata(
 
 				goto on_error;
 			}
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->file_size,
-			 container_descriptor->file_size );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->physical_number,
-			 container_descriptor->physical_number );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->logical_number,
-			 container_descriptor->logical_number );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-			if( libcnotify_verbose != 0 )
+/* TODO replace direct pass of sizeof() */
+			if( libfsclfs_container_descriptor_read_data(
+			     container_descriptor,
+			     record_data,
+			     sizeof( fsclfs_base_log_container_attributes_record_data_t ),
+			     error ) != 1 )
 			{
-				libcnotify_printf(
-				 "%s: file size\t\t\t\t: %" PRIu32 "\n",
-				 function,
-				 container_descriptor->file_size );
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read container descriptor.",
+				 function );
 
-				byte_stream_copy_to_uint32_little_endian(
-				 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->unknown1,
-				 value_32bit );
-				libcnotify_printf(
-				 "%s: unknown1\t\t\t\t: 0x%08" PRIx32 "\n",
-				 function,
-				 value_32bit );
-
-				libcnotify_printf(
-				 "%s: physical number\t\t\t: %" PRIu32 "\n",
-				 function,
-				 container_descriptor->physical_number );
-
-				libcnotify_printf(
-				 "%s: logical number\t\t\t: %" PRIu32 "\n",
-				 function,
-				 container_descriptor->logical_number );
-
-				byte_stream_copy_to_uint32_little_endian(
-				 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->unknown2,
-				 value_32bit );
-				libcnotify_printf(
-				 "%s: unknown2\t\t\t\t: 0x%08" PRIx32 "\n",
-				 function,
-				 value_32bit );
-
-				byte_stream_copy_to_uint32_little_endian(
-				 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->unknown3,
-				 value_32bit );
-				libcnotify_printf(
-				 "%s: unknown3\t\t\t\t: 0x%08" PRIx32 "\n",
-				 function,
-				 value_32bit );
-
-				byte_stream_copy_to_uint32_little_endian(
-				 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->number_of_streams,
-				 value_32bit );
-				libcnotify_printf(
-				 "%s: number of streams\t\t\t: %" PRIu32 "\n",
-				 function,
-				 value_32bit );
-
-				byte_stream_copy_to_uint32_little_endian(
-				 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->unknown5,
-				 value_32bit );
-				libcnotify_printf(
-				 "%s: unknown5\t\t\t\t: 0x%08" PRIx32 "\n",
-				 function,
-				 value_32bit );
-
-				byte_stream_copy_to_uint64_little_endian(
-				 ( (fsclfs_base_log_container_attributes_record_data_t *) record_data )->unknown6,
-				 value_64bit );
-				libcnotify_printf(
-				 "%s: unknown6\t\t\t\t: 0x%08" PRIx64 "\n",
-				 function,
-				 value_64bit );
-
-				libcnotify_printf(
-				 "\n" );
+				goto on_error;
 			}
-#endif
 			record_data                   += sizeof( fsclfs_base_log_container_attributes_record_data_t );
 			record_data_offset            += sizeof( fsclfs_base_log_container_attributes_record_data_t );
 			information_records_data_size -= sizeof( fsclfs_base_log_container_attributes_record_data_t );

@@ -26,7 +26,6 @@
 #include "libfsclfs_container.h"
 #include "libfsclfs_container_descriptor.h"
 #include "libfsclfs_libcerror.h"
-#include "libfsclfs_libuna.h"
 #include "libfsclfs_store.h"
 #include "libfsclfs_types.h"
 
@@ -275,7 +274,7 @@ int libfsclfs_container_open_wide(
 	return( 1 );
 }
 
-#endif
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
 /* Retrieves the size
  * Returns 1 if successful or -1 on error
@@ -301,30 +300,20 @@ int libfsclfs_container_get_size(
 	}
 	internal_container = (libfsclfs_internal_container_t *) container;
 
-	if( internal_container->container_descriptor == NULL )
+	if( libfsclfs_container_descriptor_get_size(
+	     internal_container->container_descriptor,
+	     size,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid container - missing container descriptor.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve size from container descriptor.",
 		 function );
 
 		return( -1 );
 	}
-	if( size == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid size.",
-		 function );
-
-		return( -1 );
-	}
-	*size = (size64_t) internal_container->container_descriptor->file_size;
-
 	return( 1 );
 }
 
@@ -353,21 +342,8 @@ int libfsclfs_container_get_utf8_name_size(
 	}
 	internal_container = (libfsclfs_internal_container_t *) container;
 
-	if( internal_container->container_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid container - missing container descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf8_string_size_from_utf16_stream(
-	     internal_container->container_descriptor->name,
-	     internal_container->container_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
+	if( libfsclfs_container_descriptor_get_utf8_name_size(
+	     internal_container->container_descriptor,
 	     utf8_string_size,
 	     error ) != 1 )
 	{
@@ -375,7 +351,7 @@ int libfsclfs_container_get_utf8_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to determine size of UTF-8 string.",
+		 "%s: unable to retrieve UTF-8 name size from container descriptor.",
 		 function );
 
 		return( -1 );
@@ -409,30 +385,17 @@ int libfsclfs_container_get_utf8_name(
 	}
 	internal_container = (libfsclfs_internal_container_t *) container;
 
-	if( internal_container->container_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid container - missing container descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf8_string_copy_from_utf16_stream(
+	if( libfsclfs_container_descriptor_get_utf8_name(
+	     internal_container->container_descriptor,
 	     utf8_string,
 	     utf8_string_size,
-	     internal_container->container_descriptor->name,
-	     internal_container->container_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-		 "%s: unable to copy name to UTF-8 string.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve UTF-8 name from container descriptor.",
 		 function );
 
 		return( -1 );
@@ -465,21 +428,8 @@ int libfsclfs_container_get_utf16_name_size(
 	}
 	internal_container = (libfsclfs_internal_container_t *) container;
 
-	if( internal_container->container_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid container - missing container descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf16_string_size_from_utf16_stream(
-	     internal_container->container_descriptor->name,
-	     internal_container->container_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
+	if( libfsclfs_container_descriptor_get_utf16_name_size(
+	     internal_container->container_descriptor,
 	     utf16_string_size,
 	     error ) != 1 )
 	{
@@ -487,7 +437,7 @@ int libfsclfs_container_get_utf16_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to determine size of UTF-16 string.",
+		 "%s: unable to retrieve UTF-16 name size from container descriptor.",
 		 function );
 
 		return( -1 );
@@ -521,30 +471,17 @@ int libfsclfs_container_get_utf16_name(
 	}
 	internal_container = (libfsclfs_internal_container_t *) container;
 
-	if( internal_container->container_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid container - missing container descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libuna_utf16_string_copy_from_utf16_stream(
+	if( libfsclfs_container_descriptor_get_utf16_name(
+	     internal_container->container_descriptor,
 	     utf16_string,
 	     utf16_string_size,
-	     internal_container->container_descriptor->name,
-	     internal_container->container_descriptor->name_size,
-	     LIBUNA_ENDIAN_LITTLE,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-		 "%s: unable to copy name to UTF-16 string.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve UTF-16 name from container descriptor.",
 		 function );
 
 		return( -1 );
