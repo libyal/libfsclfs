@@ -113,6 +113,8 @@ int fsclfs_test_owner_page_initialize(
 	          &owner_page,
 	          &error );
 
+	owner_page = NULL;
+
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int fsclfs_test_owner_page_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	owner_page = NULL;
 
 #if defined( HAVE_FSCLFS_TEST_MEMORY )
 

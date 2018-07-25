@@ -113,6 +113,8 @@ int fsclfs_test_record_value_initialize(
 	          &record_value,
 	          &error );
 
+	record_value = NULL;
+
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int fsclfs_test_record_value_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	record_value = NULL;
 
 #if defined( HAVE_FSCLFS_TEST_MEMORY )
 

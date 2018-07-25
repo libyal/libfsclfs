@@ -113,6 +113,8 @@ int fsclfs_test_stream_descriptor_initialize(
 	          &stream_descriptor,
 	          &error );
 
+	stream_descriptor = NULL;
+
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int fsclfs_test_stream_descriptor_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	stream_descriptor = NULL;
 
 #if defined( HAVE_FSCLFS_TEST_MEMORY )
 

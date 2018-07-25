@@ -113,6 +113,8 @@ int fsclfs_test_block_initialize(
 	          &block,
 	          &error );
 
+	block = NULL;
+
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int fsclfs_test_block_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	block = NULL;
 
 #if defined( HAVE_FSCLFS_TEST_MEMORY )
 

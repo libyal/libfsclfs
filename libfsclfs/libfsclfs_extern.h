@@ -37,8 +37,11 @@
 
 #include <libfsclfs/extern.h>
 
+#define LIBFSCLFS_EXTERN_VARIABLE	LIBFSCLFS_EXTERN
+
 #else
-#define LIBFSCLFS_EXTERN	/* extern */
+#define LIBFSCLFS_EXTERN		/* extern */
+#define LIBFSCLFS_EXTERN_VARIABLE	extern
 
 #endif /* !defined( HAVE_LOCAL_LIBFSCLFS ) */
 

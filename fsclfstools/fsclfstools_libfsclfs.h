@@ -1,5 +1,5 @@
 /*
- * The internal libfsclfs header
+ * The libfsclfs header wrapper
  *
  * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
  *

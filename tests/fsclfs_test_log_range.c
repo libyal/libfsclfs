@@ -113,6 +113,8 @@ int fsclfs_test_log_range_initialize(
 	          &log_range,
 	          &error );
 
+	log_range = NULL;
+
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int fsclfs_test_log_range_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	log_range = NULL;
 
 #if defined( HAVE_FSCLFS_TEST_MEMORY )
 

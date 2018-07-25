@@ -654,6 +654,8 @@ int fsclfs_test_store_initialize(
 	          &store,
 	          &error );
 
+	store = NULL;
+
 	FSCLFS_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -665,8 +667,6 @@ int fsclfs_test_store_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	store = NULL;
 
 #if defined( HAVE_FSCLFS_TEST_MEMORY )
 
