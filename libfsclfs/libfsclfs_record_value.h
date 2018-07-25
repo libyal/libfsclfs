@@ -82,6 +82,26 @@ int libfsclfs_record_value_read_data(
      size_t data_size,
      libcerror_error_t **error );
 
+int libfsclfs_record_value_get_type(
+     libfsclfs_record_value_t *record_value,
+     uint32_t *record_type,
+     libcerror_error_t **error );
+
+int libfsclfs_record_value_get_flags(
+     libfsclfs_record_value_t *record_value,
+     uint16_t *record_flags,
+     libcerror_error_t **error );
+
+int libfsclfs_record_value_get_previous_lsn(
+     libfsclfs_record_value_t *record_value,
+     uint64_t *previous_lsn,
+     libcerror_error_t **error );
+
+int libfsclfs_record_value_get_undo_next_lsn(
+     libfsclfs_record_value_t *record_value,
+     uint64_t *undo_next_lsn,
+     libcerror_error_t **error );
+
 int libfsclfs_record_value_get_data(
      libfsclfs_record_value_t *record_value,
      uint8_t **data,

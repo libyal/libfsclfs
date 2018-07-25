@@ -74,6 +74,10 @@ fsclfstest_SOURCES = \
 fsclfstest_LDADD = \
 	@LIBFTXR_LIBADD@ \
 	@LIBFTXF_LIBADD@ \
+	@LIBFUSN_LIBADD@ \
+	@LIBFGUID_LIBADD@ \
+	@LIBFDATETIME_LIBADD@ \
+	@LIBUNA_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	../libfsclfs/libfsclfs.la \

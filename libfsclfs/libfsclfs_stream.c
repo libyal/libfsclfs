@@ -25,6 +25,7 @@
 
 #include "libfsclfs_definitions.h"
 #include "libfsclfs_libcerror.h"
+#include "libfsclfs_libcnotify.h"
 #include "libfsclfs_record.h"
 #include "libfsclfs_record_value.h"
 #include "libfsclfs_stream.h"
@@ -496,8 +497,24 @@ int libfsclfs_stream_get_record_by_lsn(
 	}
 	block_offset             = (uint32_t) ( record_lsn & 0xfffffe00UL );
         container_logical_number = (uint32_t) ( record_lsn >> 32 );
-        record_number            = (uint16_t) ( record_lsn & 0x01ff );
+	record_number            = (uint16_t) ( record_lsn & 0x01ff );
 
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: LSN: 0x%08" PRIx32 ", container logical number: %" PRIu32 ", record number: %" PRIu16 ", block offset: 0x%08" PRIx32 ", \n",
+		 function,
+		 record_lsn,
+		 container_logical_number,
+		 record_number,
+		 block_offset );
+	}
+#endif
+	if( record_lsn == 0 )
+	{
+		return( 0 );
+	}
 	result = libfsclfs_store_get_record_value_by_logical_lsn(
 	          internal_stream->internal_store,
 	          internal_stream->stream_descriptor->number,

@@ -197,14 +197,14 @@ int libfsclfs_store_read_store_metadata(
 
 int libfsclfs_store_read_container_owner_page(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *container_file_io_handle,
      libfsclfs_owner_page_t *owner_page,
-     uint32_t container_logical_number,
      uint32_t offset,
      libcerror_error_t **error );
 
 int libfsclfs_block_read_record_values(
      libfsclfs_internal_store_t *internal_store,
-     uint32_t container_logical_number,
+     libbfio_handle_t *container_file_io_handle,
      uint32_t block_offset,
      libcdata_array_t *record_values_array,
      libcerror_error_t **error );

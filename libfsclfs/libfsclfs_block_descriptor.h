@@ -35,6 +35,10 @@ typedef struct libfsclfs_block_descriptor libfsclfs_block_descriptor_t;
 
 struct libfsclfs_block_descriptor
 {
+	/* The block number
+	 */
+	uint32_t block_number;
+
 	/* The offset
 	 */
 	uint32_t offset;
@@ -50,6 +54,12 @@ int libfsclfs_block_descriptor_initialize(
 
 int libfsclfs_block_descriptor_free(
      libfsclfs_block_descriptor_t **block_descriptor,
+     libcerror_error_t **error );
+
+int libfsclfs_block_descriptor_read_data(
+     libfsclfs_block_descriptor_t *block_descriptor,
+     const uint8_t *data,
+     size_t data_size,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

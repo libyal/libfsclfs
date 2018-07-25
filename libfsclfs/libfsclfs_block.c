@@ -644,7 +644,20 @@ int libfsclfs_block_read(
 		 block->size - block->fixup_values_offset,
 		 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
+	if( ( ( number_of_sectors * 2 ) > block->size )
+	 || ( block->fixup_values_offset >= ( block->size - ( number_of_sectors * 2 ) ) ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid fixup value offset value out of bounds.",
+		 function );
+
+		goto on_error;
+	}
 	/* Apply the fix-up values
 	 */
 	fixup_value_offset = block->fixup_values_offset;
@@ -672,7 +685,8 @@ int libfsclfs_block_read(
 			 value_16bit,
 			 fixup_value );
 		}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 		if( ( block->data )[ fixup_offset ] >= 0x80 )
 		{
 			libcerror_error_set(

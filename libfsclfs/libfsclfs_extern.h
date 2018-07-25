@@ -28,13 +28,6 @@
  */
 #if !defined( HAVE_LOCAL_LIBFSCLFS )
 
-/* If libtool DLL support is enabled set LIBFSCLFS_DLL_EXPORT
- * before including libfsclfs/extern.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBFSCLFS_DLL_EXPORT
-#endif
-
 #include <libfsclfs/extern.h>
 
 #define LIBFSCLFS_EXTERN_VARIABLE	LIBFSCLFS_EXTERN

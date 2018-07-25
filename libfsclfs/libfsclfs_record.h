@@ -65,6 +65,18 @@ int libfsclfs_record_free(
      libcerror_error_t **error );
 
 LIBFSCLFS_EXTERN \
+int libfsclfs_record_get_type(
+     libfsclfs_record_t *record,
+     uint32_t *record_type,
+     libcerror_error_t **error );
+
+LIBFSCLFS_EXTERN \
+int libfsclfs_record_get_flags(
+     libfsclfs_record_t *record,
+     uint16_t *record_flags,
+     libcerror_error_t **error );
+
+LIBFSCLFS_EXTERN \
 int libfsclfs_record_get_previous_lsn(
      libfsclfs_record_t *record,
      uint64_t *previous_lsn,

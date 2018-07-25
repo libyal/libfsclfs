@@ -266,7 +266,7 @@ int libfsclfs_record_value_read_data(
 		 ( (fsclfs_container_record_header_t *) data )->unknown1,
 		 value_32bit );
 		libcnotify_printf(
-		 "%s: unknown1\t\t\t\t\t: 0x%08" PRIx32 "\n",
+		 "%s: unknown1\t\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
 
@@ -376,6 +376,154 @@ int libfsclfs_record_value_read_data(
 		 0 );
 	}
 #endif
+	return( 1 );
+}
+
+/* Retrieve the record type
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_record_value_get_type(
+     libfsclfs_record_value_t *record_value,
+     uint32_t *record_type,
+     libcerror_error_t **error )
+{
+	static char *function = "libfsclfs_record_value_get_type";
+
+	if( record_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record value.",
+		 function );
+
+		return( -1 );
+	}
+	if( record_type == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record type.",
+		 function );
+
+		return( -1 );
+	}
+	*record_type = record_value->type;
+
+	return( 1 );
+}
+
+/* Retrieve the record flags
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_record_value_get_flags(
+     libfsclfs_record_value_t *record_value,
+     uint16_t *record_flags,
+     libcerror_error_t **error )
+{
+	static char *function = "libfsclfs_record_value_get_flags";
+
+	if( record_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record value.",
+		 function );
+
+		return( -1 );
+	}
+	if( record_flags == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record flags.",
+		 function );
+
+		return( -1 );
+	}
+	*record_flags = record_value->flags;
+
+	return( 1 );
+}
+
+/* Retrieve the previous log sequence number (LSN)
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_record_value_get_previous_lsn(
+     libfsclfs_record_value_t *record_value,
+     uint64_t *previous_lsn,
+     libcerror_error_t **error )
+{
+	static char *function = "libfsclfs_record_value_get_previous_lsn";
+
+	if( record_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record value.",
+		 function );
+
+		return( -1 );
+	}
+	if( previous_lsn == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid previous LSN.",
+		 function );
+
+		return( -1 );
+	}
+	*previous_lsn = record_value->previous_lsn;
+
+	return( 1 );
+}
+
+/* Retrieve the undo-next log sequence number (LSN)
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_record_value_get_undo_next_lsn(
+     libfsclfs_record_value_t *record_value,
+     uint64_t *undo_next_lsn,
+     libcerror_error_t **error )
+{
+	static char *function = "libfsclfs_record_value_get_undo_next_lsn";
+
+	if( record_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record value.",
+		 function );
+
+		return( -1 );
+	}
+	if( undo_next_lsn == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid undo-next LSN.",
+		 function );
+
+		return( -1 );
+	}
+	*undo_next_lsn = record_value->undo_next_lsn;
+
 	return( 1 );
 }
 

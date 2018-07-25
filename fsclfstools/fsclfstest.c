@@ -19,23 +19,24 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-#define TXF_TEST
-#define TXR_TEST
-*/
-
 #include <common.h>
 #include <file_stream.h>
 #include <memory.h>
 #include <system_string.h>
 #include <types.h>
 
-#if defined( HAVE_UNISTD_H )
-#include <unistd.h>
+#include <stdio.h>
+
+#if defined( HAVE_IO_H ) || defined( WINAPI )
+#include <io.h>
 #endif
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
+#endif
+
+#if defined( HAVE_UNISTD_H )
+#include <unistd.h>
 #endif
 
 #include "fsclfstools_getopt.h"
@@ -48,6 +49,14 @@
 #include "fsclfstools_output.h"
 #include "fsclfstools_signal.h"
 #include "fsclfstools_unused.h"
+
+enum FSCLFS_RECORD_DATA_TYPES
+{
+	FSCLFS_RECORD_DATA_TYPE_UNKNOWN,
+	FSCLFS_RECORD_DATA_TYPE_TM,
+	FSCLFS_RECORD_DATA_TYPE_TXF,
+	FSCLFS_RECORD_DATA_TYPE_TXR,
+};
 
 /* Prints the executable usage information
  */
@@ -72,24 +81,17 @@ void usage_fprint(
 /* Prints a record information
  * Returns 1 if successful or -1 on error
  */
-int fsclfstest_store_record_fprint(
+int fsclfstest_record_fprint(
      FILE *stream,
-     libfsclfs_store_t *log_store,
+     int record_data_type,
+     libfsclfs_record_t *log_record,
      libfsclfs_error_t **error )
 {
-	libfsclfs_record_t *log_record = NULL;
-	libfsclfs_stream_t *log_stream = NULL;
-	uint8_t *record_data           = NULL;
-	static char *function          = "fsclfstest_store_record_fprint";
-	size_t record_data_size        = 0;
-	uint64_t record_lsn            = 0;
-	int stream_index               = 0;
-
-#if defined( TXF_TEST )
-	libftxf_record_t *txf_record   = NULL;
-#elif defined( TXR_TEST )
-	libftxr_record_t *txr_record   = NULL;
-#endif
+	libftxf_record_t *txf_record = NULL;
+	libftxr_record_t *txr_record = NULL;
+	uint8_t *record_data         = NULL;
+	static char *function        = "fsclfstest_store_record_fprint";
+	size_t record_data_size      = 0;
 
 	if( stream == NULL )
 	{
@@ -102,32 +104,253 @@ int fsclfstest_store_record_fprint(
 
 		return( -1 );
 	}
-	if( log_store == NULL )
+	if( log_record == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid store.",
+		 "%s: invalid record.",
 		 function );
 
 		return( -1 );
 	}
-	if( libfsclfs_store_get_stream(
-	     log_store,
-	     stream_index,
-	     &log_stream,
+	if( libfsclfs_record_get_data(
+	     log_record,
+	     &record_data,
+	     &record_data_size,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve stream: %d.",
-		 function,
-		 stream_index );
+		 "%s: unable to retrieve record data.",
+		 function );
 
 		goto on_error;
+	}
+	switch( record_data_type )
+	{
+		case FSCLFS_RECORD_DATA_TYPE_TXF:
+			if( libftxf_record_initialize(
+			     &txf_record,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create TxF record.",
+				 function );
+
+				goto on_error;
+			}
+			if( libftxf_record_copy_from_byte_stream(
+			     txf_record,
+			     record_data,
+			     record_data_size,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read TxF record.",
+				 function );
+
+				goto on_error;
+			}
+			if( libftxf_record_free(
+			     &txf_record,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free TxF record.",
+				 function );
+
+				goto on_error;
+			}
+			break;
+
+		case FSCLFS_RECORD_DATA_TYPE_TXR:
+			if( libftxr_record_initialize(
+			     &txr_record,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create TxR record.",
+				 function );
+
+				goto on_error;
+			}
+			if( libftxr_record_copy_from_byte_stream(
+			     txr_record,
+			     record_data,
+			     record_data_size,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read TxR record.",
+				 function );
+
+				goto on_error;
+			}
+			if( libftxr_record_free(
+			     &txr_record,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free TxR record.",
+				 function );
+
+				goto on_error;
+			}
+			break;
+
+		default:
+			libcnotify_print_data(
+			 record_data,
+			 record_data_size,
+			 0 );
+			break;
+	}
+	return( 1 );
+
+on_error:
+	if( txf_record != NULL )
+	{
+		libftxf_record_free(
+		 &txf_record,
+		 NULL );
+	}
+	if( txr_record != NULL )
+	{
+		libftxr_record_free(
+		 &txr_record,
+		 NULL );
+	}
+	return( -1 );
+}
+
+/* Prints the records in a stream
+ * Returns 1 if successful or -1 on error
+ */
+int fsclfstest_stream_fprint(
+     FILE *stream,
+     libfsclfs_stream_t *log_stream,
+     libfsclfs_error_t **error )
+{
+	uint8_t stream_name[ 256 ];
+
+	libfsclfs_record_t *log_record = NULL;
+	static char *function          = "fsclfstest_stream_fprint";
+	uint64_t record_lsn            = 0;
+	uint32_t record_type           = 0;
+	int record_data_type           = 0;
+	int result                     = 0;
+
+	if( stream == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid stream.",
+		 function );
+
+		return( -1 );
+	}
+	if( log_stream == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid stream.",
+		 function );
+
+		return( -1 );
+	}
+	if( libfsclfs_stream_get_utf8_name(
+	     log_stream,
+	     stream_name,
+	     256,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve stream name.",
+		 function );
+
+		goto on_error;
+	}
+	/* Name of the TxF stream: TxfLog
+	 */
+	if( memory_compare(
+	     stream_name,
+	     "TxfLog",
+	     7 ) == 0 )
+	{
+		record_data_type = FSCLFS_RECORD_DATA_TYPE_TXF;
+	}
+	/* Name of the TxR stream: \SystemRoot\System32\Config\TxR\{%GUID%}.TxR.blf
+	 */
+	else if( ( memory_compare(
+	            stream_name,
+	            "\\SystemRoot\\System32\\Config\\TxR\\{",
+	            33 ) == 0 )
+	      && ( memory_compare(
+	            &( stream_name[ 70 ] ),
+	            "}.TxR.blf",
+	            10 ) == 0 ) )
+	{
+		record_data_type = FSCLFS_RECORD_DATA_TYPE_TXR;
+	}
+	/* Name of the TxR stream: \Device\HarddiskVolume#\$Extend\$RmMetadata\$TxfLog\$TxfLog.blf
+	 */
+	else if( ( memory_compare(
+	            stream_name,
+	            "\\Device\\HarddiskVolume",
+	            22 ) == 0 )
+	      && ( memory_compare(
+	            &( stream_name[ 23 ] ),
+	            "\\$Extend\\$RmMetadata\\$TxfLog\\$TxfLog.blf",
+	            41 ) == 0 ) )
+	{
+		record_data_type = FSCLFS_RECORD_DATA_TYPE_TM;
+
+/* 00000000: 00 00 00 00 00 00 00 00  04 01 00 00 ed e0 c2 43   ........ .......C
+ * 00000010: 3d 9f e1 11 ad a0 80 6e  6f 6e 69 63 8c 6c d6 9a   =......n onic.l..
+ *
+ * 00000000: 00 00 00 00 00 00 00 00  04 01 00 00 ed e0 c2 43   ........ .......C
+ * 00000010: 3d 9f e1 11 ad a0 80 6e  6f 6e 69 63 8c ec 7c 80   =......n onic..|.
+ *
+ *  0 -  8 Unknown empty
+ *  8 -  4 Unknown
+ * 12 - 16 Unknown (GUID?)
+ * 28 -  4 Unknown (sequence number? similar to unknown2)
+ *
+ * libfsclfs_container_descriptor_read_data: unknown2                      : 0x8cd6a878
+ */
+	}
+	else
+	{
+		record_data_type = FSCLFS_RECORD_DATA_TYPE_UNKNOWN;
 	}
 	if( libfsclfs_stream_get_base_lsn(
 	     log_stream,
@@ -159,42 +382,15 @@ int fsclfstest_store_record_fprint(
 		goto on_error;
 	}
 */
-#if defined( TXF_TEST )
-	if( libftxf_record_initialize(
-	     &txf_record,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create TxF record.",
-		 function );
-
-		goto on_error;
-	}
-#elif defined( TXR_TEST )
-	if( libftxr_record_initialize(
-	     &txr_record,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create TxR record.",
-		 function );
-
-		goto on_error;
-	}
-#endif
 	while( record_lsn != 0xffffffff00000000ULL )
 	{
-		if( libfsclfs_stream_get_record_by_lsn(
-		     log_stream,
-		     record_lsn,
-		     &log_record,
-		     error ) != 1 )
+		result = libfsclfs_stream_get_record_by_lsn(
+		          log_stream,
+		          record_lsn,
+		          &log_record,
+		          error );
+
+		if( result == -1 )
 		{
 			libcerror_error_set(
 			 error,
@@ -206,65 +402,30 @@ int fsclfstest_store_record_fprint(
 
 			goto on_error;
 		}
-		if( libfsclfs_record_get_data(
+		else if( result == 0 )
+		{
+			break;
+		}
+		libcnotify_printf(
+		 "%s: record: 0x%08" PRIx64 ":\n",
+		 function,
+		 record_lsn );
+
+		if( fsclfstest_record_fprint(
+		     stream,
+		     record_data_type,
 		     log_record,
-		     &record_data,
-		     &record_data_size,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve record: 0x%08" PRIx64 " data.",
-			 function,
-			 record_lsn );
-
-			goto on_error;
-		}
-		libcnotify_printf(
-		 "%s: record: 0x%08" PRIx64 " data:\n",
-		 function,
-		 record_lsn );
-
-#if defined( TXF_TEST )
-		if( libftxf_record_read(
-		     txf_record,
-		     record_data,
-		     record_data_size,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read TxF record.",
+			 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
+			 "%s: unable to print record.",
 			 function );
 
 			goto on_error;
 		}
-#elif defined( TXR_TEST )
-		if( libftxr_record_read(
-		     txr_record,
-		     record_data,
-		     record_data_size,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read TxR record.",
-			 function );
-
-			goto on_error;
-		}
-#else
-		libcnotify_print_data(
-		 record_data,
-		 record_data_size,
-		 0 );
-#endif
 		if( libfsclfs_record_get_previous_lsn(
 		     log_record,
 		     &record_lsn,
@@ -275,8 +436,21 @@ int fsclfstest_store_record_fprint(
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 			 "%s: unable to retrieve previous LSN.",
-			 function,
-			 record_lsn );
+			 function );
+
+			goto on_error;
+		}
+		if( libfsclfs_record_get_type(
+		     log_record,
+		     &record_type,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve record type.",
+			 function );
 
 			goto on_error;
 		}
@@ -293,51 +467,6 @@ int fsclfstest_store_record_fprint(
 
 			goto on_error;
 		}
-/*
-		record_lsn = 0xffffffff00000000ULL;
-*/
-	}
-#if defined( TXF_TEST )
-	if( libftxf_record_free(
-	     &txf_record,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free TxF record.",
-		 function );
-
-		goto on_error;
-	}
-#elif defined( TXR_TEST )
-	if( libftxr_record_free(
-	     &txr_record,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free TxR record.",
-		 function );
-
-		goto on_error;
-	}
-#endif
-	if( libfsclfs_stream_free(
-	     &log_stream,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free stream.",
-		 function );
-
-		goto on_error;
 	}
 	return( 1 );
 
@@ -348,27 +477,95 @@ on_error:
 		 &log_record,
 		 NULL );
 	}
+	return( -1 );
+}
+
+/* Prints the records in a store
+ * Returns 1 if successful or -1 on error
+ */
+int fsclfstest_store_fprint(
+     FILE *stream,
+     libfsclfs_store_t *log_store,
+     libfsclfs_error_t **error )
+{
+	libfsclfs_stream_t *log_stream = NULL;
+	static char *function          = "fsclfstest_store_fprint";
+	int item_index                 = 0;
+	int number_of_streams          = 0;
+
+	if( libfsclfs_store_get_number_of_streams(
+	     log_store,
+	     &number_of_streams,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve number of streams.",
+		 function );
+
+		goto on_error;
+	}
+	for( item_index = 0;
+	     item_index < number_of_streams;
+	     item_index++ )
+	{
+		if( libfsclfs_store_get_stream(
+		     log_store,
+		     item_index,
+		     &log_stream,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve stream: %d.",
+			 function,
+			 item_index );
+
+			goto on_error;
+		}
+		if( fsclfstest_stream_fprint(
+		     stream,
+		     log_stream,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_PRINT_FAILED,
+			 "%s: unable to print records in stream: %d.",
+			 function,
+			 item_index );
+
+			goto on_error;
+		}
+		if( libfsclfs_stream_free(
+		     &log_stream,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free stream: %d.",
+			 function,
+			 item_index );
+
+			goto on_error;
+		}
+	}
+	return( 1 );
+
+on_error:
 	if( log_stream != NULL )
 	{
 		libfsclfs_stream_free(
 		 &log_stream,
 		 NULL );
 	}
-#if defined( TXF_TEST )
-	if( txf_record != NULL )
-	{
-		libftxf_record_free(
-		 &txf_record,
-		 NULL );
-	}
-#elif defined( TXR_TEST )
-	if( txr_record != NULL )
-	{
-		libftxr_record_free(
-		 &txr_record,
-		 NULL );
-	}
-#endif
 	return( -1 );
 }
 
@@ -518,14 +715,14 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( fsclfstest_store_record_fprint(
+	if( fsclfstest_store_fprint(
 	     stdout,
 	     log_store,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to print store record.\n" );
+		 "Unable to print records in store.\n" );
 
 		goto on_error;
 	}

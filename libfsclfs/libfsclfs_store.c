@@ -772,6 +772,7 @@ int libfsclfs_store_open_file_io_handle(
 	}
 	internal_store->base_log_file_io_handle                   = file_io_handle;
 	internal_store->base_log_file_io_handle_opened_in_library = file_io_handle_opened_in_library;
+	internal_store->access_flags                              = access_flags;
 
 	return( 1 );
 
@@ -874,6 +875,11 @@ int libfsclfs_store_open_containers(
 			 container_descriptor_index );
 
 			return( -1 );
+		}
+/* TODO determine what unknown2 contains */
+		if( container_descriptor->unknown2 == 0 )
+		{
+			continue;
 		}
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_container_descriptor_get_utf16_name_size(
@@ -1046,6 +1052,15 @@ int libfsclfs_store_open_containers(
 			container_location      = container_name_start;
 			container_location_size = container_name_size;
 		}
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			libcnotify_printf(
+			 "%s: opening container: %" PRIs_SYSTEM "\n",
+			 function,
+			 container_location );
+		}
+#endif
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_store_open_container_wide(
 		          internal_store,
@@ -1098,6 +1113,7 @@ int libfsclfs_store_open_container(
 {
 	libbfio_handle_t *file_io_handle = NULL;
 	static char *function            = "libfsclfs_store_open_container";
+	size_t filename_length           = 0;
 
 	if( internal_store == NULL )
 	{
@@ -1161,11 +1177,13 @@ int libfsclfs_store_open_container(
                 goto on_error;
 	}
 #endif
+	filename_length = narrow_string_length(
+	                   filename );
+
 	if( libbfio_file_set_name(
 	     file_io_handle,
 	     filename,
-	     narrow_string_length(
-	      filename ) + 1,
+	     filename_length + 1,
 	     error ) != 1 )
 	{
                 libcerror_error_set(
@@ -1218,6 +1236,7 @@ int libfsclfs_store_open_container_wide(
 {
 	libbfio_handle_t *file_io_handle = NULL;
 	static char *function            = "libfsclfs_container_open_wide";
+	size_t filename_length           = 0;
 
 	if( internal_store == NULL )
 	{
@@ -1281,11 +1300,13 @@ int libfsclfs_store_open_container_wide(
                 goto on_error;
 	}
 #endif
+	filename_length = wide_string_length(
+	                   filename );
+
 	if( libbfio_file_set_name_wide(
 	     file_io_handle,
 	     filename,
-	     wide_string_length(
-	      filename ) + 1,
+	     filename_length + 1,
 	     error ) != 1 )
 	{
                 libcerror_error_set(
@@ -1843,7 +1864,6 @@ int libfsclfs_store_read_block_descriptors(
 	size_t record_data_size                        = 0;
 	uint32_t block_descriptor_index                = 0;
 	uint32_t block_descriptors_data_size           = 0;
-	uint32_t block_number                          = 0;
 	uint32_t number_of_block_descriptors           = 0;
 	uint32_t unknown2                              = 0;
 	uint32_t unknown3                              = 0;
@@ -2115,57 +2135,36 @@ int libfsclfs_store_read_block_descriptors(
 
 			goto on_error;
 		}
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (fsclfs_base_log_block_descriptor_t *) record_data )->block_size,
-		 block_descriptor->size );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (fsclfs_base_log_block_descriptor_t *) record_data )->block_offset,
-		 block_descriptor->offset );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (fsclfs_base_log_block_descriptor_t *) record_data )->block_number,
-		 block_number );
-
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: block descriptor %02" PRIu32 " unknown1:\n",
+			 "%s: reading block descriptor %02" PRIu32 ".\n",
 			 function,
 			 block_descriptor_index );
-			libcnotify_print_data(
-			 ( (fsclfs_base_log_block_descriptor_t *) record_data )->unknown1,
-			 12,
-			 0 );
-
-			libcnotify_printf(
-			 "%s: block descriptor %02" PRIu32 " size\t: %" PRIu32 "\n",
-			 function,
-			 block_descriptor_index,
-			 block_descriptor->size );
-
-			libcnotify_printf(
-			 "%s: block descriptor %02" PRIu32 " offset\t: 0x%08" PRIx32 "\n",
-			 function,
-			 block_descriptor_index,
-			 block_descriptor->offset );
-
-			libcnotify_printf(
-			 "%s: block descriptor %02" PRIu32 " number\t: %" PRIu32 "\n",
-			 function,
-			 block_descriptor_index,
-			 block_number );
-
-			libcnotify_printf(
-			 "\n" );
 		}
 #endif
+/* TODO replace direct pass of sizeof() */
+		if( libfsclfs_block_descriptor_read_data(
+		     block_descriptor,
+		     record_data,
+		     sizeof( fsclfs_base_log_block_descriptor_t ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read block descriptor.",
+			 function );
+
+			goto on_error;
+		}
 		/* Note that this function also check if the block_number is within bounds
 		 */
 		if( libcdata_array_set_entry_by_index(
 		     block_descriptors_array,
-		     (int) block_number,
+		     (int) block_descriptor->block_number,
 		     (intptr_t *) block_descriptor,
 		     error ) != 1 )
 		{
@@ -2175,7 +2174,7 @@ int libfsclfs_store_read_block_descriptors(
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 			 "%s: unable to set block descriptor: %" PRIu32 " in array.",
 			 function,
-			 block_number );
+			 block_descriptor->block_number );
 
 			goto on_error;
 		}
@@ -3228,16 +3227,14 @@ on_error:
  */
 int libfsclfs_store_read_container_owner_page(
      libfsclfs_internal_store_t *internal_store,
+     libbfio_handle_t *container_file_io_handle,
      libfsclfs_owner_page_t *owner_page,
-     uint32_t container_logical_number,
      uint32_t offset,
      libcerror_error_t **error )
 {
-	libbfio_handle_t *container_file_io_handle = NULL;
-	static char *function                      = "libfsclfs_store_read_container_owner_page";
-	uint32_t container_physical_number         = 0;
-	int number_of_streams                      = 0;
-	int result                                 = 0;
+	static char *function = "libfsclfs_store_read_container_owner_page";
+	int number_of_streams = 0;
+	int result            = 0;
 
 	if( internal_store == NULL )
 	{
@@ -3261,37 +3258,6 @@ int libfsclfs_store_read_container_owner_page(
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 		 "%s: unable to retrieve number of stream descriptors.",
 		 function );
-
-		return( -1 );
-	}
-	if( libfsclfs_store_get_container_physical_number(
-	     internal_store,
-	     container_logical_number,
-	     &container_physical_number,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve container physical number.",
-		 function );
-
-		return( -1 );
-	}
-	if( libbfio_pool_get_handle(
-	     internal_store->container_file_io_pool,
-	     (int) container_physical_number,
-	     &container_file_io_handle,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve file IO handle: %" PRIu32 " from pool.",
-		 function,
-		 container_physical_number );
 
 		return( -1 );
 	}
@@ -3333,22 +3299,22 @@ int libfsclfs_store_read_container_owner_page(
  */
 int libfsclfs_block_read_record_values(
      libfsclfs_internal_store_t *internal_store,
-     uint32_t container_logical_number,
+     libbfio_handle_t *container_file_io_handle,
      uint32_t block_offset,
      libcdata_array_t *record_values_array,
      libcerror_error_t **error )
 {
-	libfsclfs_block_t *block                   = NULL;
-	libbfio_handle_t *container_file_io_handle = NULL;
-	libfsclfs_record_value_t *record_value     = NULL;
-	uint8_t *record_data                       = NULL;
-	static char *function                      = "libfsclfs_block_read_record_values";
-	size_t alignment_padding_size              = 0;
-	size_t record_data_offset                  = 0;
-	size_t record_data_size                    = 0;
-	uint32_t container_physical_number         = 0;
-	uint32_t record_type                       = 0;
-	int entry_index                            = 0;
+	libfsclfs_block_t *block               = NULL;
+	libfsclfs_record_value_t *record_value = NULL;
+	uint8_t *record_data                   = NULL;
+	static char *function                  = "libfsclfs_block_read_record_values";
+	size_t alignment_padding_size          = 0;
+	size_t record_data_offset              = 0;
+	size_t record_data_size                = 0;
+        uint32_t container_logical_number      = 0;
+	uint32_t record_type                   = 0;
+	uint16_t record_number                 = 0;
+	int entry_index                        = 0;
 
 	if( internal_store == NULL )
 	{
@@ -3376,38 +3342,6 @@ int libfsclfs_block_read_record_values(
 	}
 	do
 	{
-/* TODO use logical container number */
-		if( libfsclfs_store_get_container_physical_number(
-		     internal_store,
-		     container_logical_number,
-		     &container_physical_number,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve container physical number.",
-			 function );
-
-			goto on_error;
-		}
-		if( libbfio_pool_get_handle(
-		     internal_store->container_file_io_pool,
-		     (int) container_physical_number,
-		     &container_file_io_handle,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve file IO handle: %" PRIu32 " from pool.",
-			 function,
-			 container_physical_number );
-
-			goto on_error;
-		}
 		if( libfsclfs_block_read(
 		     block,
 		     internal_store->io_handle,
@@ -3534,8 +3468,34 @@ int libfsclfs_block_read_record_values(
 		{
 			break;
 		}
+		block_offset             = (uint32_t) ( block->next_block_lsn & 0xfffffe00UL );
+	        container_logical_number = (uint32_t) ( block->next_block_lsn >> 32 );
+		record_number            = (uint16_t) ( block->next_block_lsn & 0x01ff );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			libcnotify_printf(
+			 "%s: LSN: 0x%08" PRIx32 ", container logical number: %" PRIu32 ", record number: %" PRIu16 ", block offset: 0x%08" PRIx32 ", \n",
+			 function,
+			 block->next_block_lsn,
+			 container_logical_number,
+			 record_number,
+			 block_offset );
+		}
+#endif
 /* TODO what about block outside the container */
-		block_offset = (uint32_t) ( block->next_block_lsn & 0xfffffe00UL );
+		if( block->next_block_lsn != 0 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid next block LSN value out of bounds.",
+			 function );
+
+			goto on_error;
+		}
 	}
 	while( block_offset != 0 );
 
@@ -4658,7 +4618,7 @@ int libfsclfs_store_get_container(
 }
 
 /* Retrieves the physical container number for a specific logical container number
- * Returns 1 if successful, 0 if no such logical container number or -1 on error
+ * Returns 1 if successful, 0 if not available or -1 on error
  */
 int libfsclfs_store_get_container_physical_number(
      libfsclfs_internal_store_t *internal_store,
@@ -4741,12 +4701,14 @@ int libfsclfs_store_get_container_physical_number(
 
 		return( 1 );
 	}
+/* TODO remove?
 	else if( container_descriptor->physical_number == container_logical_number )
 	{
 		*container_physical_number = container_descriptor->physical_number;
 
 		return( 1 );
 	}
+*/
 	else if( container_descriptor->logical_number > container_logical_number )
 	{
 		for( container_descriptor_index = 1;
@@ -4781,18 +4743,25 @@ int libfsclfs_store_get_container_physical_number(
 
 				return( -1 );
 			}
+/* TODO determine what unknown2 contains */
+			if( container_descriptor->unknown2 == 0 )
+			{
+				continue;
+			}
 			if( container_descriptor->logical_number == container_logical_number )
 			{
 				*container_physical_number = container_descriptor->physical_number;
 
 				return( 1 );
 			}
+/* TODO remove?
 			if( container_descriptor->physical_number == container_logical_number )
 			{
 				*container_physical_number = container_descriptor->physical_number;
 
 				return( 1 );
 			}
+*/
 		}
 	}
 	else
@@ -4829,18 +4798,24 @@ int libfsclfs_store_get_container_physical_number(
 
 				return( -1 );
 			}
+			if( container_descriptor->unknown2 == 0 )
+			{
+				continue;
+			}
 			if( container_descriptor->logical_number == container_logical_number )
 			{
 				*container_physical_number = container_descriptor->physical_number;
 
 				return( 1 );
 			}
+/* TODO remove?
 			if( container_descriptor->physical_number == container_logical_number )
 			{
 				*container_physical_number = container_descriptor->physical_number;
 
 				return( 1 );
 			}
+*/
 		}
 	}
 	return( 0 );
@@ -4970,7 +4945,7 @@ int libfsclfs_store_get_stream(
 }
 
 /* Retrieves a specific record value using a logical LSN
- * Returns 1 if successful, 0 if no such record or -1 on error
+ * Returns 1 if successful, 0 if not available or -1 on error
  */
 int libfsclfs_store_get_record_value_by_logical_lsn(
      libfsclfs_internal_store_t *internal_store,
@@ -4981,13 +4956,15 @@ int libfsclfs_store_get_record_value_by_logical_lsn(
      libfsclfs_record_value_t **record_value,
      libcerror_error_t **error )
 {
-	libcdata_array_t *record_values_array = NULL;
-	libfsclfs_owner_page_t *owner_page     = NULL;
-	static char *function                  = "libfsclfs_store_get_record_value_by_logical_lsn";
-	uint32_t owner_page_offset             = 0;
-	uint32_t physical_block_offset         = 0;
-	uint32_t region_offset                 = 0;
-	int result                             = 0;
+	libbfio_handle_t *container_file_io_handle = NULL;
+	libcdata_array_t *record_values_array      = NULL;
+	libfsclfs_owner_page_t *owner_page         = NULL;
+	static char *function                      = "libfsclfs_store_get_record_value_by_logical_lsn";
+	uint32_t container_physical_number         = 0;
+	uint32_t owner_page_offset                 = 0;
+	uint32_t physical_block_offset             = 0;
+	uint32_t region_offset                     = 0;
+	int result                                 = 0;
 
 	if( internal_store == NULL )
 	{
@@ -5011,7 +4988,53 @@ int libfsclfs_store_get_record_value_by_logical_lsn(
 
 		return( -1 );
 	}
-	if( stream_number > 0 )
+	result = libfsclfs_store_get_container_physical_number(
+	          internal_store,
+	          container_logical_number,
+	          &container_physical_number,
+	          error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve container physical number.",
+		 function );
+
+		goto on_error;
+	}
+	else if( result != 0 )
+	{
+/* TODO use logical container number for index in file IO pool? */
+		if( libbfio_pool_get_handle(
+		     internal_store->container_file_io_pool,
+		     (int) container_physical_number,
+		     &container_file_io_handle,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve container file IO handle: %" PRIu32 " from pool.",
+			 function,
+			 container_physical_number );
+
+			goto on_error;
+		}
+	}
+	if( container_file_io_handle == 0 )
+	{
+		return( 0 );
+	}
+	if( stream_number == 0 )
+	{
+		physical_block_offset = block_offset;
+		result                = 1;
+	}
+	else
 	{
 		region_offset = ( block_offset / internal_store->io_handle->region_size )
 			      * internal_store->io_handle->region_size;
@@ -5034,8 +5057,8 @@ int libfsclfs_store_get_record_value_by_logical_lsn(
 		}
 		if( libfsclfs_store_read_container_owner_page(
 		     internal_store,
+		     container_file_io_handle,
 		     owner_page,
-		     container_logical_number,
 		     owner_page_offset,
 		     error ) != 1 )
 		{
@@ -5082,11 +5105,6 @@ int libfsclfs_store_get_record_value_by_logical_lsn(
 		}
 		owner_page = NULL;
 	}
-	else
-	{
-		physical_block_offset = block_offset;
-		result                = 1;
-	}
 	if( result != 0 )
 	{
 		if( libcdata_array_initialize(
@@ -5105,7 +5123,7 @@ int libfsclfs_store_get_record_value_by_logical_lsn(
 		}
 		if( libfsclfs_block_read_record_values(
 		     internal_store,
-		     container_logical_number,
+		     container_file_io_handle,
 		     physical_block_offset,
 		     record_values_array,
 		     error ) != 1 )
@@ -5149,6 +5167,20 @@ int libfsclfs_store_get_record_value_by_logical_lsn(
 			 "%s: unable to set record value: %" PRIu16 ".",
 			 function,
 			 record_number );
+
+			goto on_error;
+		}
+		if( libcdata_array_free(
+		     &record_values_array,
+		     (int (*)(intptr_t **, libcerror_error_t **)) &libfsclfs_record_value_free,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free record values array.",
+			 function );
 
 			goto on_error;
 		}

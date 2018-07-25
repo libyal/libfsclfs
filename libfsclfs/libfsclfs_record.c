@@ -183,6 +183,88 @@ int libfsclfs_record_free(
 	return( result );
 }
 
+/* Retrieve the record type
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_record_get_type(
+     libfsclfs_record_t *record,
+     uint32_t *record_type,
+     libcerror_error_t **error )
+{
+	libfsclfs_internal_record_t *internal_record = NULL;
+	static char *function                        = "libfsclfs_record_get_type";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfsclfs_internal_record_t *) record;
+
+	if( libfsclfs_record_value_get_type(
+	     internal_record->record_value,
+	     record_type,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve record type from record value.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieve the record flags
+ * Returns 1 if successful or -1 on error
+ */
+int libfsclfs_record_get_flags(
+     libfsclfs_record_t *record,
+     uint16_t *record_flags,
+     libcerror_error_t **error )
+{
+	libfsclfs_internal_record_t *internal_record = NULL;
+	static char *function                        = "libfsclfs_record_get_flags";
+
+	if( record == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid record.",
+		 function );
+
+		return( -1 );
+	}
+	internal_record = (libfsclfs_internal_record_t *) record;
+
+	if( libfsclfs_record_value_get_flags(
+	     internal_record->record_value,
+	     record_flags,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve record flags from record value.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
 /* Retrieve the previous log sequence number (LSN)
  * Returns 1 if successful or -1 on error
  */
@@ -207,30 +289,20 @@ int libfsclfs_record_get_previous_lsn(
 	}
 	internal_record = (libfsclfs_internal_record_t *) record;
 
-	if( internal_record->record_value == NULL )
+	if( libfsclfs_record_value_get_previous_lsn(
+	     internal_record->record_value,
+	     previous_lsn,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid record - missing record value.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve previous log sequence number (LSN) from record value.",
 		 function );
 
 		return( -1 );
 	}
-	if( previous_lsn == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid previous LSN.",
-		 function );
-
-		return( -1 );
-	}
-	*previous_lsn = internal_record->record_value->previous_lsn;
-
 	return( 1 );
 }
 
@@ -258,30 +330,20 @@ int libfsclfs_record_get_undo_next_lsn(
 	}
 	internal_record = (libfsclfs_internal_record_t *) record;
 
-	if( internal_record->record_value == NULL )
+	if( libfsclfs_record_value_get_undo_next_lsn(
+	     internal_record->record_value,
+	     undo_next_lsn,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid record - missing record value.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve undo-next log sequence number (LSN) from record value.",
 		 function );
 
 		return( -1 );
 	}
-	if( undo_next_lsn == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid undo-next LSN.",
-		 function );
-
-		return( -1 );
-	}
-	*undo_next_lsn = internal_record->record_value->undo_next_lsn;
-
 	return( 1 );
 }
 
@@ -320,7 +382,7 @@ int libfsclfs_record_get_data(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve record value data.",
+		 "%s: unable to retrieve data from record value.",
 		 function );
 
 		return( -1 );
