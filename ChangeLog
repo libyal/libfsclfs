@@ -1,4 +1,6 @@
 TODO
+* don't allow store to be opened multiple times
+
 * add check signature functions?
 * use notify output grouping
 * fsclfsinfo:
@@ -26,23 +28,8 @@ Deployment
 * check configure test of sub library included functions
 * write man pages
 
-20160108
-* 2016 update
-
-20150106
-* 2015 update
-
-20141226
-* updated dpkg files
-
-20141130
-* code clean up
-* updated msvscpp files
-
-20141022
-* changes for deployment
-
 20141011
+* see `git log' for more recent change log
 * removed README.macosx
 * updated dependencies
 * changes for project site move

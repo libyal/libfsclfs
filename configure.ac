@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libfsclfs],
- [20180815],
+ [20180910],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -156,9 +156,6 @@ AS_IF(
  [AC_SUBST(
   [libfsclfs_spec_requires],
   [Requires:])
- AC_SUBST(
-  [libfsclfs_spec_build_requires],
-  [BuildRequires:])
  ])
 
 AS_IF(
