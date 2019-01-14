@@ -9,6 +9,8 @@ Homepage: https://github.com/libyal/libfsclfs
 Package: libfsclfs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libfsclfs1
+Replaces: libfsclfs1
 Suggests: libfsclfs-dbg
 Description: Library to access the Common Log File System (CLFS) format
  libfsclfs is a library to access the Common Log File System (CLFS) format.
@@ -31,6 +33,8 @@ Package: libfsclfs-tools
 Section: utils
 Architecture: any
 Depends: libfsclfs (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libfsclfs-utils
+Replaces: libfsclfs-utils
 Description: Several tools for reading the Common Log File System (CLFS)
  Several tools for reading the Common Log File System (CLFS).
 

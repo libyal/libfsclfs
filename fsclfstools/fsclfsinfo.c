@@ -1,7 +1,7 @@
 /*
  * Shows information obtained from a Common Log File System (CLFS) store
  *
- * Copyright (C) 2010-2018, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -156,7 +156,7 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	fsclfsoutput_version_fprint(
+	fsclfstools_output_version_fprint(
 	 stdout,
 	 program );
 
@@ -191,7 +191,7 @@ int main( int argc, char * const argv[] )
 				break;
 
 			case (system_integer_t) 'V':
-				fsclfsoutput_copyright_fprint(
+				fsclfstools_output_copyright_fprint(
 				 stdout );
 
 				return( EXIT_SUCCESS );
