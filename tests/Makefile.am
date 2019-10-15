@@ -22,6 +22,7 @@ TESTS = \
 check_SCRIPTS = \
 	test_fsclfsinfo.sh \
 	test_library.sh \
+	test_manpage.sh \
 	test_runner.sh
 
 EXTRA_DIST = \

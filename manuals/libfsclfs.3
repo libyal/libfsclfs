@@ -1,11 +1,9 @@
-.Dd October  4, 2016
+.Dd October 15, 2019
 .Dt libfsclfs 3
 .Os libfsclfs
 .Sh NAME
 .Nm libfsclfs.h
 .Nd Library to access the Common Log File System (CLFS) format
-.Sh LIBRARY
-.Lb libfsclfs
 .Sh SYNOPSIS
 .In libfsclfs.h
 .Pp
@@ -15,17 +13,17 @@ Support functions
 .Ft int
 .Fn libfsclfs_get_access_flags_read "void"
 .Ft int
-.Fn libfsclfs_get_codepage "int *codepage, libfsclfs_error_t **error"
+.Fn libfsclfs_get_codepage "int *codepage" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_set_codepage "int codepage, libfsclfs_error_t **error"
+.Fn libfsclfs_set_codepage "int codepage" "libfsclfs_error_t **error"
 .Pp
 Notify functions
 .Ft void
 .Fn libfsclfs_notify_set_verbose "int verbose"
 .Ft int
-.Fn libfsclfs_notify_set_stream "FILE *stream, libfsclfs_error_t **error"
+.Fn libfsclfs_notify_set_stream "FILE *stream" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_notify_stream_open "const char *filename, libfsclfs_error_t **error"
+.Fn libfsclfs_notify_stream_open "const char *filename" "libfsclfs_error_t **error"
 .Ft int
 .Fn libfsclfs_notify_stream_close "libfsclfs_error_t **error"
 .Pp
@@ -33,83 +31,89 @@ Error functions
 .Ft void
 .Fn libfsclfs_error_free "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_error_fprint "libfsclfs_error_t *error, FILE *stream"
+.Fn libfsclfs_error_fprint "libfsclfs_error_t *error" "FILE *stream"
 .Ft int
-.Fn libfsclfs_error_sprint "libfsclfs_error_t *error, char *string, size_t size"
+.Fn libfsclfs_error_sprint "libfsclfs_error_t *error" "char *string" "size_t size"
 .Ft int
-.Fn libfsclfs_error_backtrace_fprint "libfsclfs_error_t *error, FILE *stream"
+.Fn libfsclfs_error_backtrace_fprint "libfsclfs_error_t *error" "FILE *stream"
 .Ft int
-.Fn libfsclfs_error_backtrace_sprint "libfsclfs_error_t *error, char *string, size_t size"
+.Fn libfsclfs_error_backtrace_sprint "libfsclfs_error_t *error" "char *string" "size_t size"
 .Pp
 Store functions
 .Ft int
-.Fn libfsclfs_store_initialize "libfsclfs_store_t **store, libfsclfs_error_t **error"
+.Fn libfsclfs_store_initialize "libfsclfs_store_t **store" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_free "libfsclfs_store_t **store, libfsclfs_error_t **error"
+.Fn libfsclfs_store_free "libfsclfs_store_t **store" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_open "libfsclfs_store_t *store, const char *filename, int access_flags, libfsclfs_error_t **error"
+.Fn libfsclfs_store_signal_abort "libfsclfs_store_t *store" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_open_containers "libfsclfs_store_t *store, libfsclfs_error_t **error"
+.Fn libfsclfs_store_open "libfsclfs_store_t *store" "const char *filename" "int access_flags" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_close "libfsclfs_store_t *store, libfsclfs_error_t **error"
+.Fn libfsclfs_store_open_containers "libfsclfs_store_t *store" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_get_number_of_containers "libfsclfs_store_t *store, int *number_of_containers, libfsclfs_error_t **error"
+.Fn libfsclfs_store_close "libfsclfs_store_t *store" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_get_container "libfsclfs_store_t *store, int container_index, libfsclfs_container_t **container, libfsclfs_error_t **error"
+.Fn libfsclfs_store_get_number_of_containers "libfsclfs_store_t *store" "int *number_of_containers" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_get_number_of_streams "libfsclfs_store_t *store, int *number_of_streams, libfsclfs_error_t **error"
+.Fn libfsclfs_store_get_container "libfsclfs_store_t *store" "int container_index" "libfsclfs_container_t **container" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_store_get_stream "libfsclfs_store_t *store, int stream_index, libfsclfs_stream_t **stream, libfsclfs_error_t **error"
+.Fn libfsclfs_store_get_number_of_streams "libfsclfs_store_t *store" "int *number_of_streams" "libfsclfs_error_t **error"
+.Ft int
+.Fn libfsclfs_store_get_stream "libfsclfs_store_t *store" "int stream_index" "libfsclfs_stream_t **stream" "libfsclfs_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int
-.Fn libfsclfs_store_open_wide "libfsclfs_store_t *store, const wchar_t *filename, int access_flags, libfsclfs_error_t **error"
+.Fn libfsclfs_store_open_wide "libfsclfs_store_t *store" "const wchar_t *filename" "int access_flags" "libfsclfs_error_t **error"
 .Pp
 Available when compiled with libbfio support:
 .Ft int
-.Fn libfsclfs_store_open_file_io_handle "libfsclfs_store_t *store, libbfio_handle_t *file_io_handle, int access_flags, libfsclfs_error_t **error"
+.Fn libfsclfs_store_open_file_io_handle "libfsclfs_store_t *store" "libbfio_handle_t *file_io_handle" "int access_flags" "libfsclfs_error_t **error"
 .Pp
 Container functions
 .Ft int
-.Fn libfsclfs_container_free "libfsclfs_container_t **container, libfsclfs_error_t **error"
+.Fn libfsclfs_container_free "libfsclfs_container_t **container" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_container_get_size "libfsclfs_container_t *container, size64_t *size, libfsclfs_error_t **error"
+.Fn libfsclfs_container_get_size "libfsclfs_container_t *container" "size64_t *size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_container_get_utf8_name_size "libfsclfs_container_t *container, size_t *utf8_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_container_get_utf8_name_size "libfsclfs_container_t *container" "size_t *utf8_string_size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_container_get_utf8_name "libfsclfs_container_t *container, uint8_t *utf8_string, size_t utf8_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_container_get_utf8_name "libfsclfs_container_t *container" "uint8_t *utf8_string" "size_t utf8_string_size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_container_get_utf16_name_size "libfsclfs_container_t *container, size_t *utf16_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_container_get_utf16_name_size "libfsclfs_container_t *container" "size_t *utf16_string_size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_container_get_utf16_name "libfsclfs_container_t *container, uint16_t *utf16_string, size_t utf16_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_container_get_utf16_name "libfsclfs_container_t *container" "uint16_t *utf16_string" "size_t utf16_string_size" "libfsclfs_error_t **error"
 .Pp
 Stream functions
 .Ft int
-.Fn libfsclfs_stream_free "libfsclfs_stream_t **stream, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_free "libfsclfs_stream_t **stream" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_stream_get_utf8_name_size "libfsclfs_stream_t *stream, size_t *utf8_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_get_utf8_name_size "libfsclfs_stream_t *stream" "size_t *utf8_string_size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_stream_get_utf8_name "libfsclfs_stream_t *stream, uint8_t *utf8_string, size_t utf8_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_get_utf8_name "libfsclfs_stream_t *stream" "uint8_t *utf8_string" "size_t utf8_string_size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_stream_get_utf16_name_size "libfsclfs_stream_t *stream, size_t *utf16_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_get_utf16_name_size "libfsclfs_stream_t *stream" "size_t *utf16_string_size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_stream_get_utf16_name "libfsclfs_stream_t *stream, uint16_t *utf16_string, size_t utf16_string_size, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_get_utf16_name "libfsclfs_stream_t *stream" "uint16_t *utf16_string" "size_t utf16_string_size" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_stream_get_base_lsn "libfsclfs_stream_t *stream, uint64_t *base_lsn, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_get_base_lsn "libfsclfs_stream_t *stream" "uint64_t *base_lsn" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_stream_get_last_lsn "libfsclfs_stream_t *stream, uint64_t *last_lsn, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_get_last_lsn "libfsclfs_stream_t *stream" "uint64_t *last_lsn" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_stream_get_record_by_lsn "libfsclfs_stream_t *stream, uint64_t record_lsn, libfsclfs_record_t **record, libfsclfs_error_t **error"
+.Fn libfsclfs_stream_get_record_by_lsn "libfsclfs_stream_t *stream" "uint64_t record_lsn" "libfsclfs_record_t **record" "libfsclfs_error_t **error"
 .Pp
 Record functions
 .Ft int
-.Fn libfsclfs_record_free "libfsclfs_record_t **record, libfsclfs_error_t **error"
+.Fn libfsclfs_record_free "libfsclfs_record_t **record" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_record_get_previous_lsn "libfsclfs_record_t *record, uint64_t *previous_lsn, libfsclfs_error_t **error"
+.Fn libfsclfs_record_get_type "libfsclfs_record_t *record" "uint32_t *record_type" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_record_get_undo_next_lsn "libfsclfs_record_t *record, uint64_t *undo_next_lsn, libfsclfs_error_t **error"
+.Fn libfsclfs_record_get_flags "libfsclfs_record_t *record" "uint16_t *record_flags" "libfsclfs_error_t **error"
 .Ft int
-.Fn libfsclfs_record_get_data "libfsclfs_record_t *record, uint8_t **data, size_t *data_size, libfsclfs_error_t **error"
+.Fn libfsclfs_record_get_previous_lsn "libfsclfs_record_t *record" "uint64_t *previous_lsn" "libfsclfs_error_t **error"
+.Ft int
+.Fn libfsclfs_record_get_undo_next_lsn "libfsclfs_record_t *record" "uint64_t *undo_next_lsn" "libfsclfs_error_t **error"
+.Ft int
+.Fn libfsclfs_record_get_data "libfsclfs_record_t *record" "uint8_t **data" "size_t *data_size" "libfsclfs_error_t **error"
 .Sh DESCRIPTION
 The
 .Fn libfsclfs_get_version
@@ -122,8 +126,8 @@ None
 .Sh FILES
 None
 .Sh NOTES
-libfsclfs allows to be compiled with wide character support (wchar_t).
-
+libfsclfs can be compiled with wide character support (wchar_t).
+.sp
 To compile libfsclfs with wide character support use:
 .Ar ./configure --enable-wide-character-type=yes
  or define:
@@ -131,7 +135,7 @@ To compile libfsclfs with wide character support use:
  or
 .Ar UNICODE
  during compilation.
-
+.sp
 .Ar LIBFSCLFS_WIDE_CHARACTER_TYPE
  in libfsclfs/features.h can be used to determine if libfsclfs was compiled with wide character support.
 .Sh BUGS
@@ -140,7 +144,7 @@ Please report bugs of any kind on the project issue tracker: https://github.com/
 These man pages are generated from "libfsclfs.h".
 .Sh COPYRIGHT
 Copyright (C) 2010-2019, Joachim Metz <joachim.metz@gmail.com>.
-
+.sp
 This is free software; see the source for copying conditions.
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .Sh SEE ALSO
