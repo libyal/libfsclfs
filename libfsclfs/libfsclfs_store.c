@@ -685,6 +685,17 @@ int libfsclfs_store_open_file_io_handle(
 	}
 	internal_store = (libfsclfs_internal_store_t *) store;
 
+	if( internal_store->base_log_file_io_handle != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid file - base log file IO handle already set.",
+		 function );
+
+		return( -1 );
+	}
 	if( file_io_handle == NULL )
 	{
 		libcerror_error_set(
