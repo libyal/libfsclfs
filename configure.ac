@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libfsclfs],
- [20191224],
+ [20200219],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
