@@ -190,6 +190,7 @@ int libfsclfs_store_open(
      libfsclfs_error_t **error );
 
 #if defined( LIBFSCLFS_HAVE_WIDE_CHARACTER_TYPE )
+
 /* Opens a base log using a base log
  * Returns 1 if successful or -1 on error
  */
@@ -199,9 +200,11 @@ int libfsclfs_store_open_wide(
      const wchar_t *filename,
      int access_flags,
      libfsclfs_error_t **error );
-#endif
+
+#endif /* defined( LIBFSCLFS_HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( LIBFSCLFS_HAVE_BFIO )
+
 /* Opens a base log using a Basic File IO (bfio) handle of a base log
  * Returns 1 if successful or -1 on error
  */
@@ -211,7 +214,8 @@ int libfsclfs_store_open_file_io_handle(
      libbfio_handle_t *file_io_handle,
      int access_flags,
      libfsclfs_error_t **error );
-#endif
+
+#endif /* defined( LIBFSCLFS_HAVE_BFIO ) */
 
 /* Opens the containers
  * This function assumes the container files are in the same location as the base log file
