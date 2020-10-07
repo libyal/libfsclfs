@@ -376,7 +376,7 @@ int info_handle_container_fprint(
 	}
 	fprintf(
 	 info_handle->notify_stream,
-	 "\tName:\t%" PRIs_SYSTEM "\n",
+	 "\tName\t: %" PRIs_SYSTEM "\n",
 	 value_string );
 
 	memory_free(
@@ -400,7 +400,7 @@ int info_handle_container_fprint(
 	}
 	fprintf(
 	 info_handle->notify_stream,
-	 "\tSize:\t%" PRIu64 "\n",
+	 "\tSize\t: %" PRIu64 "\n",
 	 container_size );
 
 	fprintf(
@@ -504,7 +504,7 @@ int info_handle_stream_fprint(
 	}
 	fprintf(
 	 info_handle->notify_stream,
-	 "\tName:\t%" PRIs_SYSTEM "\n",
+	 "\tName\t: %" PRIs_SYSTEM "\n",
 	 value_string );
 
 	memory_free(
@@ -586,12 +586,12 @@ int info_handle_store_fprint(
 	}
 	fprintf(
 	 info_handle->notify_stream,
-	 "\tNumber of containers:\t%d\n",
+	 "\tNumber of containers\t: %d\n",
 	 number_of_containers );
 
 	fprintf(
 	 info_handle->notify_stream,
-	 "\tNumber of streams:\t%d\n",
+	 "\tNumber of streams\t: %d\n",
 	 number_of_streams );
 
 	fprintf(

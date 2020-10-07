@@ -815,7 +815,7 @@ int libfsclfs_store_open_containers(
 	size_t container_name_size                             = 0;
 	int container_descriptor_index                         = 0;
 	int number_of_container_descriptors                    = 0;
-	int result                                             = 0;
+	int result                                             = 1;
 
 	if( store == NULL )
 	{
@@ -887,11 +887,12 @@ int libfsclfs_store_open_containers(
 
 			return( -1 );
 		}
-/* TODO determine what unknown2 contains */
+/* TODO determine what unknown2 contains
 		if( container_descriptor->unknown2 == 0 )
 		{
 			continue;
 		}
+*/
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfsclfs_container_descriptor_get_utf16_name_size(
 		          container_descriptor,

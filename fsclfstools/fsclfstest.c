@@ -90,7 +90,7 @@ int fsclfstest_record_fprint(
 	libftxf_record_t *txf_record = NULL;
 	libftxr_record_t *txr_record = NULL;
 	uint8_t *record_data         = NULL;
-	static char *function        = "fsclfstest_store_record_fprint";
+	static char *function        = "fsclfstest_record_fprint";
 	size_t record_data_size      = 0;
 
 	if( stream == NULL )
@@ -299,6 +299,11 @@ int fsclfstest_stream_fprint(
 
 		goto on_error;
 	}
+	fprintf(
+	 stream,
+	 "Stream: %s\n",
+	 stream_name );
+
 	/* Name of the TxF stream: TxfLog
 	 */
 	if( memory_compare(
@@ -315,7 +320,7 @@ int fsclfstest_stream_fprint(
 	            "\\SystemRoot\\System32\\Config\\TxR\\{",
 	            33 ) == 0 )
 	      && ( memory_compare(
-	            &( stream_name[ 70 ] ),
+	            &( stream_name[ 69 ] ),
 	            "}.TxR.blf",
 	            10 ) == 0 ) )
 	{

@@ -177,24 +177,14 @@ int libfsclfs_record_value_read_data(
 
 		return( -1 );
 	}
-	if( data_size > (size_t) SSIZE_MAX )
+	if( ( data_size < sizeof( fsclfs_container_record_header_t ) )
+	 || ( data_size > (size_t) SSIZE_MAX ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid data size value exceeds maximum.",
-		 function );
-
-		return( -1 );
-	}
-	if( data_size < sizeof( fsclfs_container_record_header_t ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: invalid data value too small.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid data size value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -289,7 +279,8 @@ int libfsclfs_record_value_read_data(
 		libcnotify_printf(
 		 "\n" );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	if( ( record_value->size < sizeof( fsclfs_container_record_header_t ) )
 	 || ( (size_t) record_value->size > data_size ) )
 	{
@@ -300,10 +291,10 @@ int libfsclfs_record_value_read_data(
 		 "%s: invalid record size value out of bounds.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( ( data_offset < sizeof( fsclfs_container_record_header_t ) )
-	 || ( (size_t) data_offset > data_size ) )
+	 || ( (size_t) data_offset >= data_size ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -312,7 +303,7 @@ int libfsclfs_record_value_read_data(
 		 "%s: invalid data offset value out of bounds.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
@@ -328,7 +319,8 @@ int libfsclfs_record_value_read_data(
 			 0 );
 		}
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	record_value->data_size = record_value->size - data_offset;
 
 	record_value->data = (uint8_t *) memory_allocate(
@@ -343,7 +335,7 @@ int libfsclfs_record_value_read_data(
 		 "%s: unable to create record value data.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( memory_copy(
 	     record_value->data,
@@ -357,12 +349,7 @@ int libfsclfs_record_value_read_data(
 		 "%s: unable to copy record value data.",
 		 function );
 
-		memory_free(
-		 record_value->data );
-
-		record_value->data = NULL;
-
-		return( -1 );
+		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
@@ -377,6 +364,18 @@ int libfsclfs_record_value_read_data(
 	}
 #endif
 	return( 1 );
+
+on_error:
+	if( record_value->data != NULL )
+	{
+		memory_free(
+		 record_value->data );
+
+		record_value->data = NULL;
+	}
+	record_value->data_size = 0;
+
+	return( -1 );
 }
 
 /* Retrieve the record type
