@@ -197,32 +197,6 @@ int libfsclfs_block_read(
 
 		return( -1 );
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading block at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
-		 function,
-		 offset,
-		 offset );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     (off64_t) offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek block offset: %" PRIu32 ".",
-		 function,
-		 offset );
-
-		return( -1 );
-	}
 	if( block->data != NULL )
 	{
 		memory_free(
@@ -242,10 +216,21 @@ int libfsclfs_block_read(
 
 		goto on_error;
 	}
-	read_count = libbfio_handle_read_buffer(
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: reading block at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
+		 function,
+		 offset,
+		 offset );
+	}
+#endif
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              block->data,
 	              sizeof( fsclfs_block_header_t ),
+	              (off64_t) offset,
 	              error );
 
 	if( read_count != (ssize_t) sizeof( fsclfs_block_header_t ) )
@@ -254,8 +239,10 @@ int libfsclfs_block_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read block header data.",
-		 function );
+		 "%s: unable to read block header data at offset: %" PRIu32 " (0x%08" PRIx32 ").",
+		 function,
+		 offset,
+		 offset );
 
 		goto on_error;
 	}
@@ -441,7 +428,8 @@ int libfsclfs_block_read(
 		libcnotify_printf(
 		 "\n" );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	if( number_of_sectors != number_of_sectors_copy )
 	{
 		libcerror_error_set(
@@ -589,26 +577,11 @@ int libfsclfs_block_read(
 		block_data_offset += read_size;
 		region_offset     += io_handle->region_size;
 
-		if( libbfio_handle_seek_offset(
-		     file_io_handle,
-		     (off64_t) region_offset,
-		     SEEK_SET,
-		     error ) == -1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_SEEK_FAILED,
-			 "%s: unable to seek next region offset: %" PRIu32 ".",
-			 function,
-			 region_offset );
-
-			goto on_error;
-		}
-		read_count = libbfio_handle_read_buffer(
+		read_count = libbfio_handle_read_buffer_at_offset(
 			      file_io_handle,
 			      &( ( block->data )[ block_data_offset ] ),
 			      (size_t) remaining_block_size,
+			      (off64_t) region_offset,
 			      error );
 
 		if( read_count != (ssize_t) remaining_block_size )
@@ -617,8 +590,10 @@ int libfsclfs_block_read(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read block data.",
-			 function );
+			 "%s: unable to read block data at offset: %" PRIu32 " (0x%08" PRIx32 ").",
+			 function,
+			 region_offset,
+			 region_offset );
 
 			goto on_error;
 		}
