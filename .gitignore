@@ -142,6 +142,9 @@ stamp-h[1-9]
 /tests/fsclfs_test_stream
 /tests/fsclfs_test_stream_descriptor
 /tests/fsclfs_test_support
+/tests/fsclfs_test_tools_info_handle
+/tests/fsclfs_test_tools_output
+/tests/fsclfs_test_tools_signal
 /tests/input
 /tests/tmp*
 

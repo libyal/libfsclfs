@@ -14,6 +14,9 @@ MSVSCPP_FILES = \
 	fsclfs_test_stream/fsclfs_test_stream.vcproj \
 	fsclfs_test_stream_descriptor/fsclfs_test_stream_descriptor.vcproj \
 	fsclfs_test_support/fsclfs_test_support.vcproj \
+	fsclfs_test_tools_info_handle/fsclfs_test_tools_info_handle.vcproj \
+	fsclfs_test_tools_output/fsclfs_test_tools_output.vcproj \
+	fsclfs_test_tools_signal/fsclfs_test_tools_signal.vcproj \
 	fsclfsinfo/fsclfsinfo.vcproj \
 	fsclfstest/fsclfstest.vcproj \
 	libbfio/libbfio.vcproj \

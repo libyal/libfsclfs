@@ -1,3 +1,5 @@
+AUTOMAKE_OPTIONS = subdir-objects
+
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
@@ -17,13 +19,15 @@ AM_CPPFLAGS = \
 
 TESTS = \
 	test_library.sh \
+	test_tools.sh \
 	test_fsclfsinfo.sh
 
 check_SCRIPTS = \
 	test_fsclfsinfo.sh \
 	test_library.sh \
 	test_manpage.sh \
-	test_runner.sh
+	test_runner.sh \
+	test_tools.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
@@ -43,7 +47,10 @@ check_PROGRAMS = \
 	fsclfs_test_store \
 	fsclfs_test_stream \
 	fsclfs_test_stream_descriptor \
-	fsclfs_test_support
+	fsclfs_test_support \
+	fsclfs_test_tools_info_handle \
+	fsclfs_test_tools_output \
+	fsclfs_test_tools_signal
 
 fsclfs_test_block_SOURCES = \
 	fsclfs_test_block.c \
@@ -245,6 +252,42 @@ fsclfs_test_support_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
+	../libfsclfs/libfsclfs.la \
+	@LIBCERROR_LIBADD@
+
+fsclfs_test_tools_info_handle_SOURCES = \
+	../fsclfstools/info_handle.c ../fsclfstools/info_handle.h \
+	fsclfs_test_libcerror.h \
+	fsclfs_test_macros.h \
+	fsclfs_test_memory.c fsclfs_test_memory.h \
+	fsclfs_test_tools_info_handle.c \
+	fsclfs_test_unused.h
+
+fsclfs_test_tools_info_handle_LDADD = \
+	@LIBFDATETIME_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	../libfsclfs/libfsclfs.la \
+	@LIBCERROR_LIBADD@
+
+fsclfs_test_tools_output_SOURCES = \
+	../fsclfstools/fsclfstools_output.c ../fsclfstools/fsclfstools_output.h \
+	fsclfs_test_libcerror.h \
+	fsclfs_test_macros.h \
+	fsclfs_test_tools_output.c \
+	fsclfs_test_unused.h
+
+fsclfs_test_tools_output_LDADD = \
+	../libfsclfs/libfsclfs.la \
+	@LIBCERROR_LIBADD@
+
+fsclfs_test_tools_signal_SOURCES = \
+	../fsclfstools/fsclfstools_signal.c ../fsclfstools/fsclfstools_signal.h \
+	fsclfs_test_libcerror.h \
+	fsclfs_test_macros.h \
+	fsclfs_test_tools_signal.c \
+	fsclfs_test_unused.h
+
+fsclfs_test_tools_signal_LDADD = \
 	../libfsclfs/libfsclfs.la \
 	@LIBCERROR_LIBADD@
 
