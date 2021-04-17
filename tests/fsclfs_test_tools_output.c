@@ -39,7 +39,7 @@
 
 #include "../fsclfstools/fsclfstools_output.h"
 
-/* Tests the fsclfstools_output_initialize and function
+/* Tests the fsclfstools_output_initialize function
  * Returns 1 if successful or 0 if not
  */
 int fsclfs_test_tools_output_initialize(
