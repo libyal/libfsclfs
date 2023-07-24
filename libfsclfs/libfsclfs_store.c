@@ -668,9 +668,9 @@ int libfsclfs_store_open_file_io_handle(
 {
 	libfsclfs_internal_store_t *internal_store = NULL;
 	static char *function                      = "libfsclfs_store_open_file_io_handle";
+	uint8_t file_io_handle_opened_in_library   = 0;
 	int bfio_access_flags                      = 0;
 	int file_io_handle_is_open                 = 0;
-	int file_io_handle_opened_in_library       = 0;
 
 	if( store == NULL )
 	{
