@@ -6,9 +6,7 @@ EXTRA_DIST = \
 	fsclfsinfo.1 \
 	libfsclfs.3
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f Makefile
 

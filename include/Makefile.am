@@ -15,13 +15,11 @@ EXTRA_DIST = \
 	libfsclfs/features.h.in \
 	libfsclfs/types.h.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libfsclfs.h \
+	libfsclfs/definitions.h \
+	libfsclfs/features.h \
+	libfsclfs/types.h \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libfsclfs.h
-	-rm -f libfsclfs/definitions.h
-	-rm -f libfsclfs/features.h
-	-rm -f libfsclfs/types.h
-	-rm -f Makefile
 
