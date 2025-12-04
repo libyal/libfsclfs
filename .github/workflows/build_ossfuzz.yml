@@ -30,6 +30,6 @@ jobs:
         head -n 20 projects/libyal/Dockerfile > projects/libfsclfs/Dockerfile
         echo "RUN git clone --depth 1 https://github.com/libyal/libfsclfs.git libfsclfs" >> projects/libfsclfs/Dockerfile
         tail -n 3 projects/libyal/Dockerfile >> projects/libfsclfs/Dockerfile
-        python3 infra/helper.py build_image --pull libfsclfs 
+        python3 infra/helper.py build_image --pull libfsclfs
         python3 infra/helper.py build_fuzzers --sanitizer address libfsclfs
         python3 infra/helper.py check_build libfsclfs
