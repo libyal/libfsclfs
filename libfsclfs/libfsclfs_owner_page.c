@@ -795,7 +795,9 @@ fprintf( stderr, "X: 0x%08" PRIx32 ": 0x%02" PRIx8 ", 0x%02" PRIx8 "\n",
 			stream_number             = sector_mapping_array_data[ 0 ];
 			first_block_sector_number = sector_mapping_array_data[ 1 ];
 
+#if defined( HAVE_DEBUG_OUTPUT )
 			first_sector = sector_index;
+#endif
 
 			if( libcdata_array_append_entry(
 			     owner_page->physical_log_ranges_array,
@@ -834,10 +836,6 @@ fprintf( stderr, "X: 0x%08" PRIx32 ": 0x%02" PRIx8 ", 0x%02" PRIx8 "\n",
 			new_log_range = 0;
 		}
 		last_block_sector_number = sector_mapping_array_data[ 1 ];
-
-fprintf( stderr, "X: 0x%08" PRIx32 ": 0x%02" PRIx8 ", 0x%02" PRIx8 "\n",
- region_offset + ( sector_index * io_handle->bytes_per_sector ),
- sector_mapping_array_data[ 0 ], sector_mapping_array_data[ 1 ] );
 
 		sector_index++;
 

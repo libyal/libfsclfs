@@ -153,11 +153,12 @@ int libfsclfs_block_read(
      uint32_t offset,
      libcerror_error_t **error )
 {
+	uint8_t *block_data             = NULL;
 	static char *function           = "libfsclfs_block_read";
 	void *reallocation              = NULL;
+	size_t block_size               = 0;
 	ssize_t read_count              = 0;
 	uint32_t block_data_offset      = 0;
-	uint32_t block_format_version   = 0;
 	uint32_t fixup_offset           = 0;
 	uint32_t fixup_value_index      = 0;
 	uint32_t fixup_value_offset     = 0;
@@ -165,11 +166,12 @@ int libfsclfs_block_read(
 	uint32_t read_size              = 0;
 	uint32_t region_offset          = 0;
 	uint32_t remaining_block_size   = 0;
-	uint32_t stored_checksum        = 0;
 	uint16_t number_of_sectors      = 0;
 	uint16_t number_of_sectors_copy = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
+	uint32_t block_format_version   = 0;
+	uint32_t stored_checksum        = 0;
 	uint32_t value_32bit            = 0;
 	uint16_t fixup_value            = 0;
 	uint16_t value_16bit            = 0;
@@ -202,10 +204,12 @@ int libfsclfs_block_read(
 		memory_free(
 		 block->data );
 	}
-	block->data = (uint8_t *) memory_allocate(
-	                           sizeof( fsclfs_block_header_t ) );
+	block_size = sizeof( fsclfs_block_header_t );
 
-	if( block->data == NULL )
+	block_data = (uint8_t *) memory_allocate(
+	                          block_size );
+
+	if( block_data == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -228,12 +232,12 @@ int libfsclfs_block_read(
 #endif
 	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
-	              block->data,
-	              sizeof( fsclfs_block_header_t ),
+	              block_data,
+	              block_size,
 	              (off64_t) offset,
 	              error );
 
-	if( read_count != (ssize_t) sizeof( fsclfs_block_header_t ) )
+	if( read_count != (ssize_t) block_size )
 	{
 		libcerror_error_set(
 		 error,
@@ -253,13 +257,13 @@ int libfsclfs_block_read(
 		 "%s: block header data:\n",
 		 function );
 		libcnotify_print_data(
-		 block->data,
+		 block_data,
 		 sizeof( fsclfs_block_header_t ),
 		 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 	}
 #endif
 	if( memory_compare(
-	     ( (fsclfs_block_header_t *) block->data )->signature,
+	     ( (fsclfs_block_header_t *) block_data )->signature,
 	     fsclfs_block_signature,
 	     2 ) != 0 )
 	{
@@ -272,46 +276,38 @@ int libfsclfs_block_read(
 
 		goto on_error;
 	}
-	block->stream_number = ( (fsclfs_block_header_t *) block->data )->stream_number;
+	block->stream_number = ( (fsclfs_block_header_t *) block_data )->stream_number;
 
 	byte_stream_copy_to_uint16_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->number_of_sectors,
+	 ( (fsclfs_block_header_t *) block_data )->number_of_sectors,
 	 number_of_sectors );
 
 	byte_stream_copy_to_uint16_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->number_of_sectors_copy,
+	 ( (fsclfs_block_header_t *) block_data )->number_of_sectors_copy,
 	 number_of_sectors_copy );
 
-	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->checksum,
-	 stored_checksum );
-
-	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->format_version,
-	 block_format_version );
-
 	byte_stream_copy_to_uint64_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->physical_lsn,
+	 ( (fsclfs_block_header_t *) block_data )->physical_lsn,
 	 block->physical_lsn );
 
 	byte_stream_copy_to_uint64_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->next_block_lsn,
+	 ( (fsclfs_block_header_t *) block_data )->next_block_lsn,
 	 block->next_block_lsn );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->record_data_offset,
+	 ( (fsclfs_block_header_t *) block_data )->record_data_offset,
 	 block->record_data_offset );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->sector_mapping_array_offset,
+	 ( (fsclfs_block_header_t *) block_data )->sector_mapping_array_offset,
 	 block->sector_mapping_array_offset );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->virtual_log_range_array_offset,
+	 ( (fsclfs_block_header_t *) block_data )->virtual_log_range_array_offset,
 	 block->virtual_log_range_array_offset );
 
 	byte_stream_copy_to_uint32_little_endian(
-	 ( (fsclfs_block_header_t *) block->data )->fixup_values_offset,
+	 ( (fsclfs_block_header_t *) block_data )->fixup_values_offset,
 	 block->fixup_values_offset );
 
 #if defined( HAVE_DEBUG_OUTPUT )
@@ -320,13 +316,13 @@ int libfsclfs_block_read(
 		libcnotify_printf(
 		 "%s: signature\t\t\t\t\t\t: 0x%02x 0x%02x\n",
 		 function,
-		 ( (fsclfs_block_header_t *) block->data )->signature[ 0 ],
-		 ( (fsclfs_block_header_t *) block->data )->signature[ 1 ] );
+		 ( (fsclfs_block_header_t *) block_data )->signature[ 0 ],
+		 ( (fsclfs_block_header_t *) block_data )->signature[ 1 ] );
 
 		libcnotify_printf(
 		 "%s: fixup place holder\t\t\t\t: 0x%02" PRIx8 "\n",
 		 function,
-		 ( (fsclfs_block_header_t *) block->data )->fixup_place_holder );
+		 ( (fsclfs_block_header_t *) block_data )->fixup_place_holder );
 
 		libcnotify_printf(
 		 "%s: stream number\t\t\t\t\t: %" PRIu8 "\n",
@@ -346,25 +342,31 @@ int libfsclfs_block_read(
 		 (uint32_t) number_of_sectors_copy * io_handle->bytes_per_sector );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 ( (fsclfs_block_header_t *) block->data )->unknown1,
+		 ( (fsclfs_block_header_t *) block_data )->unknown1,
 		 value_32bit );
 		libcnotify_printf(
 		 "%s: unknown1\t\t\t\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
 
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (fsclfs_block_header_t *) block_data )->checksum,
+		 stored_checksum );
 		libcnotify_printf(
 		 "%s: checksum\t\t\t\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 stored_checksum );
 
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (fsclfs_block_header_t *) block_data )->format_version,
+		 block_format_version );
 		libcnotify_printf(
 		 "%s: format version\t\t\t\t\t: %" PRIu32 "\n",
 		 function,
 		 block_format_version );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 ( (fsclfs_block_header_t *) block->data )->unknown2,
+		 ( (fsclfs_block_header_t *) block_data )->unknown2,
 		 value_32bit );
 		libcnotify_printf(
 		 "%s: unknown2\t\t\t\t\t\t: 0x%08" PRIx32 "\n",
@@ -400,7 +402,7 @@ int libfsclfs_block_read(
 		 "%s: unknown4:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (fsclfs_block_header_t *) block->data )->unknown4,
+		 ( (fsclfs_block_header_t *) block_data )->unknown4,
 		 8,
 		 0 );
 
@@ -408,7 +410,7 @@ int libfsclfs_block_read(
 		 "%s: unknown5:\n",
 		 function );
 		libcnotify_print_data(
-		 ( (fsclfs_block_header_t *) block->data )->unknown5,
+		 ( (fsclfs_block_header_t *) block_data )->unknown5,
 		 44,
 		 0 );
 
@@ -418,7 +420,7 @@ int libfsclfs_block_read(
 		 block->fixup_values_offset );
 
 		byte_stream_copy_to_uint32_little_endian(
-		 ( (fsclfs_block_header_t *) block->data )->unknown6,
+		 ( (fsclfs_block_header_t *) block_data )->unknown6,
 		 value_32bit );
 		libcnotify_printf(
 		 "%s: unknown6\t\t\t\t\t\t: 0x%08" PRIx32 "\n",
@@ -441,9 +443,9 @@ int libfsclfs_block_read(
 
 		goto on_error;
 	}
-	block->size = (uint32_t) number_of_sectors * io_handle->bytes_per_sector;
+	block_size = (size_t) number_of_sectors * io_handle->bytes_per_sector;
 
-	if( block->size < sizeof( fsclfs_block_header_t ) )
+	if( block_size < sizeof( fsclfs_block_header_t ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -455,7 +457,10 @@ int libfsclfs_block_read(
 		goto on_error;
 	}
 #if UINT32_MAX > SSIZE_MAX
-	if( (size_t) block->size > (size_t) SSIZE_MAX )
+	if( (size_t) block_size > (size_t) SSIZE_MAX )
+#else
+	if( (size_t) block_size > (size_t) UINT32_MAX )
+#endif
 	{
 		libcerror_error_set(
 		 error,
@@ -466,9 +471,8 @@ int libfsclfs_block_read(
 
 		goto on_error;
 	}
-#endif
 	if( ( block->fixup_values_offset < sizeof( fsclfs_block_header_t ) )
-	 || ( block->fixup_values_offset >= block->size ) )
+	 || ( block->fixup_values_offset >= block_size ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -519,8 +523,8 @@ int libfsclfs_block_read(
 		goto on_error;
 	}
 	reallocation = memory_reallocate(
-	                block->data,
-	                sizeof( uint8_t ) * block->size );
+	                block_data,
+	                sizeof( uint8_t ) * block_size );
 
 	if( reallocation == NULL )
 	{
@@ -533,9 +537,9 @@ int libfsclfs_block_read(
 
 		goto on_error;
 	}
-	block->data = (uint8_t *) reallocation;
+	block_data = (uint8_t *) reallocation;
 
-	remaining_block_size = block->size - sizeof( fsclfs_block_header_t );
+	remaining_block_size = block_size - sizeof( fsclfs_block_header_t );
 
 	region_offset = ( offset / io_handle->region_size )
 	              * io_handle->region_size;
@@ -555,7 +559,7 @@ int libfsclfs_block_read(
 	}
 	read_count = libbfio_handle_read_buffer(
 		      file_io_handle,
-		      &( ( block->data )[ block_data_offset ] ),
+		      &( ( block_data )[ block_data_offset ] ),
 		      (size_t) read_size,
 		      error );
 
@@ -579,7 +583,7 @@ int libfsclfs_block_read(
 
 		read_count = libbfio_handle_read_buffer_at_offset(
 			      file_io_handle,
-			      &( ( block->data )[ block_data_offset ] ),
+			      &( ( block_data )[ block_data_offset ] ),
 			      (size_t) remaining_block_size,
 			      (off64_t) region_offset,
 			      error );
@@ -607,7 +611,7 @@ int libfsclfs_block_read(
 			 "%s: block header trailing data:\n",
 			 function );
 			libcnotify_print_data(
-			 &( ( block->data )[ sizeof( fsclfs_block_header_t ) ] ),
+			 &( ( block_data )[ sizeof( fsclfs_block_header_t ) ] ),
 			 block->record_data_offset,
 			 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 		}
@@ -615,14 +619,14 @@ int libfsclfs_block_read(
 		 "%s: fix-up values data:\n",
 		 function );
 		libcnotify_print_data(
-		 &( ( block->data )[ block->fixup_values_offset ] ),
-		 block->size - block->fixup_values_offset,
+		 &( ( block_data )[ block->fixup_values_offset ] ),
+		 block_size - block->fixup_values_offset,
 		 LIBCNOTIFY_PRINT_DATA_FLAG_GROUP_DATA );
 	}
 #endif /* defined( HAVE_DEBUG_OUTPUT ) */
 
-	if( ( ( number_of_sectors * 2 ) > block->size )
-	 || ( block->fixup_values_offset >= ( block->size - ( number_of_sectors * 2 ) ) ) )
+	if( ( ( number_of_sectors * 2 ) > block_size )
+	 || ( block->fixup_values_offset >= ( block_size - ( number_of_sectors * 2 ) ) ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -646,11 +650,11 @@ int libfsclfs_block_read(
 		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint16_little_endian(
-			 &( ( block->data )[ fixup_offset ] ),
+			 &( ( block_data )[ fixup_offset ] ),
 			 value_16bit );
 
 			byte_stream_copy_to_uint16_little_endian(
-			 &( ( block->data )[ fixup_value_offset ] ),
+			 &( ( block_data )[ fixup_value_offset ] ),
 			 fixup_value );
 
 			libcnotify_printf(
@@ -662,7 +666,7 @@ int libfsclfs_block_read(
 		}
 #endif /* defined( HAVE_DEBUG_OUTPUT ) */
 
-		if( ( block->data )[ fixup_offset ] >= 0x80 )
+		if( ( block_data )[ fixup_offset ] >= 0x80 )
 		{
 			libcerror_error_set(
 			 error,
@@ -675,7 +679,7 @@ int libfsclfs_block_read(
 		}
 		if( fixup_value_index == 0 )
 		{
-			if( ( ( block->data )[ fixup_offset ] & 0x40 ) == 0 )
+			if( ( ( block_data )[ fixup_offset ] & 0x40 ) == 0 )
 			{
 				libcerror_error_set(
 				 error,
@@ -686,11 +690,11 @@ int libfsclfs_block_read(
 
 				goto on_error;
 			}
-			( block->data )[ fixup_offset ] ^= 0x40;
+			( block_data )[ fixup_offset ] ^= 0x40;
 		}
 		if( ( fixup_value_index + 1 ) == number_of_sectors )
 		{
-			if( ( ( block->data )[ fixup_offset ] & 0x20 ) == 0 )
+			if( ( ( block_data )[ fixup_offset ] & 0x20 ) == 0 )
 			{
 				libcerror_error_set(
 				 error,
@@ -701,12 +705,12 @@ int libfsclfs_block_read(
 
 				goto on_error;
 			}
-			( block->data )[ fixup_offset ] ^= 0x20;
+			( block_data )[ fixup_offset ] ^= 0x20;
 		}
-		if( ( ( block->data )[ fixup_offset ] != 0x00 )
-		 && ( ( block->data )[ fixup_offset ] != 0x04 )
-		 && ( ( block->data )[ fixup_offset ] != 0x08 )
-		 && ( ( block->data )[ fixup_offset ] != 0x10 ) )
+		if( ( ( block_data )[ fixup_offset ] != 0x00 )
+		 && ( ( block_data )[ fixup_offset ] != 0x04 )
+		 && ( ( block_data )[ fixup_offset ] != 0x08 )
+		 && ( ( block_data )[ fixup_offset ] != 0x10 ) )
 		{
 			libcerror_error_set(
 			 error,
@@ -717,7 +721,7 @@ int libfsclfs_block_read(
 
 			goto on_error;
 		}
-		if( ( block->data )[ fixup_offset + 1 ] != ( (fsclfs_block_header_t *) block->data )->fixup_place_holder )
+		if( ( block_data )[ fixup_offset + 1 ] != ( (fsclfs_block_header_t *) block_data )->fixup_place_holder )
 		{
 			libcerror_error_set(
 			 error,
@@ -728,8 +732,8 @@ int libfsclfs_block_read(
 
 			goto on_error;
 		}
-		( block->data )[ fixup_offset ]     = ( block->data )[ fixup_value_offset ];
-		( block->data )[ fixup_offset + 1 ] = ( block->data )[ fixup_value_offset + 1 ];
+		( block_data )[ fixup_offset ]     = ( block_data )[ fixup_value_offset ];
+		( block_data )[ fixup_offset + 1 ] = ( block_data )[ fixup_value_offset + 1 ];
 
 		fixup_value_offset += 2;
 		fixup_offset       += io_handle->bytes_per_sector;
@@ -741,15 +745,16 @@ int libfsclfs_block_read(
 		 "\n" );
 	}
 #endif
+	block->data = block_data;
+	block->size = (uint32_t) number_of_sectors * io_handle->bytes_per_sector;
+
 	return( 1 );
 
 on_error:
-	if( block->data != NULL )
+	if( block_data != NULL )
 	{
 		memory_free(
-		 block->data );
-
-		block->data = NULL;
+		 block_data );
 	}
 	return( -1 );
 }

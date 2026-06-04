@@ -21,6 +21,9 @@ AM_CPPFLAGS = \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBFSCLFS_DLL_IMPORT@
 
+AM_TESTS_ENVIRONMENT = \
+	export TESTS_USE_WINAPI="@TESTS_USE_WINAPI@";
+
 TESTS = \
 	test_library.sh \
 	test_tools.sh \
@@ -282,7 +285,8 @@ fsclfs_test_tools_output_SOURCES = \
 
 fsclfs_test_tools_output_LDADD = \
 	../libfsclfs/libfsclfs.la \
-	@LIBCERROR_LIBADD@
+	@LIBCERROR_LIBADD@ \
+	@LIBINTL@
 
 fsclfs_test_tools_signal_SOURCES = \
 	../fsclfstools/fsclfstools_signal.c ../fsclfstools/fsclfstools_signal.h \

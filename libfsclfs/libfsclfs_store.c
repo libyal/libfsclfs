@@ -1062,7 +1062,9 @@ int libfsclfs_store_open_containers(
 		else
 		{
 			container_location      = container_name_start;
+#if defined( HAVE_DEBUG_OUTPUT )
 			container_location_size = container_name_size;
+#endif
 		}
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -2251,7 +2253,6 @@ int libfsclfs_store_read_store_metadata(
 	size_t record_data_offset                              = 0;
 	size_t record_data_size                                = 0;
 	uint32_t alignment_padding_size                        = 0;
-	uint32_t block_file_attributes_offset                  = 0;
 	uint32_t block_name_offset                             = 0;
 	uint32_t dump_count                                    = 0;
 	uint32_t information_record_size                       = 0;
@@ -2266,6 +2267,7 @@ int libfsclfs_store_read_store_metadata(
 	system_character_t *value_string                       = NULL;
 	libfguid_identifier_t *guid                            = NULL;
 	size_t value_string_size                               = 0;
+	uint32_t block_file_attributes_offset                  = 0;
 	uint32_t value_32bit                                   = 0;
 	int result                                             = 0;
 #endif
@@ -2601,7 +2603,8 @@ int libfsclfs_store_read_store_metadata(
 		 12,
 		 0 );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	record_data_offset += sizeof( fsclfs_base_log_store_metadata_header_t );
 
 	if( ( record_data_offset + (size_t) information_records_data_size ) > record_data_size )
@@ -2736,10 +2739,6 @@ int libfsclfs_store_read_store_metadata(
 			 ( (fsclfs_base_log_file_information_record_data_t *) record_data )->block_name_offset,
 			 block_name_offset );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (fsclfs_base_log_file_information_record_data_t *) record_data )->block_file_attributes_offset,
-			 block_file_attributes_offset );
-
 #if defined( HAVE_DEBUG_OUTPUT )
 			if( libcnotify_verbose != 0 )
 			{
@@ -2772,6 +2771,9 @@ int libfsclfs_store_read_store_metadata(
 				 function,
 				 block_name_offset );
 
+				byte_stream_copy_to_uint32_little_endian(
+				 ( (fsclfs_base_log_file_information_record_data_t *) record_data )->block_file_attributes_offset,
+				 block_file_attributes_offset );
 				libcnotify_printf(
 				 "%s: block file attributes offset\t: 0x%08" PRIx32 "\n",
 				 function,
@@ -2785,11 +2787,14 @@ int libfsclfs_store_read_store_metadata(
 				 8,
 				 0 );
 			}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 			record_data                   += sizeof( fsclfs_base_log_file_information_record_data_t );
 			record_data_offset            += sizeof( fsclfs_base_log_file_information_record_data_t );
 			information_records_data_size -= sizeof( fsclfs_base_log_file_information_record_data_t );
+#if defined( HAVE_DEBUG_OUTPUT )
 			information_record_size       -= sizeof( fsclfs_base_log_file_information_record_data_t );
+#endif
 		}
 		else if( information_record_type == 0xc1fdf007 )
 		{
@@ -2838,9 +2843,9 @@ int libfsclfs_store_read_store_metadata(
 			record_data                   += sizeof( fsclfs_base_log_stream_attributes_record_data_t );
 			record_data_offset            += sizeof( fsclfs_base_log_stream_attributes_record_data_t );
 			information_records_data_size -= sizeof( fsclfs_base_log_stream_attributes_record_data_t );
+#if defined( HAVE_DEBUG_OUTPUT )
 			information_record_size       -= sizeof( fsclfs_base_log_stream_attributes_record_data_t );
-
-			block_file_attributes_offset = 0;
+#endif
 		}
 		else if( information_record_type == 0xc1fdf008 )
 		{
@@ -2889,9 +2894,9 @@ int libfsclfs_store_read_store_metadata(
 			record_data                   += sizeof( fsclfs_base_log_container_attributes_record_data_t );
 			record_data_offset            += sizeof( fsclfs_base_log_container_attributes_record_data_t );
 			information_records_data_size -= sizeof( fsclfs_base_log_container_attributes_record_data_t );
+#if defined( HAVE_DEBUG_OUTPUT )
 			information_record_size       -= sizeof( fsclfs_base_log_container_attributes_record_data_t );
-
-			block_file_attributes_offset = 0;
+#endif
 		}
 		if( block_name_offset == record_data_offset )
 		{
@@ -3323,10 +3328,13 @@ int libfsclfs_block_read_record_values(
 	size_t alignment_padding_size          = 0;
 	size_t record_data_offset              = 0;
 	size_t record_data_size                = 0;
-        uint32_t container_logical_number      = 0;
 	uint32_t record_type                   = 0;
-	uint16_t record_number                 = 0;
 	int entry_index                        = 0;
+
+#if defined( HAVE_DEBUG_OUTPUT )
+        uint32_t container_logical_number      = 0;
+	uint16_t record_number                 = 0;
+#endif
 
 	if( internal_store == NULL )
 	{
@@ -3481,10 +3489,11 @@ int libfsclfs_block_read_record_values(
 			break;
 		}
 		block_offset             = (uint32_t) ( block->next_block_lsn & 0xfffffe00UL );
+
+#if defined( HAVE_DEBUG_OUTPUT )
 	        container_logical_number = (uint32_t) ( block->next_block_lsn >> 32 );
 		record_number            = (uint16_t) ( block->next_block_lsn & 0x01ff );
 
-#if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
@@ -3878,13 +3887,13 @@ int libfsclfs_store_set_basename(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_size_from_utf8(
 		          (libuna_utf8_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          &( internal_store->basename_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_size_from_utf8(
 		          (libuna_utf8_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          &( internal_store->basename_size ),
 		          error );
 #else
@@ -3896,14 +3905,14 @@ int libfsclfs_store_set_basename(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf32_string_size_from_byte_stream(
 		          (uint8_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_size_from_byte_stream(
 		          (uint8_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
@@ -3949,14 +3958,14 @@ int libfsclfs_store_set_basename(
 		          (libuna_utf32_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          (libuna_utf8_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf16_string_copy_from_utf8(
 		          (libuna_utf16_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          (libuna_utf8_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          error );
 #else
 #error Unsupported size of wchar_t
@@ -3969,7 +3978,7 @@ int libfsclfs_store_set_basename(
 		          (libuna_utf32_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          (uint8_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          libclocale_codepage,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
@@ -3977,7 +3986,7 @@ int libfsclfs_store_set_basename(
 		          (libuna_utf16_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          (uint8_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          libclocale_codepage,
 		          error );
 #else
@@ -4359,13 +4368,13 @@ int libfsclfs_store_set_basename_wide(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_utf8_string_size_from_utf32(
 		          (libuna_utf32_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          &( internal_store->basename_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf8_string_size_from_utf16(
 		          (libuna_utf16_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          &( internal_store->basename_size ),
 		          error );
 #else
@@ -4377,14 +4386,14 @@ int libfsclfs_store_set_basename_wide(
 #if SIZEOF_WCHAR_T == 4
 		result = libuna_byte_stream_size_from_utf32(
 		          (libuna_utf32_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_byte_stream_size_from_utf16(
 		          (libuna_utf16_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          libclocale_codepage,
 		          &( internal_store->basename_size ),
 		          error );
@@ -4448,14 +4457,14 @@ int libfsclfs_store_set_basename_wide(
 		          (libuna_utf8_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          (libuna_utf32_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_utf8_string_copy_from_utf16(
 		          (libuna_utf8_character_t *) internal_store->basename,
 		          internal_store->basename_size,
 		          (libuna_utf16_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          error );
 #else
 #error Unsupported size of wchar_t
@@ -4469,7 +4478,7 @@ int libfsclfs_store_set_basename_wide(
 		          internal_store->basename_size,
 		          libclocale_codepage,
 		          (libuna_utf32_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          error );
 #elif SIZEOF_WCHAR_T == 2
 		result = libuna_byte_stream_copy_from_utf16(
@@ -4477,7 +4486,7 @@ int libfsclfs_store_set_basename_wide(
 		          internal_store->basename_size,
 		          libclocale_codepage,
 		          (libuna_utf16_character_t *) basename,
-		          basename_length + 1,
+		          basename_length,
 		          error );
 #else
 #error Unsupported size of wchar_t

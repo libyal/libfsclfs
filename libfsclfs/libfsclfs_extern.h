@@ -24,21 +24,28 @@
 
 #include <common.h>
 
+#if !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute )
+#if __has_attribute( visibility )
+#define LIBFSCLFS_INTERNAL	__attribute__((visibility("hidden"))) extern
+
+#else
+#define LIBFSCLFS_INTERNAL	extern
+
+#endif /* __has_attribute( visibility ) */
+#else
+#define LIBFSCLFS_INTERNAL	extern
+
+#endif /* !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute ) */
+
 /* Define HAVE_LOCAL_LIBFSCLFS for local use of libfsclfs
  */
 #if !defined( HAVE_LOCAL_LIBFSCLFS )
 
 #include <libfsclfs/extern.h>
 
-#if defined( __CYGWIN__ ) || defined( __MINGW32__ )
-#define LIBFSCLFS_EXTERN_VARIABLE	extern
-#else
-#define LIBFSCLFS_EXTERN_VARIABLE	LIBFSCLFS_EXTERN
-#endif
-
 #else
 #define LIBFSCLFS_EXTERN		/* extern */
-#define LIBFSCLFS_EXTERN_VARIABLE	extern
+#define LIBFSCLFS_EXTERN_VARIABLE	LIBFSCLFS_INTERNAL
 
 #endif /* !defined( HAVE_LOCAL_LIBFSCLFS ) */
 
