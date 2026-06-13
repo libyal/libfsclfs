@@ -2,8 +2,8 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libfsclfs],
-  [20260604],
-  [joachim.metz@gmail.com])
+  [20260613],
+  [https://github.com/libyal/libfsclfs/issues])
 
 AC_CONFIG_SRCDIR(
   [include/libfsclfs.h.in])
@@ -12,6 +12,8 @@ AM_INIT_AUTOMAKE([gnu 1.6 tar-ustar])
 AM_EXTRA_RECURSIVE_TARGETS([sources splint])
 
 AC_CONFIG_MACRO_DIR([m4])
+
+AC_CONFIG_TESTDIR([tests])
 
 dnl Check for host type
 AC_CANONICAL_HOST
@@ -212,6 +214,8 @@ AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([libfsclfs/libfsclfs.rc])
 AC_CONFIG_FILES([libfsclfs.pc])
 AC_CONFIG_FILES([libfsclfs.spec])
+dnl Generate test configuration files
+AC_CONFIG_FILES([tests/atlocal])
 dnl Generate a source configuration file
 AC_CONFIG_HEADERS([common/config.h])
 

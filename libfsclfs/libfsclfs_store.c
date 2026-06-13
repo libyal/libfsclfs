@@ -329,10 +329,10 @@ int libfsclfs_store_open(
 {
 	libbfio_handle_t *file_io_handle           = NULL;
 	libfsclfs_internal_store_t *internal_store = NULL;
+	const char *basename_end                   = NULL;
 	static char *function                      = "libfsclfs_store_open";
 	size_t basename_length                     = 0;
 	size_t filename_length                     = 0;
-	char *basename_end                         = NULL;
 
 	if( store == NULL )
 	{
@@ -498,10 +498,10 @@ int libfsclfs_store_open_wide(
 {
 	libbfio_handle_t *file_io_handle           = NULL;
 	libfsclfs_internal_store_t *internal_store = NULL;
+	const wchar_t *basename_end                = NULL;
 	static char *function                      = "libfsclfs_store_open_wide";
 	size_t basename_length                     = 0;
 	size_t filename_length                     = 0;
-	wchar_t *basename_end                      = NULL;
 
 	if( store == NULL )
 	{

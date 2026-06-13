@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20231119
+# Version: 20260604
 
 # Generic auto-generated build files
 *~
@@ -130,7 +130,12 @@ stamp-h[1-9]
 /fsclfstools/*.exe
 /fsclfstools/fsclfsinfo
 /fsclfstools/fsclfstest
+/tests/*.dir
 /tests/*.exe
+/tests/*.log
+/tests/*.tmp
+/tests/atconfig
+/tests/atlocal
 /tests/fsclfs_test_block
 /tests/fsclfs_test_block_descriptor
 /tests/fsclfs_test_container
@@ -151,6 +156,11 @@ stamp-h[1-9]
 /tests/fsclfs_test_tools_signal
 /tests/input
 /tests/notify_stream.log
+/tests/package.m4
+/tests/test_inputs_*.at
+/tests/test_library
+/tests/test_manpages
+/tests/test_tools
 /tests/tmp*
 
 # Local library dependencies specific files
