@@ -588,9 +588,12 @@ int libfsclfs_owner_page_read_sector_mapping_array(
 	uint8_t last_block_sector_number              = 0;
 	uint8_t stream_number                         = 0;
 	int entry_index                               = 0;
-	int first_sector                              = 0;
 	int new_log_range                             = 0;
 	int sector_index                              = 0;
+
+#if defined( HAVE_DEBUG_OUTPUT )
+	int first_sector                              = 0;
+#endif
 
 	if( owner_page == NULL )
 	{
