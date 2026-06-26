@@ -3,8 +3,7 @@ man_MANS = \
 	libfsclfs.3
 
 EXTRA_DIST = \
-	fsclfsinfo.1 \
-	libfsclfs.3
+	$(man_MANS)
 
 DISTCLEANFILES = \
 	Makefile \

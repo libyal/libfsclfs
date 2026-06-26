@@ -24,7 +24,9 @@ AM_CPPFLAGS = \
 AM_LDFLAGS = @STATIC_LDFLAGS@
 
 bin_PROGRAMS = \
-	fsclfsinfo \
+	fsclfsinfo
+
+noinst_PROGRAMS = \
 	fsclfstest
 
 fsclfsinfo_SOURCES = \

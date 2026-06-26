@@ -1,31 +1,30 @@
-.Dd October 15, 2019
-.Dt fsclfsinfo
-.Os libfsclfs
+.Dd June 26, 2026
+.Dt FSCLFSINFO 1
+.Os
 .Sh NAME
 .Nm fsclfsinfo
-.Nd determines information about a Windows Common Log File System (CLFS) format
+.Nd determines information about a Common Log File System (CLFS) store
 .Sh SYNOPSIS
 .Nm fsclfsinfo
-.Op Fl ahvV
+.Op Fl hvV
 .Ar source
 .Sh DESCRIPTION
 .Nm fsclfsinfo
-is a utility to determine information about a Windows Common Log File System (CLFS) format
+is a utility to determine information about a Common Log File System (CLFS) \
+store
 .Pp
 .Nm fsclfsinfo
 is part of the
 .Nm libfsclfs
 package.
 .Nm libfsclfs
-is a library to access the Windows Common Log File System (CLFS) format
+is a library to access the Common Log File System (CLFS) format
 .Pp
 .Ar source
 is the source file.
 .Pp
 The options are as follows:
 .Bl -tag -width Ds
-.It Fl a
-shows allocation information
 .It Fl h
 shows this help
 .It Fl v
@@ -43,18 +42,20 @@ None
 fsclfsinfo 20130915
 .sp
 Common Log File System (CLFS) store information:
-.Dl        ...
 .sp
 .Ed
 .Sh DIAGNOSTICS
-Errors, verbose and debug output are printed to stderr when verbose output \-v is enabled.
+Errors, verbose and debug output are printed to stderr when verbose output \
+\-v is enabled.
 Verbose and debug output are only printed when enabled at compilation.
+.Sh AUTHORS
+.An Joachim Metz <joachim.metz@gmail.com>
 .Sh BUGS
-Please report bugs of any kind to <joachim.metz@gmail.com> or on the project website:
-https://github.com/libyal/libfsclfs/
-.Sh AUTHOR
-These man pages were written by Joachim Metz.
+Please report bugs of any kind on the project issue tracker: \
+https://github.com/libyal/libfsclfs/issues
 .Sh COPYRIGHT
 Copyright (C) 2010-2026, Joachim Metz <joachim.metz@gmail.com>.
-This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-.Sh SEE ALSO
+.sp
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A \
+PARTICULAR PURPOSE.
